@@ -1,0 +1,11 @@
+<Project>
+  <!-- Domain-specific configuration for crops mods -->
+  <PropertyGroup>
+    <ModIdPrefix>crops</ModIdPrefix>
+  </PropertyGroup>
+
+  <!-- Include domain-specific shared code -->
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)shared\*.cs" LinkBase="Crops.Shared" />
+  </ItemGroup>
+</Project>

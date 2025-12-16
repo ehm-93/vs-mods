@@ -3,6 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6D945D37-2DA6-4166-ABEC-470DFDC26282}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "crops", "crops", "{E8895149-C83A-49BD-A555-E4C13D42177F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "weeds", "src\crops\weeds\weeds.csproj", "{ED8DB7A1-F28F-42BF-875E-937C1453E512}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "blight", "src\crops\blight\blight.csproj", "{C84C1C11-D65E-49BD-B3D4-294377F6DA6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "generations", "src\crops\generations\generations.csproj", "{1C0957CE-1081-4642-B6CF-86AB249D8669}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "berrychilling", "src\crops\berrychilling\berrychilling.csproj", "{4A462E22-4882-4E81-9619-D14CC94F26F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mulch", "src\crops\mulch\mulch.csproj", "{1C3E1962-5D55-42E8-BB0F-16B923D8AC30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fallow", "src\crops\fallow\fallow.csproj", "{08075D41-43BC-449A-AD36-C2ECC2B99340}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -10,5 +26,40 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ED8DB7A1-F28F-42BF-875E-937C1453E512}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED8DB7A1-F28F-42BF-875E-937C1453E512}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED8DB7A1-F28F-42BF-875E-937C1453E512}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED8DB7A1-F28F-42BF-875E-937C1453E512}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C84C1C11-D65E-49BD-B3D4-294377F6DA6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C84C1C11-D65E-49BD-B3D4-294377F6DA6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C84C1C11-D65E-49BD-B3D4-294377F6DA6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C84C1C11-D65E-49BD-B3D4-294377F6DA6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C0957CE-1081-4642-B6CF-86AB249D8669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C0957CE-1081-4642-B6CF-86AB249D8669}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C0957CE-1081-4642-B6CF-86AB249D8669}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C0957CE-1081-4642-B6CF-86AB249D8669}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A462E22-4882-4E81-9619-D14CC94F26F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A462E22-4882-4E81-9619-D14CC94F26F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A462E22-4882-4E81-9619-D14CC94F26F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A462E22-4882-4E81-9619-D14CC94F26F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C3E1962-5D55-42E8-BB0F-16B923D8AC30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C3E1962-5D55-42E8-BB0F-16B923D8AC30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C3E1962-5D55-42E8-BB0F-16B923D8AC30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C3E1962-5D55-42E8-BB0F-16B923D8AC30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08075D41-43BC-449A-AD36-C2ECC2B99340}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08075D41-43BC-449A-AD36-C2ECC2B99340}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08075D41-43BC-449A-AD36-C2ECC2B99340}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08075D41-43BC-449A-AD36-C2ECC2B99340}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E8895149-C83A-49BD-A555-E4C13D42177F} = {6D945D37-2DA6-4166-ABEC-470DFDC26282}
+		{ED8DB7A1-F28F-42BF-875E-937C1453E512} = {E8895149-C83A-49BD-A555-E4C13D42177F}
+		{C84C1C11-D65E-49BD-B3D4-294377F6DA6E} = {E8895149-C83A-49BD-A555-E4C13D42177F}
+		{1C0957CE-1081-4642-B6CF-86AB249D8669} = {E8895149-C83A-49BD-A555-E4C13D42177F}
+		{4A462E22-4882-4E81-9619-D14CC94F26F8} = {E8895149-C83A-49BD-A555-E4C13D42177F}
+		{1C3E1962-5D55-42E8-BB0F-16B923D8AC30} = {E8895149-C83A-49BD-A555-E4C13D42177F}
+		{08075D41-43BC-449A-AD36-C2ECC2B99340} = {E8895149-C83A-49BD-A555-E4C13D42177F}
 	EndGlobalSection
 EndGlobal

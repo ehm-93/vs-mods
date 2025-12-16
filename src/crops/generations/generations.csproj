@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Inherits from root and domain Directory.Build.props -->
+</Project>
