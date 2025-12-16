@@ -1,0 +1,55 @@
+<Project>
+  <!-- ============================================ -->
+  <!-- UNIVERSAL: Applies to ALL mods in the repo  -->
+  <!-- ============================================ -->
+
+  <PropertyGroup>
+    <!-- .NET Configuration -->
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- Metadata -->
+    <Authors>ehm-93</Authors>
+    <RepositoryUrl>https://github.com/ehm-93/vs-mods</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <!-- Vintage Story Paths -->
+    <VSPath Condition="'$(VINTAGE_STORY)' != ''">$(VINTAGE_STORY)</VSPath>
+    <VSPath Condition="'$(VSPath)' == '' AND Exists('C:\Program Files\Vintage Story')">C:\Program Files\Vintage Story</VSPath>
+    <VSPath Condition="'$(VSPath)' == '' AND Exists('/opt/vintagestory')">/opt/vintagestory</VSPath>
+    <VSDataPath Condition="'$(VINTAGE_STORY_DATA)' != ''">$(VINTAGE_STORY_DATA)</VSDataPath>
+
+    <!-- Output: All builds go to repo-root/bin/ -->
+    <RepoRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), 'vs-mods.sln'))\</RepoRoot>
+    <BaseOutputPath>$(RepoRoot)bin\</BaseOutputPath>
+    <OutputPath>$(BaseOutputPath)$(Configuration)\$(MSBuildProjectName)\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+
+    <!-- Don't generate assembly info (we control it via modinfo.json) -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <!-- Vintage Story References (all mods need these) -->
+  <ItemGroup>
+    <Reference Include="VintagestoryAPI">
+      <HintPath>$(VSPath)\VintagestoryAPI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="VSSurvivalMod">
+      <HintPath>$(VSPath)\Mods\VSSurvivalMod\VSSurvivalMod.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(VSPath)\Lib\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(VSPath)\Lib\Newtonsoft.Json.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,78 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      domain:
+        description: 'Domain to release (or "all")'
+        required: true
+        default: 'all'
+      mod:
+        description: 'Specific mod (leave empty for all in domain)'
+        required: false
+        default: ''
+
+jobs:
+  release:
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      
+      # You'll need to set up VS API DLLs for CI builds
+      # This is a placeholder - adjust based on your setup
+      - name: Setup VS References
+        run: |
+          echo "VINTAGE_STORY=C:\Program Files\Vintage Story" >> $env:GITHUB_ENV
+        shell: pwsh
+      
+      - name: Build and Package
+        run: |
+          $domain = "${{ inputs.domain }}"
+          $mod = "${{ inputs.mod }}"
+          
+          if ($domain -eq "all") {
+            ./tools/build.ps1 package
+          } elseif ($mod) {
+            ./tools/build.ps1 package -Domain $domain -Mod $mod
+          } else {
+            ./tools/build.ps1 package -Domain $domain
+          }
+        shell: pwsh
+      
+      - name: Generate release tag
+        id: tag
+        run: |
+          $date = Get-Date -Format "yyyy.MM.dd"
+          $domain = "${{ inputs.domain }}"
+          $mod = "${{ inputs.mod }}"
+          
+          if ($mod) {
+            $tag = "${domain}-${mod}-v${date}"
+            $name = "${domain}/${mod}"
+          } elseif ($domain -ne "all") {
+            $tag = "${domain}-v${date}"
+            $name = "${domain} suite"
+          } else {
+            $tag = "v${date}"
+            $name = "All mods"
+          }
+          
+          echo "tag=$tag" >> $env:GITHUB_OUTPUT
+          echo "name=$name" >> $env:GITHUB_OUTPUT
+        shell: pwsh
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: ${{ steps.tag.outputs.name }} - ${{ steps.tag.outputs.tag }}
+          files: releases/*.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
