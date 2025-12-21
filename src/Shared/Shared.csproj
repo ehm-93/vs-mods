@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Inherits from root Directory.Build.props -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Ehm93.VS.Shared</RootNamespace>
+  </PropertyGroup>
+</Project>

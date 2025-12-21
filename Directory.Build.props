@@ -1,55 +1,86 @@
 <Project>
-  <!-- ============================================ -->
-  <!-- UNIVERSAL: Applies to ALL mods in the repo  -->
-  <!-- ============================================ -->
+  <!-- Root build configuration for all vs-mods projects -->
 
   <PropertyGroup>
-    <!-- .NET Configuration -->
     <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-
-    <!-- Metadata -->
-    <Authors>ehm-93</Authors>
-    <RepositoryUrl>https://github.com/ehm-93/vs-mods</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-
-    <!-- Vintage Story Paths -->
-    <VSPath Condition="'$(VINTAGE_STORY)' != ''">$(VINTAGE_STORY)</VSPath>
-    <VSPath Condition="'$(VSPath)' == '' AND Exists('C:\Program Files\Vintage Story')">C:\Program Files\Vintage Story</VSPath>
-    <VSPath Condition="'$(VSPath)' == '' AND Exists('/opt/vintagestory')">/opt/vintagestory</VSPath>
-    <VSDataPath Condition="'$(VINTAGE_STORY_DATA)' != ''">$(VINTAGE_STORY_DATA)</VSDataPath>
-
-    <!-- Output: All builds go to repo-root/bin/ -->
-    <RepoRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), 'vs-mods.sln'))\</RepoRoot>
-    <BaseOutputPath>$(RepoRoot)bin\</BaseOutputPath>
-    <OutputPath>$(BaseOutputPath)$(Configuration)\$(MSBuildProjectName)\</OutputPath>
+    <ImplicitUsings>disable</ImplicitUsings>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-
-    <!-- Don't generate assembly info (we control it via modinfo.json) -->
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
-  <!-- Vintage Story References (all mods need these) -->
+  <!-- Output configuration -->
+  <PropertyGroup>
+    <BaseOutputPath>$(MSBuildThisFileDirectory)bin\$(Configuration)\$(MSBuildProjectName)\</BaseOutputPath>
+    <OutputPath>$(BaseOutputPath)</OutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <!-- Vintage Story API references -->
+  <PropertyGroup>
+    <!-- Try to auto-detect VS install location if not set -->
+    <VintageStoryInstall Condition="'$(VINTAGE_STORY)' != ''">$(VINTAGE_STORY)</VintageStoryInstall>
+    <VintageStoryInstall Condition="'$(VintageStoryInstall)' == '' And Exists('$(APPDATA)\Vintagestory\VintagestoryAPI.dll')">$(APPDATA)\Vintagestory</VintageStoryInstall>
+    <VintageStoryInstall Condition="'$(VintageStoryInstall)' == '' And Exists('C:\Program Files\Vintage Story\VintagestoryAPI.dll')">C:\Program Files\Vintage Story</VintageStoryInstall>
+    <VintageStoryInstall Condition="'$(VintageStoryInstall)' == '' And Exists('C:\Program Files (x86)\Vintage Story\VintagestoryAPI.dll')">C:\Program Files (x86)\Vintage Story</VintageStoryInstall>
+  </PropertyGroup>
+
+  <!-- Add reference if found, otherwise warn -->
+  <Target Name="CheckVintageStoryAPI" BeforeTargets="BeforeBuild">
+    <Warning Condition="!Exists('$(VintageStoryInstall)\VintagestoryAPI.dll')"
+             Text="VintagestoryAPI.dll not found at $(VintageStoryInstall). Set VINTAGE_STORY environment variable to your Vintage Story installation directory." />
+  </Target>
+
   <ItemGroup>
     <Reference Include="VintagestoryAPI">
-      <HintPath>$(VSPath)\VintagestoryAPI.dll</HintPath>
+      <HintPath>$(VintageStoryInstall)/VintagestoryAPI.dll</HintPath>
       <Private>false</Private>
+    </Reference>
+    <Reference Include="VintagestoryLib">
+      <HintPath>$(VintageStoryInstall)/VintagestoryLib.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="VSSurvivalMod">
-      <HintPath>$(VSPath)\Mods\VSSurvivalMod\VSSurvivalMod.dll</HintPath>
-      <Private>false</Private>
+      <HintPath>$(VintageStoryInstall)/Mods/VSSurvivalMod.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="0Harmony">
-      <HintPath>$(VSPath)\Lib\0Harmony.dll</HintPath>
-      <Private>false</Private>
+    <Reference Include="VSEssentials">
+      <HintPath>$(VintageStoryInstall)/Mods/VSEssentials.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>$(VSPath)\Lib\Newtonsoft.Json.dll</HintPath>
-      <Private>false</Private>
+      <HintPath>$(VintageStoryInstall)/Lib/Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(VintageStoryInstall)/Lib/0Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
 
+  <!-- Global shared library reference -->
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)src\shared\Shared.csproj" Condition="Exists('$(MSBuildThisFileDirectory)src\shared\Shared.csproj') And '$(MSBuildProjectName)' != 'Shared'">
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!-- Common build settings -->
+  <PropertyGroup>
+    <DebugType>embedded</DebugType>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+
+  <!-- Don't copy VS API DLLs to output -->
+  <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'VintagestoryAPI'" />
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'VintagestoryLib'" />
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'VSSurvivalMod'" />
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'VSEssentials'" />
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'Newtonsoft.Json'" />
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == '0Harmony'" />
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'protobuf-net'" />
+    </ItemGroup>
+  </Target>
 </Project>

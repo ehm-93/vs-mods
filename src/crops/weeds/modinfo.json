@@ -1,13 +1,14 @@
 {
   "type": "code",
   "modid": "cropsweeds",
-  "name": "crops/weeds",
-  "description": "TODO: Add description",
+  "name": "Weeds",
+  "description": "Adds weeds that can grow among crops, affecting their growth.",
   "authors": [
     "ehm-93"
   ],
   "version": "0.1.0",
   "dependencies": {
-    "game": "1.21.0"
+    "game": "1.21.6",
+    "cropscommon": "*"
   }
 }

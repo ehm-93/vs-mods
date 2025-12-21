@@ -2,11 +2,11 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 using Vintagestory.API.Client;
 
-namespace Ehm93.VS.Crops.Weeds;
+namespace Ehm93.VS.Crops.Common;
 
-public class WeedsModSystem : ModSystem
+public class CommonModSystem : ModSystem
 {
-    public const string ModId = "cropsweeds";
+    public const string ModId = "cropscommon";
 
     public override void Start(ICoreAPI api)
     {

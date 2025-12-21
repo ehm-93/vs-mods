@@ -20,10 +20,10 @@
 param(
     [Parameter(Mandatory=$true)]
     [string]$Domain,
-    
+
     [Parameter(Mandatory=$true)]
     [string]$Name,
-    
+
     [ValidateSet("code", "content")]
     [string]$Type = "code"
 )
@@ -39,28 +39,28 @@ $ModPath = Join-Path $DomainPath $Name
 $ModId = "$Domain$($Name -replace '-','')".ToLower()
 
 # Generate PascalCase name for C# classes
-$PascalName = ($Name -split '-' | ForEach-Object { 
+$PascalName = ($Name -split '-' | ForEach-Object {
     if ($_.Length -gt 0) { $_.Substring(0,1).ToUpper() + $_.Substring(1).ToLower() }
 }) -join ''
+
+# Generate PascalCase domain name for namespace
+$PascalDomain = $Domain.Substring(0,1).ToUpper() + $Domain.Substring(1).ToLower()
 
 # Validate
 if (-not (Test-Path $DomainPath)) {
     Write-Host "Domain '$Domain' doesn't exist. Creating it..." -ForegroundColor Yellow
     New-Item -ItemType Directory -Force -Path $DomainPath | Out-Null
-    New-Item -ItemType Directory -Force -Path (Join-Path $DomainPath "shared") | Out-Null
-    
+
     # Create domain-level Directory.Build.props
     $domainProps = @"
 <Project>
+  <!-- Import parent Directory.Build.props -->
+  <Import Project="`$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '`$(MSBuildThisFileDirectory)../'))" />
+
   <!-- Domain-specific configuration for $Domain mods -->
   <PropertyGroup>
     <ModIdPrefix>$Domain</ModIdPrefix>
   </PropertyGroup>
-
-  <!-- Include domain-specific shared code -->
-  <ItemGroup>
-    <Compile Include="`$(MSBuildThisFileDirectory)shared\*.cs" LinkBase="$($Domain.Substring(0,1).ToUpper() + $Domain.Substring(1)).Shared" />
-  </ItemGroup>
 </Project>
 "@
     Set-Content -Path (Join-Path $DomainPath "Directory.Build.props") -Value $domainProps
@@ -88,6 +88,13 @@ $modInfo = [ordered]@{
         game = "1.21.0"
     }
 }
+
+# Add common mod dependency for code mods (unless this IS the common mod)
+if ($Type -eq "code" -and $Name -ne "common") {
+    $commonModId = "${Domain}common"
+    $modInfo.dependencies[$commonModId] = "*"
+}
+
 $modInfoJson = $modInfo | ConvertTo-Json -Depth 3
 Set-Content -Path (Join-Path $ModPath "modinfo.json") -Value $modInfoJson
 Write-Host "  Created modinfo.json" -ForegroundColor Green
@@ -110,32 +117,50 @@ if ($Type -eq "code") {
     $csproj = @"
 <Project Sdk="Microsoft.NET.Sdk">
   <!-- Inherits from root and domain Directory.Build.props -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
 </Project>
 "@
     Set-Content -Path (Join-Path $ModPath "$Name.csproj") -Value $csproj
     Write-Host "  Created $Name.csproj" -ForegroundColor Green
-    
+
+    # Add reference to common mod (if this isn't the common mod)
+    if ($Name -ne "common") {
+        $commonPath = Join-Path $DomainPath "common" "common.csproj"
+        if (Test-Path $commonPath) {
+            $csprojPath = Join-Path $ModPath "$Name.csproj"
+            dotnet add $csprojPath reference $commonPath 2>$null
+            Write-Host "  Added reference to common mod" -ForegroundColor Green
+        } else {
+            Write-Host "  Warning: common mod doesn't exist yet. Create it with:" -ForegroundColor Yellow
+            Write-Host "    ./tools/new-mod.ps1 -Domain $Domain -Name common" -ForegroundColor Gray
+        }
+    }
+
     # Create ModSystem
-    $namespace = "Ehm93.VS.$PascalName"
+    $namespace = "Ehm93.VS.$PascalDomain.$PascalName"
     $modSystem = @"
 using Vintagestory.API.Common;
+using Vintagestory.API.Server;
+using Vintagestory.API.Client;
 
 namespace $namespace;
 
 public class ${PascalName}ModSystem : ModSystem
 {
     public const string ModId = "$ModId";
-    
+
     public override void Start(ICoreAPI api)
     {
         api.Logger.Notification(`$"[{ModId}] Starting...");
     }
-    
+
     public override void StartServerSide(ICoreServerAPI api)
     {
         api.Logger.Notification(`$"[{ModId}] Server-side initialization");
     }
-    
+
     public override void StartClientSide(ICoreClientAPI api)
     {
         api.Logger.Notification(`$"[{ModId}] Client-side initialization");
@@ -144,7 +169,7 @@ public class ${PascalName}ModSystem : ModSystem
 "@
     Set-Content -Path (Join-Path $ModPath "${PascalName}ModSystem.cs") -Value $modSystem
     Write-Host "  Created ${PascalName}ModSystem.cs" -ForegroundColor Green
-    
+
     # Add to domain solution if it exists
     $slnPath = Join-Path $DomainPath "$Domain.sln"
     if (Test-Path $slnPath) {
@@ -152,7 +177,7 @@ public class ${PascalName}ModSystem : ModSystem
         dotnet sln $slnPath add $csprojPath 2>$null
         Write-Host "  Added to $Domain.sln" -ForegroundColor Green
     }
-    
+
     # Add to root solution if it exists
     $rootSlnPath = Join-Path $RepoRoot "vs-mods.sln"
     if (Test-Path $rootSlnPath) {

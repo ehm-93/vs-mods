@@ -1,0 +1,13 @@
+{
+  "type": "code",
+  "modid": "cropscommon",
+  "name": "Crops Common",
+  "description": "Common code and utilities shared by all crops domain mods",
+  "authors": [
+    "ehm-93"
+  ],
+  "version": "0.1.0",
+  "dependencies": {
+    "game": "1.21.0"
+  }
+}

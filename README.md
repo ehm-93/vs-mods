@@ -7,15 +7,17 @@ Monorepo for Vintage Story mods by ehm-93.
 ```
 vs-mods/
 ├── src/
-│   ├── farming/          # Farming mechanics (weeds, blight, mulch, etc.)
-│   │   ├── weeds/
-│   │   ├── blight/
-│   │   └── shared/       # Farming-specific shared code
+│   ├── crops/            # Crop mechanics (weeds, crop quality, etc.)
+│   │   ├── common/       # Common code shared across crops mods
+│   │   └── weeds/        # Weeds affecting crop growth
+│   ├── worldgen/         # World generation (caves, etc.)
+│   │   ├── common/       # Common code shared across worldgen mods
+│   │   └── caves/        # Multi-tier cave generation system
 │   ├── primitive/        # Primitive survival (thermal fracturing, etc.)
 │   │   └── thermal-fracturing/
-│   └── shared/           # Cross-domain shared code
-│       └── VSModLib/
 ├── tools/                # Build and scaffolding scripts
+│   ├── build.ps1         # Main build script
+│   └── new-mod.ps1       # Scaffold new mods
 ├── bin/                  # Build output (gitignored)
 └── releases/             # Packaged mods (gitignored)
 ```
@@ -36,16 +38,23 @@ vs-mods/
 ./tools/build.ps1 build
 
 # Build one domain
-./tools/build.ps1 build -Domain farming
+./tools/build.ps1 build -Domain crops
 
 # Build one mod
-./tools/build.ps1 build -Domain farming -Mod weeds
+./tools/build.ps1 build -Domain crops -Mod weeds
+
+# Visualize caves (quick testing)
+cd src/worldgen/caves-visualizer
+./viz.ps1 stats             # Show cave density by depth
+./viz.ps1 connectivity      # Analyze grid connections
+./viz.ps1 slice -Seed 99    # ASCII art horizontal slice
+```
 
 # Package for release
-./tools/build.ps1 package -Domain farming
+./tools/build.ps1 package -Domain crops
 
 # Install to game for testing
-./tools/build.ps1 install -Domain farming -Mod weeds
+./tools/build.ps1 install -Domain crops -Mod weeds
 ```
 
 ## Environment Setup
@@ -64,28 +73,38 @@ $env:VINTAGE_STORY_DATA = "$env:APPDATA\VintagestoryData"
 
 ```powershell
 # Code mod (C# + assets)
-./tools/new-mod.ps1 -Domain farming -Name irrigation
+./tools/new-mod.ps1 -Domain crops -Name irrigation
 
 # Content-only mod (just JSON assets)
-./tools/new-mod.ps1 -Domain farming -Name exotic-crops -Type content
+./tools/new-mod.ps1 -Domain crops -Name exotic-crops -Type content
 ```
 
 This creates:
 ```
-src/farming/irrigation/
+src/crops/irrigation/
 ├── irrigation.csproj
 ├── modinfo.json
 ├── IrrigationModSystem.cs
-└── assets/farmingirrigation/
+└── assets/cropsirrigation/
     ├── patches/
     └── lang/en.json
+```
+
+The mod will automatically:
+- Reference the domain's `common` mod (both as a project reference and mod dependency)
+- Add the common mod to its `modinfo.json` dependencies
+
+If the domain doesn't have a `common` mod yet, create it first:
+```powershell
+./tools/new-mod.ps1 -Domain crops -Name common
 ```
 
 ## Domains
 
 | Domain | Description |
 |--------|-------------|
-| `farming` | Crop mechanics: weeds, blight, mulch, generations, vernalization |
+| `crops` | Crop mechanics: weeds, crop quality, seasons |
+| `worldgen` | World generation: caves, structures |
 | `primitive` | Early-game survival: thermal fracturing, tallow candles |
 
 ## License
