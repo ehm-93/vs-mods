@@ -1,0 +1,9 @@
+[
+  {
+    "file": "game:blocktypes/soil/farmland.json",
+    "side": "Server",
+    "op": "add",
+    "path": "/entityBehaviors",
+    "value": [{ "name": "FarmlandMulch" }]
+  }
+]

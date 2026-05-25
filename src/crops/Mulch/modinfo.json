@@ -1,0 +1,14 @@
+{
+  "type": "code",
+  "modid": "cropsmulch",
+  "name": "Mulch",
+  "description": "Adds mulch coverage on farmland to slow moisture loss and boost nutrient regen.",
+  "authors": [
+    "ehm-93"
+  ],
+  "version": "0.1.0",
+  "dependencies": {
+    "game": "1.22.0",
+    "cropscommon": "*"
+  }
+}

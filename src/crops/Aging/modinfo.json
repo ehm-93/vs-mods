@@ -1,0 +1,14 @@
+{
+  "type": "code",
+  "modid": "cropsaging",
+  "name": "Aging",
+  "description": "Farmland slowly regenerates nutrients while fallow, modulated by temperature, moisture, and mulch.",
+  "authors": [
+    "ehm-93"
+  ],
+  "version": "0.1.0",
+  "dependencies": {
+    "game": "1.22.0",
+    "cropscommon": "*"
+  }
+}

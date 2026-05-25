@@ -85,7 +85,7 @@ $modInfo = [ordered]@{
     authors = @("ehm-93")
     version = "0.1.0"
     dependencies = [ordered]@{
-        game = "1.21.0"
+        game = "1.22.0"
     }
 }
 
@@ -118,7 +118,7 @@ if ($Type -eq "code") {
 <Project Sdk="Microsoft.NET.Sdk">
   <!-- Inherits from root and domain Directory.Build.props -->
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 </Project>
 "@

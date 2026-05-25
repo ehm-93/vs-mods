@@ -1,4 +1,4 @@
 {
-  "cropscommon:moddesc": "TODO: Add description",
-  "cropscommon:modname": "crops/common"
+  "cropscommon:moddesc": "Common code and utilities shared by all crops domain mods",
+  "cropscommon:modname": "Crops Common"
 }

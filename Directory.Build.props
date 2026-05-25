@@ -2,7 +2,7 @@
   <!-- Root build configuration for all vs-mods projects -->
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
@@ -56,13 +56,23 @@
       <HintPath>$(VintageStoryInstall)/Lib/0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SkiaSharp">
+      <HintPath>$(VintageStoryInstall)/Lib/SkiaSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
 
   <!-- Global shared library reference -->
   <ItemGroup>
     <ProjectReference Include="$(MSBuildThisFileDirectory)src\shared\Shared.csproj" Condition="Exists('$(MSBuildThisFileDirectory)src\shared\Shared.csproj') And '$(MSBuildProjectName)' != 'Shared'">
       <Private>False</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+
+  <!-- ILRepack for merging shared library into mod DLLs -->
+  <ItemGroup Condition="'$(MSBuildProjectName)' != 'Shared'">
+    <PackageReference Include="ILRepack.MSBuild.Task" Version="2.0.13" PrivateAssets="all" />
   </ItemGroup>
 
   <!-- Common build settings -->
@@ -81,6 +91,34 @@
       <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'Newtonsoft.Json'" />
       <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == '0Harmony'" />
       <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'protobuf-net'" />
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'SkiaSharp'" />
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'Shared'" />
     </ItemGroup>
+  </Target>
+
+  <!-- ILRepack: Merge Shared.dll into each mod's output DLL -->
+  <Target Name="ILRepack" AfterTargets="Build" Condition="'$(MSBuildProjectName)' != 'Shared' And Exists('$(OutputPath)Shared.dll')">
+    <PropertyGroup>
+      <WorkingDirectory>$(MSBuildThisFileDirectory)</WorkingDirectory>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <InputAssemblies Include="$(OutputPath)$(TargetFileName)" />
+      <InputAssemblies Include="$(OutputPath)Shared.dll" />
+    </ItemGroup>
+
+    <Message Text="Merging Shared.dll into $(TargetFileName)..." Importance="High" />
+
+    <ILRepack
+      OutputType="$(OutputType)"
+      MainAssembly="$(OutputPath)$(TargetFileName)"
+      OutputAssembly="$(OutputPath)$(TargetFileName)"
+      InputAssemblies="@(InputAssemblies)"
+      InternalizeExcludeAssemblies=""
+      Internalize="true"
+      WorkingDirectory="$(WorkingDirectory)" />
+
+    <Delete Files="$(OutputPath)Shared.dll" />
+    <Delete Files="$(OutputPath)Shared.pdb" Condition="Exists('$(OutputPath)Shared.pdb')" />
   </Target>
 </Project>
