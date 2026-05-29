@@ -1,0 +1,13 @@
+{
+  "type": "code",
+  "modid": "worldicemelt",
+  "name": "Ice Melt",
+  "description": "Vanilla melt curve, plus: exposed ice (no enclosing Room) melts on the next tick once temperature passes 8 C. Threshold tunable via world config.",
+  "authors": [
+    "ehm-93"
+  ],
+  "version": "0.1.0",
+  "dependencies": {
+    "game": "1.22.0"
+  }
+}
