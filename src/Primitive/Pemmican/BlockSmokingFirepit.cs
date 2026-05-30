@@ -18,13 +18,21 @@ public class BlockSmokingFirepit : Block, IIgnitable
     {
         base.OnLoaded(api);
 
+        ItemStack[] meat = MeatStacks(api.World);
         interactions = new[]
         {
             new WorldInteraction
             {
                 ActionLangCode = "pemmican:blockhelp-smokingfirepit-meat",
                 MouseButton = EnumMouseButton.Right,
-                Itemstacks = MeatStacks(api.World)
+                Itemstacks = meat
+            },
+            new WorldInteraction
+            {
+                ActionLangCode = "pemmican:blockhelp-smokingfirepit-meat-bulk",
+                MouseButton = EnumMouseButton.Right,
+                HotKeyCode = "ctrl",
+                Itemstacks = meat
             },
             new WorldInteraction
             {
@@ -36,6 +44,12 @@ public class BlockSmokingFirepit : Block, IIgnitable
             {
                 ActionLangCode = "pemmican:blockhelp-smokingfirepit-take",
                 MouseButton = EnumMouseButton.Right
+            },
+            new WorldInteraction
+            {
+                ActionLangCode = "pemmican:blockhelp-smokingfirepit-take-bulk",
+                MouseButton = EnumMouseButton.Right,
+                HotKeyCode = "ctrl"
             }
         };
     }
@@ -48,10 +62,13 @@ public class BlockSmokingFirepit : Block, IIgnitable
         ItemSlot hand = byPlayer.InventoryManager.ActiveHotbarSlot;
         ItemStack? held = hand.Itemstack;
 
+        // Ctrl-click acts on the whole rack at once (hang/take all 8 pieces) instead of one piece.
+        bool bulk = byPlayer.Entity.Controls.CtrlKey;
+
         // Hang meat on the rack.
         if (held != null && be.IsAcceptedMeat(held))
         {
-            if (world.Side == EnumAppSide.Server) be.TryAddMeat(hand);
+            if (world.Side == EnumAppSide.Server) be.TryAddMeat(hand, bulk);
             return true;
         }
 
@@ -74,7 +91,7 @@ public class BlockSmokingFirepit : Block, IIgnitable
             if (world.Side == EnumAppSide.Server)
             {
                 if (be.RackIsEmpty()) DetachRack(world, blockSel.Position, byPlayer, be);
-                else be.TryTakeMeat(byPlayer);
+                else be.TryTakeMeat(byPlayer, bulk);
             }
             return true;
         }
@@ -185,9 +202,18 @@ public class BlockSmokingFirepit : Block, IIgnitable
         return stacks.ToArray();
     }
 
+    // Any combustible (see BlockEntitySmokingFirepit.IsFuelItem) works as fuel; firewood and peat are the
+    // common choices, so surface those two in the interaction help.
     static ItemStack[] FuelStacks(IWorldAccessor world)
     {
-        Item? firewood = world.GetItem(new AssetLocation("game", "firewood"));
-        return firewood != null ? new[] { new ItemStack(firewood) } : System.Array.Empty<ItemStack>();
+        System.Collections.Generic.List<ItemStack> stacks = new();
+        foreach (string code in new[] { "firewood", "stick" })
+        {
+            Item? item = world.GetItem(new AssetLocation("game", code));
+            if (item != null) stacks.Add(new ItemStack(item));
+        }
+        Block? peat = world.GetBlock(new AssetLocation("game", "peatbrick"));
+        if (peat != null) stacks.Add(new ItemStack(peat));
+        return stacks.ToArray();
     }
 }

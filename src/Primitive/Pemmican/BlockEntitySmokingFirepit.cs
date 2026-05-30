@@ -24,6 +24,10 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
 
     static readonly string[] AcceptedMeats = { "redmeat", "bushmeat", "fish", "poultry" };
 
+    // Smoking wants smoky, organic fuel — not coal/charcoal/coke. Matched by first code part, so this
+    // is a quick list to fine-tune later.
+    static readonly string[] AcceptedFuels = { "firewood", "stick", "peatbrick" };
+
     // --- firepit burn state (public so attach/detach can copy it to/from a vanilla firepit) ---
     public float furnaceTemperature = 20f;
     public int maxTemperature;
@@ -48,6 +52,8 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
         get => inventory[0].Itemstack;
         set { inventory[0].Itemstack = value; inventory[0].MarkDirty(); }
     }
+
+    public int FuelCount => FuelStack?.StackSize ?? 0;
 
     int saveTickCounter;
     MeshData? rackMesh;
@@ -211,9 +217,10 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
 
     public bool IsFuelItem(ItemStack? stack)
     {
-        if (stack == null) return false;
+        if (stack?.Collectible?.Code == null) return false;
+        if (Array.IndexOf(AcceptedFuels, stack.Collectible.Code.FirstCodePart()) < 0) return false;
         CombustibleProperties? props = stack.Collectible.GetCombustibleProperties(Api.World, stack, null);
-        return props != null && props.BurnTemperature > 0 && !IsAcceptedMeat(stack);
+        return props != null && props.BurnTemperature > 0;
     }
 
     public int CountMeat()
@@ -242,27 +249,33 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
         return false;
     }
 
-    public bool TryAddMeat(ItemSlot handSlot)
+    // Hang meat from the held stack onto the rack: one piece, or — when `all` — as many as fit.
+    public bool TryAddMeat(ItemSlot handSlot, bool all = false)
     {
         if (handSlot.Empty || !IsAcceptedMeat(handSlot.Itemstack)) return false;
 
+        bool added = false;
         for (int i = 1; i <= RackSlots; i++)
         {
             if (!inventory[i].Empty) continue;
-            if (handSlot.TryPutInto(Api.World, inventory[i], 1) > 0)
-            {
-                handSlot.MarkDirty();
-                MarkDirty(true);
-                return true;
-            }
-            return false;
+            if (handSlot.Empty || !IsAcceptedMeat(handSlot.Itemstack)) break;
+            if (handSlot.TryPutInto(Api.World, inventory[i], 1) > 0) added = true;
+            if (!all) break;
         }
-        return false; // rack full
+
+        if (added)
+        {
+            handSlot.MarkDirty();
+            MarkDirty(true);
+        }
+        return added;
     }
 
-    // Takes the top-most piece of meat/jerky off the rack. Returns false if the rack is empty.
-    public bool TryTakeMeat(IPlayer byPlayer)
+    // Takes the top-most piece of meat/jerky off the rack, or — when `all` — every piece.
+    // Returns false if the rack is empty.
+    public bool TryTakeMeat(IPlayer byPlayer, bool all = false)
     {
+        bool took = false;
         for (int i = RackSlots; i >= 1; i--)
         {
             if (inventory[i].Empty) continue;
@@ -273,10 +286,12 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
                 Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.7, 0.5));
             }
             inventory[i].MarkDirty();
-            MarkDirty(true);
-            return true;
+            took = true;
+            if (!all) break;
         }
-        return false;
+
+        if (took) MarkDirty(true);
+        return took;
     }
 
     public bool RackIsEmpty()
@@ -304,9 +319,10 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
     // ---------------- attach / detach state transfer ----------------
 
     // Pull the fuel stack out without dropping it (used during block swaps).
+    // TakeOutWhole() throws on an empty slot, so guard against no fuel.
     public ItemStack? TakeOutFuel()
     {
-        return FuelSlot.TakeOutWhole();
+        return FuelSlot.Empty ? null : FuelSlot.TakeOutWhole();
     }
 
     public void DropContents()
@@ -408,6 +424,8 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
         else if (IsSmoldering) sb.AppendLine(Lang.Get("pemmican:smokingfirepit-smoldering"));
         else if (HasFuel()) sb.AppendLine(Lang.Get("pemmican:smokingfirepit-unlit"));
         else sb.AppendLine(Lang.Get("pemmican:smokingfirepit-nofuel"));
+
+        if (FuelCount > 0) sb.AppendLine(Lang.Get("pemmican:smokingfirepit-fuelcount", FuelCount));
 
         int meat = CountMeat();
         sb.AppendLine(meat == 0

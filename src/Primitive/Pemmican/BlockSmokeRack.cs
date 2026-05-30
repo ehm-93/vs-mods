@@ -43,7 +43,8 @@ public class BlockSmokeRack : Block
         int maxTemperature = fp.maxTemperature;
         bool canIgniteFuel = fp.canIgniteFuel;
         double extinguishedTotalHours = fp.extinguishedTotalHours;
-        ItemStack? fuel = fp.fuelSlot.TakeOutWhole();
+        // TakeOutWhole() throws on an empty slot, so only pull fuel when there's actually some.
+        ItemStack? fuel = fp.fuelSlot.Empty ? null : fp.fuelSlot.TakeOutWhole();
 
         world.BlockAccessor.SetBlock(smoking.BlockId, pos);
 
