@@ -6,18 +6,18 @@
 		"transitionRatio": 1,
 		"transitionedStack": { "type": "item", "code": "game:rot" }
 	},
-	"shape": { "base": "game:block/food/meal/porridge" },
+	"shape": { "base": "game:block/food/meal/meaty-stew" },
 	"ingredients": [
 		{
 			"code": "fat-base",
-			"validStacks": [ { "type": "item", "code": "game:fat-rendered" } ],
+			"validStacks": [ { "type": "item", "code": "game:fat-rendered", "shapeElement": "bowl/meat stew/*", "textureMapping": ["meat", "group6"] } ],
 			"minQuantity": 1,
 			"maxQuantity": 1,
 			"typeName": "fat"
 		},
 		{
 			"code": "powder-base",
-			"validStacks": [ { "type": "item", "code": "pemmican:jerkypowder-*" } ],
+			"validStacks": [ { "type": "item", "code": "pemmican:jerkypowder-*", "shapeElement": "bowl/meat stew/*", "textureMapping": ["meat", "group6"] } ],
 			"minQuantity": 1,
 			"maxQuantity": 3,
 			"typeName": "powder"

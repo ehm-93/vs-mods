@@ -1,0 +1,26 @@
+[
+	{
+		"file": "game:blocktypes/clay/fired/crock.json",
+		"op": "add",
+		"path": "/textures/labelpemmican",
+		"value": { "base": "pemmican:block/crock/label-pemmican" }
+	},
+	{
+		"file": "game:blocktypes/clay/fired/crock.json",
+		"op": "add",
+		"path": "/textures/labelsaltedpemmican",
+		"value": { "base": "pemmican:block/crock/label-saltedpemmican" }
+	},
+	{
+		"file": "game:blocktypes/clay/fired/crock.json",
+		"op": "add",
+		"path": "/attributes/labelNames/-",
+		"value": "pemmican"
+	},
+	{
+		"file": "game:blocktypes/clay/fired/crock.json",
+		"op": "add",
+		"path": "/attributes/labelNames/-",
+		"value": "saltedpemmican"
+	}
+]

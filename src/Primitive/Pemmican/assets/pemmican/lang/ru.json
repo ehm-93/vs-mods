@@ -1,0 +1,66 @@
+{
+	"__comment": "Перевод сгенерирован ИИ. Пожалуйста, предложите исправления, если он плохой — автор не говорит на этом языке.",
+
+	"pemmican:modname": "Пеммикан",
+	"pemmican:moddesc": "Коптите мясо в вяленое мясо, перемалывайте его в порошок и вытапливайте с жиром в долгохранящийся пеммикан.",
+
+	"item-jerky-redmeat": "Вяленое красное мясо",
+	"item-jerky-bushmeat": "Вяленая дичь",
+	"item-jerky-fish": "Вяленая рыба",
+	"item-jerky-poultry": "Вяленая птица",
+	"item-jerkypowder-redmeat": "Порошок из вяленого красного мяса",
+	"item-jerkypowder-bushmeat": "Порошок из вяленой дичи",
+	"item-jerkypowder-fish": "Порошок из вяленой рыбы",
+	"item-jerkypowder-poultry": "Порошок из вяленой птицы",
+	"block-smokerack": "Коптильная решётка",
+	"block-smokingfirepit-*": "Коптильный костёр",
+
+	"pemmican": "Пеммикан",
+	"saltedpemmican": "Солёный пеммикан",
+
+	"game:meal-pemmican": "Пеммикан",
+	"game:mealrecipe-name-pemmican": "Пеммикан",
+	"game:mealrecipe-name-pemmican-in-container": "пеммикан",
+	"game:meal-scant-pemmican": "Пеммикан",
+	"game:meal-normal-pemmican": "Пеммикан",
+	"game:meal-hearty-pemmican": "Пеммикан",
+	"game:meal-hefty-pemmican": "Пеммикан",
+
+	"game:meal-saltedpemmican": "Солёный пеммикан",
+	"game:mealrecipe-name-saltedpemmican": "Солёный пеммикан",
+	"game:mealrecipe-name-saltedpemmican-in-container": "солёный пеммикан",
+	"game:meal-scant-saltedpemmican": "Солёный пеммикан",
+	"game:meal-normal-saltedpemmican": "Солёный пеммикан",
+	"game:meal-hearty-saltedpemmican": "Солёный пеммикан",
+	"game:meal-hefty-saltedpemmican": "Солёный пеммикан",
+
+	"game:meal-ingredient-stew-primary-jerky": "Вяленое мясо",
+	"game:meal-ingredient-stew-secondary-jerky": "Вяленое мясо",
+
+	"game:handbook-mealingredient-fat": "топлёный жир",
+	"game:handbook-mealingredient-powder": "порошок из вяленого мяса",
+	"game:handbook-mealingredient-salt": "соль",
+
+	"smokerack-empty": "Решётка пуста. ПКМ с мясом, чтобы повесить кусок; пустой рукой, чтобы снять решётку.",
+	"smokerack-contents": "На решётке {0} / {1} кусков мяса.",
+	"smokerack-progress": "Копчение: {0}% готово.",
+	"smokerack-needfire": "Разожгите огонь, чтобы продолжить копчение.",
+
+	"smokingfirepit-burning": "Коптит",
+	"smokingfirepit-smoldering": "Тлеет",
+	"smokingfirepit-unlit": "Не зажжён. Зажгите факелом или огнивом.",
+	"smokingfirepit-nofuel": "Нет топлива. ПКМ с дровами.",
+	"smokingfirepit-firepitbusy": "Освободите костёр, прежде чем добавлять коптильную решётку.",
+
+	"blockhelp-smokingfirepit-meat": "Повесить мясо на решётку",
+	"blockhelp-smokingfirepit-fuel": "Добавить топливо",
+	"blockhelp-smokingfirepit-take": "Снять мясо / убрать решётку",
+
+	"guide-pemmican-title": "Механика крафта: Вяленое мясо и пеммикан",
+	"guide-pemmican-text": "<strong>Пеммикан &amp; вяленое мясо</strong><br><i>Походная еда, которая хранится месяцами.</i><br><br>Сохранение мяса состоит из трёх шагов: закоптить его в <strong>вяленое мясо</strong>, перемолоть вяленое мясо в <strong>порошок</strong>, а затем сварить порошок с жиром в <strong>пеммикан</strong>.<br><br><strong>1. Закоптить мясо в вяленое мясо</strong><br>Изготовьте <a href=\"handbook://block-smokerack\">коптильную решётку</a> из 3 <a href=\"handbook://item-stick\">палок</a>, <a href=\"handbook://item-rope\">верёвки</a> и ножа, затем щёлкните ПКМ по пустому <a href=\"handbook://block-firepit-lit\">костру</a>, чтобы установить решётку над огнём. Подкладывайте <a href=\"handbook://item-firewood\">дрова</a> (по одному полену за клик), зажгите факелом или огнивом и щёлкайте ПКМ с сырым красным мясом, дичью, рыбой или птицей, чтобы повесить до 8 кусков. Она коптит на слабом и медленном огне, поэтому каждое полено горит довольно долго — поддерживайте огонь, и примерно через день копчения каждый кусок превратится в вяленое мясо. Пустой рукой снимайте куски по одному; когда решётка опустеет, ПКМ пустой рукой снимет её, оставив обычный костёр. Вяленое мясо хранится месяцами — гораздо дольше свежего или приготовленного мяса — и его можно есть как есть или добавлять в похлёбки.<br><br><strong>2. Перемолоть вяленое мясо в порошок</strong><br>Перемелите вяленое мясо в <a href=\"handbook://block-quern\">ручной мельнице</a> или растолките его в сетке крафта любым камнем. Каждое мясо сохраняет свою питательность, поэтому из вяленого красного мяса получается красный <a href=\"handbook://item-jerkypowder-redmeat\">порошок из вяленого мяса</a> и так далее.<br><br><strong>3. Сварить пеммикан</strong><br>В котелке над костром соедините 1 <a href=\"handbook://item-fat-rendered\">топлёный жир</a> с 1–3 порошками из вяленого мяса, чтобы приготовить <strong>пеммикан</strong> — плотное, удобное для переноски белковое блюдо. Добавьте меру <a href=\"handbook://item-salt\">соли</a>, чтобы сделать <strong>солёный пеммикан</strong>, который хранится примерно вдвое дольше. Подавайте его в мисках или запечатайте в горшке, чтобы сохранить ещё дольше.",
+
+	"block-handbooktext-smokerack": "Щёлкните ПКМ по пустому <a href=\"handbook://block-firepit-lit\">костру</a> с этим, чтобы установить его, превратив костёр в коптильную решётку, на которую можно повесить до 8 кусков мяса. Освободите решётку и щёлкните ПКМ пустой рукой, чтобы забрать её. Смотрите <a href=\"handbook://craftinginfo-pemmican\">Руководство по пеммикану</a>.",
+	"block-handbooktext-smokingfirepit-*": "Костёр с установленной над ним коптильной решёткой. Подкладывайте дрова, зажгите его и повесьте до 8 кусков мяса, чтобы медленно закоптить их в вяленое мясо. Освободите решётку и щёлкните ПКМ пустой рукой, чтобы забрать решётку, оставив обычный костёр. Смотрите <a href=\"handbook://craftinginfo-pemmican\">Руководство по пеммикану</a>.",
+	"item-handbooktext-jerky-*": "Копчёное вяленое мясо, которое хранится месяцами. Ешьте его как есть, добавляйте в похлёбки или перемалывайте в <a href=\"handbook://item-jerkypowder-redmeat\">порошок из вяленого мяса</a> для приготовления пеммикана. Смотрите <a href=\"handbook://craftinginfo-pemmican\">Руководство по пеммикану</a>.",
+	"item-handbooktext-jerkypowder-*": "Перемолотое вяленое мясо, сохраняющее питательность исходного мяса. Сварите его с <a href=\"handbook://item-fat-rendered\">топлёным жиром</a> в котелке, чтобы приготовить пеммикан. Смотрите <a href=\"handbook://craftinginfo-pemmican\">Руководство по пеммикану</a>."
+}

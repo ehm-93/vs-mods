@@ -1,0 +1,66 @@
+{
+	"__comment": "Переклад згенеровано ШІ. Будь ласка, запропонуйте виправлення, якщо він поганий — автор не розмовляє цією мовою.",
+
+	"pemmican:modname": "Пемікан",
+	"pemmican:moddesc": "Коптіть м'ясо у в'ялене, перемелюйте його на порошок і витоплюйте з жиром у довготривалий пемікан.",
+
+	"item-jerky-redmeat": "В'ялене червоне м'ясо",
+	"item-jerky-bushmeat": "В'ялена дичина",
+	"item-jerky-fish": "В'ялена риба",
+	"item-jerky-poultry": "В'ялена птиця",
+	"item-jerkypowder-redmeat": "Порошок із в'яленого червоного м'яса",
+	"item-jerkypowder-bushmeat": "Порошок із в'яленої дичини",
+	"item-jerkypowder-fish": "Порошок із в'яленої риби",
+	"item-jerkypowder-poultry": "Порошок із в'яленої птиці",
+	"block-smokerack": "Коптильна решітка",
+	"block-smokingfirepit-*": "Коптильне багаття",
+
+	"pemmican": "Пемікан",
+	"saltedpemmican": "Солоний пемікан",
+
+	"game:meal-pemmican": "Пемікан",
+	"game:mealrecipe-name-pemmican": "Пемікан",
+	"game:mealrecipe-name-pemmican-in-container": "пемікан",
+	"game:meal-scant-pemmican": "Пемікан",
+	"game:meal-normal-pemmican": "Пемікан",
+	"game:meal-hearty-pemmican": "Пемікан",
+	"game:meal-hefty-pemmican": "Пемікан",
+
+	"game:meal-saltedpemmican": "Солоний пемікан",
+	"game:mealrecipe-name-saltedpemmican": "Солоний пемікан",
+	"game:mealrecipe-name-saltedpemmican-in-container": "солоний пемікан",
+	"game:meal-scant-saltedpemmican": "Солоний пемікан",
+	"game:meal-normal-saltedpemmican": "Солоний пемікан",
+	"game:meal-hearty-saltedpemmican": "Солоний пемікан",
+	"game:meal-hefty-saltedpemmican": "Солоний пемікан",
+
+	"game:meal-ingredient-stew-primary-jerky": "В'ялене м'ясо",
+	"game:meal-ingredient-stew-secondary-jerky": "В'ялене м'ясо",
+
+	"game:handbook-mealingredient-fat": "топлений жир",
+	"game:handbook-mealingredient-powder": "порошок із в'яленого м'яса",
+	"game:handbook-mealingredient-salt": "сіль",
+
+	"smokerack-empty": "Решітка порожня. ПКМ із м'ясом, щоб повісити шматок; порожньою рукою, щоб зняти решітку.",
+	"smokerack-contents": "На решітці {0} / {1} шматків м'яса.",
+	"smokerack-progress": "Копчення: {0}% готово.",
+	"smokerack-needfire": "Розпаліть вогонь, щоб продовжити копчення.",
+
+	"smokingfirepit-burning": "Коптить",
+	"smokingfirepit-smoldering": "Тліє",
+	"smokingfirepit-unlit": "Не запалене. Запаліть смолоскипом або кресалом.",
+	"smokingfirepit-nofuel": "Немає палива. ПКМ із дровами.",
+	"smokingfirepit-firepitbusy": "Звільніть багаття, перш ніж додавати коптильну решітку.",
+
+	"blockhelp-smokingfirepit-meat": "Повісити м'ясо на решітку",
+	"blockhelp-smokingfirepit-fuel": "Додати паливо",
+	"blockhelp-smokingfirepit-take": "Зняти м'ясо / прибрати решітку",
+
+	"guide-pemmican-title": "Механіка крафту: В'ялене м'ясо та пемікан",
+	"guide-pemmican-text": "<strong>Пемікан &amp; в'ялене м'ясо</strong><br><i>Похідна їжа, що зберігається місяцями.</i><br><br>Збереження м'яса складається з трьох кроків: закоптити його у <strong>в'ялене м'ясо</strong>, перемолоти в'ялене м'ясо на <strong>порошок</strong>, а потім зварити порошок із жиром у <strong>пемікан</strong>.<br><br><strong>1. Закоптити м'ясо у в'ялене</strong><br>Виготовте <a href=\"handbook://block-smokerack\">коптильну решітку</a> з 3 <a href=\"handbook://item-stick\">палиць</a>, <a href=\"handbook://item-rope\">мотузки</a> та ножа, потім клацніть ПКМ по порожньому <a href=\"handbook://block-firepit-lit\">багатті</a>, щоб встановити решітку над вогнем. Підкладайте <a href=\"handbook://item-firewood\">дрова</a> (по одному поліну за клік), запаліть смолоскипом або кресалом і клацайте ПКМ із сирим червоним м'ясом, дичиною, рибою чи птицею, щоб повісити до 8 шматків. Воно коптить на слабкому й повільному вогні, тож кожне поліно горить досить довго — підтримуйте вогонь, і приблизно через день копчення кожен шматок перетвориться на в'ялене м'ясо. Порожньою рукою знімайте шматки по одному; коли решітка спорожніє, ПКМ порожньою рукою зніме її, залишивши звичайне багаття. В'ялене м'ясо зберігається місяцями — набагато довше за свіже чи приготоване м'ясо — і його можна їсти як є або додавати до юшок.<br><br><strong>2. Перемолоти в'ялене м'ясо на порошок</strong><br>Перемеліть в'ялене м'ясо в <a href=\"handbook://block-quern\">ручному млині</a> або потовчіть його в сітці крафту будь-яким каменем. Кожне м'ясо зберігає свою поживність, тож із в'яленого червоного м'яса виходить червоний <a href=\"handbook://item-jerkypowder-redmeat\">порошок із в'яленого м'яса</a> і так далі.<br><br><strong>3. Зварити пемікан</strong><br>У казанку над багаттям поєднайте 1 <a href=\"handbook://item-fat-rendered\">топлений жир</a> з 1–3 порошками із в'яленого м'яса, щоб приготувати <strong>пемікан</strong> — щільну, зручну для перенесення білкову страву. Додайте міру <a href=\"handbook://item-salt\">солі</a>, щоб зробити <strong>солоний пемікан</strong>, який зберігається приблизно вдвічі довше. Подавайте його в мисках або запечатайте в горщику, щоб зберегти ще довше.",
+
+	"block-handbooktext-smokerack": "Клацніть ПКМ по порожньому <a href=\"handbook://block-firepit-lit\">багатті</a> з цим, щоб встановити його, перетворивши багаття на коптильну решітку, на яку можна повісити до 8 шматків м'яса. Звільніть решітку та клацніть ПКМ порожньою рукою, щоб забрати її. Дивіться <a href=\"handbook://craftinginfo-pemmican\">Посібник із пемікану</a>.",
+	"block-handbooktext-smokingfirepit-*": "Багаття зі встановленою над ним коптильною решіткою. Підкладайте дрова, запаліть його та повісьте до 8 шматків м'яса, щоб повільно закоптити їх у в'ялене м'ясо. Звільніть решітку та клацніть ПКМ порожньою рукою, щоб забрати решітку, залишивши звичайне багаття. Дивіться <a href=\"handbook://craftinginfo-pemmican\">Посібник із пемікану</a>.",
+	"item-handbooktext-jerky-*": "Копчене сушене м'ясо, що зберігається місяцями. Їжте його як є, додавайте до юшок або перемелюйте на <a href=\"handbook://item-jerkypowder-redmeat\">порошок із в'яленого м'яса</a> для приготування пемікану. Дивіться <a href=\"handbook://craftinginfo-pemmican\">Посібник із пемікану</a>.",
+	"item-handbooktext-jerkypowder-*": "Перемелене в'ялене м'ясо, що зберігає поживність вихідного м'яса. Зваріть його з <a href=\"handbook://item-fat-rendered\">топленим жиром</a> у казанку, щоб приготувати пемікан. Дивіться <a href=\"handbook://craftinginfo-pemmican\">Посібник із пемікану</a>."
+}

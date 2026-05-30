@@ -1,0 +1,66 @@
+{
+	"__comment": "Tradução gerada por IA. Por favor, contribua com correções se estiverem ruins – o autor não fala este idioma.",
+
+	"pemmican:modname": "Pemmican",
+	"pemmican:moddesc": "Defume a carne para fazer carne seca, moa-a em pó e derreta-a com gordura para fazer pemmican de longa duração.",
+
+	"item-jerky-redmeat": "Carne vermelha seca",
+	"item-jerky-bushmeat": "Carne de caça seca",
+	"item-jerky-fish": "Peixe seco",
+	"item-jerky-poultry": "Ave seca",
+	"item-jerkypowder-redmeat": "Pó de carne vermelha seca",
+	"item-jerkypowder-bushmeat": "Pó de carne de caça seca",
+	"item-jerkypowder-fish": "Pó de peixe seco",
+	"item-jerkypowder-poultry": "Pó de ave seca",
+	"block-smokerack": "Grelha de defumação",
+	"block-smokingfirepit-*": "Fogueira de defumação",
+
+	"pemmican": "Pemmican",
+	"saltedpemmican": "Pemmican salgado",
+
+	"game:meal-pemmican": "Pemmican",
+	"game:mealrecipe-name-pemmican": "Pemmican",
+	"game:mealrecipe-name-pemmican-in-container": "pemmican",
+	"game:meal-scant-pemmican": "Pemmican",
+	"game:meal-normal-pemmican": "Pemmican",
+	"game:meal-hearty-pemmican": "Pemmican",
+	"game:meal-hefty-pemmican": "Pemmican",
+
+	"game:meal-saltedpemmican": "Pemmican salgado",
+	"game:mealrecipe-name-saltedpemmican": "Pemmican salgado",
+	"game:mealrecipe-name-saltedpemmican-in-container": "pemmican salgado",
+	"game:meal-scant-saltedpemmican": "Pemmican salgado",
+	"game:meal-normal-saltedpemmican": "Pemmican salgado",
+	"game:meal-hearty-saltedpemmican": "Pemmican salgado",
+	"game:meal-hefty-saltedpemmican": "Pemmican salgado",
+
+	"game:meal-ingredient-stew-primary-jerky": "Carne seca",
+	"game:meal-ingredient-stew-secondary-jerky": "Carne seca",
+
+	"game:handbook-mealingredient-fat": "gordura derretida",
+	"game:handbook-mealingredient-powder": "pó de carne seca",
+	"game:handbook-mealingredient-salt": "sal",
+
+	"smokerack-empty": "Grelha vazia. Clique com o botão direito com carne para pendurar um pedaço; com a mão vazia para retirar a grelha.",
+	"smokerack-contents": "A grelha contém {0} / {1} pedaços de carne.",
+	"smokerack-progress": "Defumando: {0}% concluído.",
+	"smokerack-needfire": "Acenda o fogo para continuar a defumar.",
+
+	"smokingfirepit-burning": "Defumando",
+	"smokingfirepit-smoldering": "Em brasa",
+	"smokingfirepit-unlit": "Apagada. Acenda com uma tocha ou um acendedor.",
+	"smokingfirepit-nofuel": "Sem combustível. Clique com o botão direito com lenha.",
+	"smokingfirepit-firepitbusy": "Esvazie a fogueira antes de adicionar uma grelha de defumação.",
+
+	"blockhelp-smokingfirepit-meat": "Pendurar carne na grelha",
+	"blockhelp-smokingfirepit-fuel": "Adicionar combustível",
+	"blockhelp-smokingfirepit-take": "Retirar carne / remover grelha",
+
+	"guide-pemmican-title": "Mecânica de fabricação: Carne seca & pemmican",
+	"guide-pemmican-text": "<strong>Pemmican &amp; carne seca</strong><br><i>Comida de viagem que dura meses.</i><br><br>Conservar carne envolve três etapas: defumá-la em <strong>carne seca</strong>, moer a carne seca em <strong>pó</strong> e então cozinhar o pó com gordura para fazer <strong>pemmican</strong>.<br><br><strong>1. Defumar carne em carne seca</strong><br>Fabrique uma <a href=\"handbook://block-smokerack\">grelha de defumação</a> com 3 <a href=\"handbook://item-stick\">gravetos</a>, uma <a href=\"handbook://item-rope\">corda</a> e uma faca, depois clique com o botão direito em uma <a href=\"handbook://block-firepit-lit\">fogueira</a> vazia com ela para encaixar a grelha sobre o fogo. Alimente-a com <a href=\"handbook://item-firewood\">lenha</a> (uma tora por clique), acenda-a com uma tocha ou um acendedor, e clique com o botão direito com carne vermelha crua, carne de caça, peixe ou ave para pendurar até 8 pedaços. Ela defuma em fogo baixo e lento, então cada tora dura um bom tempo — mantenha-a acesa e, depois de cerca de um dia de defumação, cada pedaço vira carne seca. Com a mão vazia, retire os pedaços um a um; quando a grelha estiver vazia, um clique com o botão direito de mão vazia a remove e deixa uma fogueira comum. A carne seca dura meses — muito mais do que carne fresca ou cozida — e pode ser comida assim mesmo ou adicionada a ensopados.<br><br><strong>2. Moer carne seca em pó</strong><br>Moa a carne seca em um <a href=\"handbook://block-quern\">moinho manual</a>, ou triture-a na grade de fabricação com qualquer pedra solta. Cada carne mantém sua própria nutrição, então a carne vermelha seca rende <a href=\"handbook://item-jerkypowder-redmeat\">pó de carne vermelha seca</a>, e assim por diante.<br><br><strong>3. Cozinhar pemmican</strong><br>Em uma panela sobre uma fogueira, combine 1 <a href=\"handbook://item-fat-rendered\">gordura derretida</a> com 1 a 3 pós de carne seca para fazer <strong>pemmican</strong> — uma refeição proteica densa e portátil. Adicione uma medida de <a href=\"handbook://item-salt\">sal</a> para fazer <strong>pemmican salgado</strong>, que dura cerca do dobro do tempo. Sirva-o em tigelas, ou sele-o em um pote para conservá-lo por ainda mais tempo.",
+
+	"block-handbooktext-smokerack": "Clique com o botão direito em uma <a href=\"handbook://block-firepit-lit\">fogueira</a> vazia com isto para encaixá-lo, transformando a fogueira em uma grelha de defumação na qual você pode pendurar até 8 pedaços de carne. Esvazie a grelha e clique com o botão direito de mão vazia para retirá-la. Veja o <a href=\"handbook://craftinginfo-pemmican\">Guia do pemmican</a>.",
+	"block-handbooktext-smokingfirepit-*": "Uma fogueira com uma grelha de defumação encaixada sobre ela. Alimente-a com lenha, acenda-a e pendure até 8 pedaços de carne para defumá-los lentamente em carne seca. Esvazie a grelha e clique com o botão direito de mão vazia para retirar a grelha, deixando uma fogueira comum. Veja o <a href=\"handbook://craftinginfo-pemmican\">Guia do pemmican</a>.",
+	"item-handbooktext-jerky-*": "Carne defumada e seca que dura meses. Coma-a assim mesmo, adicione-a a ensopados, ou moa-a em <a href=\"handbook://item-jerkypowder-redmeat\">pó de carne seca</a> para fazer pemmican. Veja o <a href=\"handbook://craftinginfo-pemmican\">Guia do pemmican</a>.",
+	"item-handbooktext-jerkypowder-*": "Carne seca moída que mantém a nutrição da carne de origem. Cozinhe-a com <a href=\"handbook://item-fat-rendered\">gordura derretida</a> em uma panela para fazer pemmican. Veja o <a href=\"handbook://craftinginfo-pemmican\">Guia do pemmican</a>."
+}
