@@ -162,6 +162,12 @@ function Invoke-Package {
         # Copy modinfo.json
         Copy-Item (Join-Path $mod.Path "modinfo.json") $staging/
 
+        # Copy modicon.png if present (shown in the in-game mod manager)
+        $iconPath = Join-Path $mod.Path "modicon.png"
+        if (Test-Path $iconPath) {
+            Copy-Item $iconPath $staging/
+        }
+
         # Copy assets
         $assetsPath = Join-Path $mod.Path "assets"
         if (Test-Path $assetsPath) {

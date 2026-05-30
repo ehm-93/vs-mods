@@ -1,0 +1,31 @@
+{
+	"code": "smokerack",
+	"class": "SmokeRack",
+	"behaviors": [
+		{ "name": "Unplaceable" }
+	],
+	"shape": { "base": "pemmican:block/smokerack" },
+	"textures": {
+		"wood": { "base": "game:block/wood/debarked/aged" }
+	},
+	"creativeinventory": { "general": ["*"], "items": ["*"] },
+	"blockmaterial": "Wood",
+	"replaceable": 600,
+	"resistance": 1.5,
+	"lightAbsorption": 0,
+	"renderpass": "OpaqueNoCull",
+	"faceCullMode": "NeverCull",
+	"sounds": {
+		"place": "game:sounds/block/planks",
+		"break": "game:sounds/block/planks",
+		"walk": "game:sounds/walk/wood"
+	},
+	"collisionbox": { "x1": 0.12, "y1": 0, "z1": 0.12, "x2": 0.88, "y2": 0.69, "z2": 0.88 },
+	"selectionbox": { "x1": 0.12, "y1": 0, "z1": 0.12, "x2": 0.88, "y2": 0.69, "z2": 0.88 },
+	"sidesolid": { "all": false },
+	"sideopaque": { "all": false },
+	"guiTransform": {
+		"origin": { "x": 0.5, "y": 0.3, "z": 0.5 },
+		"scale": 1.8
+	}
+}

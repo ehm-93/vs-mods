@@ -1,0 +1,54 @@
+{
+	"pemmican:modname": "Pemmican",
+	"pemmican:moddesc": "Smoke meat into jerky, grind it to powder, and render it with fat into long-lasting pemmican.",
+
+	"item-jerky-redmeat": "Red meat jerky",
+	"item-jerky-bushmeat": "Bushmeat jerky",
+	"item-jerky-fish": "Fish jerky",
+	"item-jerky-poultry": "Poultry jerky",
+	"item-jerkypowder-redmeat": "Red meat jerky powder",
+	"item-jerkypowder-bushmeat": "Bushmeat jerky powder",
+	"item-jerkypowder-fish": "Fish jerky powder",
+	"item-jerkypowder-poultry": "Poultry jerky powder",
+	"block-smokerack": "Smoking rack",
+	"block-smokingfirepit-*": "Smoking firepit",
+
+	"pemmican": "Pemmican",
+	"mealrecipe-name-pemmican": "Pemmican",
+	"mealrecipe-name-pemmican-in-container": "pemmican",
+	"meal-scant-pemmican": "Scant pemmican",
+	"meal-normal-pemmican": "Pemmican",
+	"meal-hearty-pemmican": "Hearty pemmican",
+	"meal-hefty-pemmican": "Hefty pemmican",
+
+	"saltedpemmican": "Salted pemmican",
+	"mealrecipe-name-saltedpemmican": "Salted pemmican",
+	"mealrecipe-name-saltedpemmican-in-container": "salted pemmican",
+	"meal-scant-saltedpemmican": "Scant salted pemmican",
+	"meal-normal-saltedpemmican": "Salted pemmican",
+	"meal-hearty-saltedpemmican": "Hearty salted pemmican",
+	"meal-hefty-saltedpemmican": "Hefty salted pemmican",
+
+	"smokerack-empty": "Rack empty. Right-click with meat to hang a piece; empty-handed to take the rack back.",
+	"smokerack-contents": "Rack holding {0} / {1} pieces of meat.",
+	"smokerack-progress": "Smoking: {0}% done.",
+	"smokerack-needfire": "Light the fire to keep smoking.",
+
+	"smokingfirepit-burning": "Smoking",
+	"smokingfirepit-smoldering": "Smoldering",
+	"smokingfirepit-unlit": "Unlit. Light it with a torch or firestarter.",
+	"smokingfirepit-nofuel": "No fuel. Right-click with firewood.",
+	"smokingfirepit-firepitbusy": "Empty the firepit before adding a smoking rack.",
+
+	"blockhelp-smokingfirepit-meat": "Hang meat on the rack",
+	"blockhelp-smokingfirepit-fuel": "Add fuel",
+	"blockhelp-smokingfirepit-take": "Take meat off / remove rack",
+
+	"guide-pemmican-title": "Crafting Mechanic: Jerky & pemmican",
+	"guide-pemmican-text": "<strong>Pemmican &amp; jerky</strong><br><i>Trail food that keeps for months.</i><br><br>Preserving meat takes three steps: smoke it into <strong>jerky</strong>, grind the jerky into <strong>powder</strong>, then cook the powder with fat into <strong>pemmican</strong>.<br><br><strong>1. Smoke meat into jerky</strong><br>Craft a <a href=\"handbook://block-smokerack\">smoking rack</a> from 3 <a href=\"handbook://item-stick\">sticks</a>, a <a href=\"handbook://item-rope\">rope</a> and a knife, then right-click an empty <a href=\"handbook://block-firepit-lit\">firepit</a> with it to fit the rack over the fire. Feed it <a href=\"handbook://item-firewood\">firewood</a> (one log per click), light it with a torch or firestarter, and right-click with raw red meat, bushmeat, fish or poultry to hang up to 8 pieces. It smokes low and slow, so each log lasts a good while — keep it lit and, after about a day of smoking, every piece turns to jerky. Empty-handed, take pieces off one at a time; once the rack is empty, an empty-handed right-click pops it back off and leaves a plain firepit. Jerky keeps for months — far longer than fresh or cooked meat — and can be eaten as-is or added to stews.<br><br><strong>2. Grind jerky into powder</strong><br>Grind jerky in a <a href=\"handbook://block-quern\">quern</a>, or crush it in the crafting grid with any loose stone. Each meat keeps its own nutrition, so red meat jerky yields red meat <a href=\"handbook://item-jerkypowder-redmeat\">jerky powder</a>, and so on.<br><br><strong>3. Cook pemmican</strong><br>In a cooking pot over a firepit, combine 1 <a href=\"handbook://item-fat-rendered\">rendered fat</a> with 1 to 3 jerky powder to make <strong>pemmican</strong> — a dense, portable protein meal. Add a measure of <a href=\"handbook://item-salt\">salt</a> to make <strong>salted pemmican</strong>, which keeps roughly twice as long. Serve it into bowls, or seal it in a crock to preserve it even further.",
+
+	"block-handbooktext-smokerack": "Right-click an empty <a href=\"handbook://block-firepit-lit\">firepit</a> with this to fit it on, turning the firepit into a smoking rack you can hang up to 8 pieces of meat on. Empty the rack and right-click it empty-handed to take it back. See the <a href=\"handbook://craftinginfo-pemmican\">Pemmican guide</a>.",
+	"block-handbooktext-smokingfirepit-*": "A firepit with a smoking rack fitted over it. Feed it firewood, light it, and hang up to 8 pieces of meat to slow-smoke them into jerky. Empty the rack and right-click empty-handed to take the rack back, leaving a plain firepit. See the <a href=\"handbook://craftinginfo-pemmican\">Pemmican guide</a>.",
+	"item-handbooktext-jerky-*": "Smoked, dried meat that keeps for months. Eat it as-is, add it to stews, or grind it into <a href=\"handbook://item-jerkypowder-redmeat\">jerky powder</a> for making pemmican. See the <a href=\"handbook://craftinginfo-pemmican\">Pemmican guide</a>.",
+	"item-handbooktext-jerkypowder-*": "Ground jerky that keeps the nutrition of its source meat. Cook it with <a href=\"handbook://item-fat-rendered\">rendered fat</a> in a pot to make pemmican. See the <a href=\"handbook://craftinginfo-pemmican\">Pemmican guide</a>."
+}

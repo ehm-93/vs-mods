@@ -1,0 +1,113 @@
+{
+	"code": "smokingfirepit",
+	"class": "SmokingFirepit",
+	"entityClass": "SmokingFirepit",
+	"behaviors": [
+		{ "name": "Ignitable" },
+		{ "name": "HeatSource" }
+	],
+	"variantgroups": [
+		{ "code": "burnstate", "states": ["extinct", "lit", "cold"] }
+	],
+	"renderpass": "OpaqueNoCull",
+	"faceCullMode": "NeverCull",
+	"shapeByType": {
+		"*-extinct": { "base": "game:block/wood/firepit/extinct-normal" },
+		"*-lit": { "base": "game:block/wood/firepit/lit-normal" },
+		"*-cold": { "base": "game:block/wood/firepit/cold-normal" }
+	},
+	"textures": {
+		"ceramic": { "base": "game:block/clay/ceramic" },
+		"tinder": { "base": "game:block/hay/normal-side" },
+		"log": { "base": "game:block/wood/firepit/log" },
+		"birch": { "base": "game:block/wood/debarked/birch" },
+		"charred": { "base": "game:block/wood/charred" },
+		"ashes": { "base": "game:block/wood/firepit/ground" },
+		"aged": { "base": "game:block/wood/debarked/aged" },
+		"fire": { "base": "game:block/wood/firepit/fire" },
+		"walnut-h": { "base": "game:block/wood/bark/walnut-h" },
+		"ember": { "base": "game:block/coal/ember" }
+	},
+	"blockmaterial": "Wood",
+	"lightAbsorption": 0,
+	"lightHsvByType": {
+		"smokingfirepit-extinct": [7, 7, 3],
+		"smokingfirepit-lit": [7, 7, 16]
+	},
+	"particlePropertiesByType": {
+		"smokingfirepit-extinct": [
+			{
+				"hsvaColor": [{ "avg": 0, "var": 0 }, { "avg": 0, "var": 0 }, { "avg": 70, "var": 30 }, { "avg": 220, "var": 50 }],
+				"opacityEvolve": { "transform": "quadratic", "factor": -16 },
+				"gravityEffect": { "avg": 0, "var": 0 },
+				"posOffset": [{ "avg": 0, "var": 0.2 }, { "avg": -0.9, "var": 0 }, { "avg": 0, "var": 0.2 }],
+				"velocity": [{ "avg": 0, "var": 0.05 }, { "avg": 0.1, "var": 0.05 }, { "avg": 0, "var": 0.05 }],
+				"quantity": { "avg": 0.05 },
+				"size": { "avg": 0.3, "var": 0.05 },
+				"sizeEvolve": { "transform": "linear", "factor": 1.5 },
+				"particleModel": "Quad",
+				"windAffectednes": 0.7
+			}
+		],
+		"smokingfirepit-lit": [
+			{
+				"hsvaColor": [{ "avg": 30, "var": 20 }, { "avg": 255, "var": 50 }, { "avg": 255, "var": 50 }, { "avg": 255, "var": 0 }],
+				"gravityEffect": { "dist": "invexp", "avg": -0.1, "var": 0.4 },
+				"posOffset": [{ "avg": 0, "var": 0.2 }, { "avg": -0.9, "var": 0 }, { "avg": 0, "var": 0.2 }],
+				"velocity": [{ "avg": 0, "var": 0.15 }, { "avg": 0.5, "var": 0.1 }, { "avg": 0, "var": 0.15 }],
+				"quantity": { "avg": 0.006 },
+				"size": { "avg": 0.4, "var": 0 },
+				"sizeEvolve": { "transform": "quadratic", "factor": -0.7 },
+				"lifeLength": { "avg": 1.5 },
+				"vertexFlags": 128,
+				"windAffectednes": 0.2
+			},
+			{
+				"hsvaColor": [{ "avg": 0, "var": 0 }, { "avg": 0, "var": 0 }, { "avg": 70, "var": 30 }, { "avg": 220, "var": 50 }],
+				"opacityEvolve": { "transform": "linear", "factor": -255 },
+				"gravityEffect": { "avg": 0, "var": 0 },
+				"posOffset": [{ "avg": 0, "var": 0.2 }, { "avg": -0.9, "var": 0 }, { "avg": 0, "var": 0.2 }],
+				"velocity": [{ "avg": 0, "var": 0.025 }, { "avg": 0.2, "var": 0.05 }, { "avg": 0, "var": 0.025 }],
+				"quantity": { "avg": 0.3 },
+				"size": { "avg": 0.3, "var": 0.05 },
+				"sizeEvolve": { "transform": "linear", "factor": 1.5 },
+				"particleModel": "Quad",
+				"lifeLength": { "avg": 18 },
+				"selfPropelled": true,
+				"windAffectednes": 0.7
+			},
+			{
+				"hsvaColor": [{ "avg": 20, "var": 20 }, { "avg": 255, "var": 50 }, { "avg": 255, "var": 50 }, { "avg": 255, "var": 0 }],
+				"opacityEvolve": { "transform": "quadratic", "factor": -16 },
+				"gravityEffect": { "avg": 0, "var": 0 },
+				"posOffset": [{ "avg": 0, "var": 0.1 }, { "avg": -0.8, "var": 0 }, { "avg": 0, "var": 0.1 }],
+				"velocity": [{ "avg": 0, "var": 0.1 }, { "avg": 0.125, "var": 0.05 }, { "avg": 0, "var": 0.1 }],
+				"quantity": { "avg": 0.15 },
+				"size": { "avg": 0.35, "var": 0.05 },
+				"lifeLength": { "avg": 0.25 },
+				"sizeEvolve": { "transform": "linear", "factor": 0.25 },
+				"particleModel": "Quad",
+				"vertexFlags": 128,
+				"windAffectednes": 0.5
+			}
+		]
+	},
+	"sidesolid": { "all": false },
+	"sideopaque": { "all": false },
+	"replaceable": 10,
+	"resistance": 1.5,
+	"collisionbox": null,
+	"selectionbox": { "x1": 0.0625, "y1": 0, "z1": 0.0625, "x2": 0.9375, "y2": 1, "z2": 0.9375 },
+	"creativeinventory": { "general": ["*-extinct"] },
+	"dropsByType": { "*": [] },
+	"materialDensity": 600,
+	"sounds": {
+		"place": "game:sounds/block/planks",
+		"hit": "game:sounds/block/planks",
+		"break": "game:sounds/block/planks"
+	},
+	"guiTransform": {
+		"origin": { "x": 0.5, "y": 0.25, "z": 0.5 },
+		"scale": 1.4
+	}
+}

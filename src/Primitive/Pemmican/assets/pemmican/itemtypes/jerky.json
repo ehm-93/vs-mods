@@ -1,0 +1,80 @@
+{
+	"code": "jerky",
+	"maxstacksize": 64,
+	"variantgroups": [
+		{ "code": "type", "states": ["redmeat", "bushmeat", "fish", "poultry"] }
+	],
+	"behaviors": [
+		{ "name": "GroundStorable", "properties": { "layout": "Quadrants", "collisionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.125, "z2": 1 } } }
+	],
+	"attributes": {
+		"foodTags": ["meat"],
+		"nutritionPropsWhenInMealByType": {
+			"*-redmeat": { "satiety": 420, "foodcategory": "Protein" },
+			"*-bushmeat": { "satiety": 180, "foodcategory": "Protein" },
+			"*-fish": { "satiety": 375, "foodcategory": "Protein" },
+			"*-poultry": { "satiety": 375, "foodcategory": "Protein" }
+		},
+		"canSealCrock": true,
+		"handbook": { "include": true, "groupBy": ["jerky-*"] }
+	},
+	"shapeByType": {
+		"*-redmeat": { "base": "game:item/food/meat/red" },
+		"*-bushmeat": { "base": "game:item/food/meat/bushmeat" },
+		"*-fish": { "base": "game:item/food/meat/fish" },
+		"*-poultry": { "base": "game:item/food/meat/poultry" }
+	},
+	"texturesByType": {
+		"*-redmeat": { "meat": { "base": "pemmican:item/jerky-redmeat" } },
+		"*-bushmeat": { "meat": { "base": "pemmican:item/jerky-bushmeat" } },
+		"*-fish": { "raw": { "base": "pemmican:item/jerky-fish" } },
+		"*-poultry": { "meat": { "base": "pemmican:item/jerky-poultry" } }
+	},
+	"creativeinventory": { "general": ["*"], "items": ["*"] },
+	"nutritionPropsByType": {
+		"*-redmeat": { "satiety": 170, "health": 0, "foodcategory": "Protein" },
+		"*-bushmeat": { "satiety": 75, "health": 0, "foodcategory": "Protein" },
+		"*-fish": { "satiety": 65, "health": 0, "foodcategory": "Protein" },
+		"*-poultry": { "satiety": 130, "health": 0, "foodcategory": "Protein" }
+	},
+	"transitionableProps": [
+		{
+			"type": "Perish",
+			"freshHours": { "avg": 2160 },
+			"transitionHours": { "avg": 720 },
+			"transitionedStack": { "type": "item", "code": "game:rot" },
+			"transitionRatio": 1
+		}
+	],
+	"grindingProps": { "groundStack": { "type": "item", "code": "pemmican:jerkypowder-{type}" } },
+	"materialDensity": 600,
+	"guiTransformByType": {
+		"*-redmeat": {
+			"rotate": false,
+			"translation": { "x": 0.5, "y": 0, "z": 0 },
+			"rotation": { "x": 171, "y": -122, "z": 33 },
+			"origin": { "x": 0.4, "y": 0.08, "z": 0.5 },
+			"scale": 4.72
+		},
+		"*-bushmeat": {
+			"rotate": false,
+			"translation": { "x": 0, "y": 0, "z": 0 },
+			"rotation": { "x": 171, "y": -122, "z": 33 },
+			"origin": { "x": 0.5, "y": 0.04, "z": 0.53 },
+			"scale": 4.7199
+		},
+		"*-fish": {
+			"translation": { "x": 0, "y": 0, "z": 0 },
+			"rotation": { "x": -22.5, "y": -44, "z": -158 },
+			"origin": { "x": 0.5, "y": 0, "z": 0.5 },
+			"scale": 2.81
+		},
+		"*-poultry": {
+			"rotate": false,
+			"translation": { "x": 0, "y": 0, "z": 0 },
+			"rotation": { "x": 171, "y": -122, "z": 33 },
+			"origin": { "x": 0.5, "y": 0.04, "z": 0.53 },
+			"scale": 4.7199
+		}
+	}
+}

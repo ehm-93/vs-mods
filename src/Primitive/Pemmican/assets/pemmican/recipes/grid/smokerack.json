@@ -1,0 +1,12 @@
+{
+	"ingredientPattern": "SSR,S_K",
+	"width": 3,
+	"height": 2,
+	"shapeless": true,
+	"ingredients": {
+		"S": { "type": "item", "code": "game:stick" },
+		"R": { "type": "item", "code": "game:rope" },
+		"K": { "type": "item", "tags": ["tool-knife"], "isTool": true }
+	},
+	"output": { "type": "block", "code": "pemmican:smokerack", "quantity": 1 }
+}

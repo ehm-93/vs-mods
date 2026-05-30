@@ -1,0 +1,13 @@
+{
+  "type": "code",
+  "modid": "pemmican",
+  "name": "Pemmican",
+  "description": "Preserve meat the old way. Build a smoking rack onto a firepit to slow-smoke meat into jerky, grind jerky to powder, and mix it with rendered fat into long-lasting pemmican.",
+  "authors": [
+    "ehm-93"
+  ],
+  "version": "0.1.0",
+  "dependencies": {
+    "game": "1.22.0"
+  }
+}
