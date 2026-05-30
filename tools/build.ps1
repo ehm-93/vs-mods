@@ -18,10 +18,15 @@
 .PARAMETER Configuration
     Build configuration: Debug or Release. Default: Release
 
+.PARAMETER Force
+    Re-fetch optional dependencies even if already present (re-downloads cached zips
+    and re-extracts). Without this, deps are fetched only when missing.
+
 .EXAMPLE
     ./build.ps1 list
     ./build.ps1 build
     ./build.ps1 build -Domain farming
+    ./build.ps1 build -Force
     ./build.ps1 package -Domain farming -Mod weeds
     ./build.ps1 install -Domain primitive -Mod thermal-fracturing
 #>
@@ -33,7 +38,8 @@ param(
 
     [string]$Domain = "",
     [string]$Mod = "",
-    [string]$Configuration = "Release"
+    [string]$Configuration = "Release",
+    [switch]$Force
 )
 
 $ErrorActionPreference = "Stop"
@@ -82,6 +88,43 @@ function Get-ModInfo($domainName, $modName) {
     }
 }
 
+# Fetch a mod's optional dependencies if it ships a deps/fetch.ps1.
+# Skips when deps are already extracted (fast, offline) unless -Force is set.
+function Invoke-FetchDeps($mod) {
+    $depsDir = Join-Path $mod.Path "deps"
+    $fetchScript = Join-Path $depsDir "fetch.ps1"
+    if (-not (Test-Path $fetchScript)) {
+        return  # mod has no optional dependencies
+    }
+
+    # "Already fetched" = at least one extracted dep dir exists. fetch.ps1 unpacks
+    # each dep to deps/<dependency-modid>/ and caches zips in deps/.cache/, so any
+    # subdirectory other than .cache means a prior fetch succeeded. A clean checkout
+    # has none (deps/ is gitignored apart from fetch.ps1 and .gitignore).
+    if (-not $Force) {
+        $extracted = Get-ChildItem $depsDir -Directory -ErrorAction SilentlyContinue |
+            Where-Object { $_.Name -ne ".cache" }
+        if ($extracted) {
+            # fetch.ps1 re-extracts every run, so the dep dirs are newer than the
+            # script after a successful fetch. If fetch.ps1 is newer, its dep list
+            # was edited (version bump / added dep) and we re-fetch; otherwise skip.
+            $newestDep = ($extracted | Sort-Object LastWriteTime -Descending |
+                Select-Object -First 1).LastWriteTime
+            if ((Get-Item $fetchScript).LastWriteTime -le $newestDep) {
+                return  # deps present and up to date
+            }
+        }
+    }
+
+    Write-Host "    Fetching dependencies..." -ForegroundColor Gray
+    try {
+        if ($Force) { & $fetchScript -Force } else { & $fetchScript }
+    }
+    catch {
+        throw "Dependency fetch failed for $($mod.Domain)/$($mod.Name): $($_.Exception.Message)"
+    }
+}
+
 # Determine what to build based on filters
 function Get-BuildTargets {
     $targets = @()
@@ -121,6 +164,7 @@ function Invoke-Build {
 
     foreach ($mod in $codeTargets) {
         Write-Host "  $($mod.Domain)/$($mod.Name)" -ForegroundColor Gray
+        Invoke-FetchDeps $mod
         dotnet build $mod.CsprojPath -c $Configuration --nologo -v q
         if ($LASTEXITCODE -ne 0) {
             throw "Build failed for $($mod.Domain)/$($mod.Name)"
