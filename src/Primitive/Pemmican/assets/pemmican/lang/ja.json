@@ -44,6 +44,7 @@
 	"game:handbook-mealingredient-fat": "精製脂",
 	"game:handbook-mealingredient-powder": "ジャーキーの粉",
 	"game:handbook-mealingredient-salt": "塩",
+	"game:handbook-mealingredient-fruit": "ドライフルーツ",
 
 	"smokerack-empty": "ラックは空です。",
 	"smokerack-contents": "ラックに肉が {0} / {1} 切れあります。",

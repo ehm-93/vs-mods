@@ -1,0 +1,35 @@
+[
+	{
+		"__comment": "Expanded Foods compat (gated): allow EF dried fruit as an optional ingredient in pemmican (the traditional berry addition). Accepts both dryfruit-* (fully preserved) and dehydratedfruit-* (the perishable intermediate), matching EF's own pemmican. minQuantity 0 keeps it optional; it shares the meat-stew shapeElement+textureMapping so it melds into the pemmican blob (no separate mesh), and its Fruit nutrition rounds out the meal.",
+		"file": "pemmican:recipes/cooking/pemmican.json",
+		"op": "add",
+		"path": "/ingredients/-",
+		"value": {
+			"code": "fruit-base",
+			"validStacks": [
+				{ "type": "item", "code": "expandedfoods:dryfruit-*", "shapeElement": "bowl/meat stew/*", "textureMapping": ["meat", "group6"] },
+				{ "type": "item", "code": "expandedfoods:dehydratedfruit-*", "shapeElement": "bowl/meat stew/*", "textureMapping": ["meat", "group6"] }
+			],
+			"minQuantity": 0,
+			"maxQuantity": 1,
+			"typeName": "fruit"
+		},
+		"dependsOn": [ { "modid": "expandedfoods" } ]
+	},
+	{
+		"file": "pemmican:recipes/cooking/saltedpemmican.json",
+		"op": "add",
+		"path": "/ingredients/-",
+		"value": {
+			"code": "fruit-base",
+			"validStacks": [
+				{ "type": "item", "code": "expandedfoods:dryfruit-*", "shapeElement": "bowl/meat stew/*", "textureMapping": ["meat", "group6"] },
+				{ "type": "item", "code": "expandedfoods:dehydratedfruit-*", "shapeElement": "bowl/meat stew/*", "textureMapping": ["meat", "group6"] }
+			],
+			"minQuantity": 0,
+			"maxQuantity": 1,
+			"typeName": "fruit"
+		},
+		"dependsOn": [ { "modid": "expandedfoods" } ]
+	}
+]

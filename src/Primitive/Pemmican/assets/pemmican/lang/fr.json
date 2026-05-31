@@ -44,6 +44,7 @@
 	"game:handbook-mealingredient-fat": "graisse fondue",
 	"game:handbook-mealingredient-powder": "poudre de viande séchée",
 	"game:handbook-mealingredient-salt": "sel",
+	"game:handbook-mealingredient-fruit": "fruits séchés",
 
 	"smokerack-empty": "Grille vide.",
 	"smokerack-contents": "La grille contient {0} / {1} morceaux de viande.",

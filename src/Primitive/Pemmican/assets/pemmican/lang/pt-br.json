@@ -44,6 +44,7 @@
 	"game:handbook-mealingredient-fat": "gordura derretida",
 	"game:handbook-mealingredient-powder": "pó de carne seca",
 	"game:handbook-mealingredient-salt": "sal",
+	"game:handbook-mealingredient-fruit": "frutas secas",
 
 	"smokerack-empty": "Grelha vazia.",
 	"smokerack-contents": "A grelha contém {0} / {1} pedaços de carne.",

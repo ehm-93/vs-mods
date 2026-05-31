@@ -44,6 +44,7 @@
 	"game:handbook-mealingredient-fat": "ausgelassenes Fett",
 	"game:handbook-mealingredient-powder": "Dörrfleischpulver",
 	"game:handbook-mealingredient-salt": "Salz",
+	"game:handbook-mealingredient-fruit": "Trockenfrüchte",
 
 	"smokerack-empty": "Gestell leer.",
 	"smokerack-contents": "Gestell enthält {0} / {1} Stück Fleisch.",

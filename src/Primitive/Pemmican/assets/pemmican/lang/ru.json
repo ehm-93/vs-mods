@@ -44,6 +44,7 @@
 	"game:handbook-mealingredient-fat": "топлёный жир",
 	"game:handbook-mealingredient-powder": "порошок из вяленого мяса",
 	"game:handbook-mealingredient-salt": "соль",
+	"game:handbook-mealingredient-fruit": "сухофрукты",
 
 	"smokerack-empty": "Решётка пуста.",
 	"smokerack-contents": "На решётке {0} / {1} кусков мяса.",

@@ -45,6 +45,7 @@
 	"game:handbook-mealingredient-fat": "rendered fat",
 	"game:handbook-mealingredient-powder": "jerky powder",
 	"game:handbook-mealingredient-salt": "salt",
+	"game:handbook-mealingredient-fruit": "dried fruit",
 
 	"smokerack-empty": "Rack empty.",
 	"smokerack-contents": "Rack holding {0} / {1} pieces of meat.",
