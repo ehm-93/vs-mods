@@ -18,6 +18,7 @@ public class PemmicanModSystem : ModSystem
         api.RegisterBlockClass("SmokeRack", typeof(BlockSmokeRack));
         api.RegisterBlockClass("SmokingFirepit", typeof(BlockSmokingFirepit));
         api.RegisterBlockEntityClass("SmokingFirepit", typeof(BlockEntitySmokingFirepit));
+        api.RegisterBlockEntityClass("DryingRack", typeof(BlockEntityDryingRack));
 
         if (!Harmony.HasAnyPatches(ModId))
         {
@@ -26,16 +27,18 @@ public class PemmicanModSystem : ModSystem
         }
     }
 
-    // Load the data-driven drying/smoking recipes from assets/<domain>/recipes/drying/*.json so the rack's
-    // input->output mappings live in JSON, not code. Runs on both sides (deterministic asset load), so
-    // client and server agree without any network sync. Disabled recipes and those whose dependsOn is
-    // unsatisfied are dropped here.
+    // Load the data-driven drying/smoking recipes from assets/<domain>/config/drying/*.json so the rack's
+    // input->output mappings live in JSON, not code. These live under config/ (a Universal asset category)
+    // rather than recipes/ — recipes/ is server-only (EnumAppSide.Server), so loading there leaves the
+    // CLIENT with zero recipes, making IsRackable always false client-side and breaking the hang
+    // interaction. config/ loads on both sides, so client and server agree with no network sync. Disabled
+    // recipes and those whose dependsOn is unsatisfied are dropped here.
     public override void AssetsFinalize(ICoreAPI api)
     {
         base.AssetsFinalize(api);
         dryingRecipes.Clear();
 
-        foreach (IAsset asset in api.Assets.GetMany("recipes/drying/", null, true))
+        foreach (IAsset asset in api.Assets.GetMany("config/drying/", null, true))
         {
             DryingRecipe[]? entries;
             try { entries = asset.ToObject<DryingRecipe[]>(); }
@@ -70,7 +73,7 @@ public class PemmicanModSystem : ModSystem
         {
             AssetLocation? outCode = r.OutputFor(code);
             if (outCode != null && world.GetItem(outCode) is Item item)
-                return new DryingResult(item, r.Output.Quantity, r.Hours);
+                return new DryingResult(item, r.Output.Quantity, r.Hours, r.RequiresFire);
         }
         return null;
     }

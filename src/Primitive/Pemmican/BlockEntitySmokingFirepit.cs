@@ -1,22 +1,20 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
-using Vintagestory.API.Util;
 using Vintagestory.GameContent;
 
 namespace Ehm93.VS.Primitive.Pemmican;
 
 // A firepit with a smoking rack baked into the same block. It keeps a stripped-down copy of the vanilla
-// firepit's fuel/ignite/burn loop (no cooking pot, no input/output smelting, no GUI) plus an 8-slot rack
-// that smokes meat into jerky while the fire is lit. Slot 0 is fuel; slots 1..8 are the rack.
-public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionSource
+// firepit's fuel/ignite/burn loop (no cooking pot, no input/output smelting, no GUI) and, while the fire
+// is lit, smokes the rack contents into their dried output as a single batch. The shared rack inventory,
+// hang/take, drying lookup and item rendering live in BlockEntityRack. Slot 0 is fuel; slots 1..8 rack.
+public class BlockEntitySmokingFirepit : BlockEntityRack, IHeatSource
 {
-    public const int RackSlots = 8;
     public const double SmokeHoursRequired = 24.0;
     // In-game hours one fuel item burns for, per second of its vanilla burnDuration. Firewood
     // (burnDuration 24) -> ~4 in-game hours, so a full 24h batch needs ~6 logs (a low, slow, smoky fire).
@@ -39,10 +37,6 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
 
     // --- rack smoking state ---
     protected double smokeHours;
-    protected double lastCalendarHours = -1;
-
-    protected InventoryGeneric inventory;
-    public InventoryBase Inventory => inventory;
 
     public ItemSlot FuelSlot => inventory[0];
     public ItemStack? FuelStack
@@ -53,33 +47,27 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
 
     public int FuelCount => FuelStack?.StackSize ?? 0;
 
-    int saveTickCounter;
     MeshData? rackMesh;
-    ICoreClientAPI? capi;
-    CollectibleObject? nowTesselatingObj;
-    Shape? nowTesselatingShape;
-
-    // On-rack display layout (block-local 0..1). The rack frame is raised so it sits above the fire.
     const float RackYOffset = 0.0f;
-    const float ItemScale = 0.7f;
-    const float ItemY = 0.98f;
-    // 8 meat positions in a 3 / 2 / 3 arrangement (back row, middle row, front row).
-    static readonly float[] PosX = { 0.2f, 0.5f, 0.8f, 0.35f, 0.65f, 0.2f, 0.5f, 0.8f };
-    static readonly float[] PosZ = { 0.2f, 0.2f, 0.2f, 0.5f, 0.5f, 0.8f, 0.8f, 0.8f };
 
-    public BlockEntitySmokingFirepit()
+    // The standalone rack shape carries extra elements used only for connecting to adjacent racks (seam
+    // stubs, rail/rung bridges, the centred seam rail/rung, the moved lashings, and the upward post
+    // extensions). A firepit-mounted rack is always a single, unconnected rack, so we tesselate ONLY this
+    // base "lone rack" element set — otherwise those connect-only pieces render as bars poking out in every
+    // direction and the posts shoot up out of the top of the firepit.
+    static readonly string[] LoneRackElements =
     {
-        inventory = new InventoryGeneric(RackSlots + 1, null, null, null);
-    }
+        "bar-front", "bar-mid", "bar-back",
+        "rail-left", "rail-right",
+        "lash-fl", "lash-ml", "lash-bl", "lash-fr", "lash-mr", "lash-br",
+        "post-nw", "post-ne", "post-sw", "post-se",
+    };
+
+    protected override string InventoryId => "smokingfirepit";
 
     public override void Initialize(ICoreAPI api)
     {
         base.Initialize(api);
-        inventory.LateInitialize($"smokingfirepit-{Pos.X}/{Pos.Y}/{Pos.Z}", api);
-        capi = api as ICoreClientAPI;
-
-        if (lastCalendarHours < 0) lastCalendarHours = api.World.Calendar.TotalHours;
-
         if (api.Side == EnumAppSide.Server)
         {
             RegisterGameTickListener(OnBurnTick, 100);
@@ -155,7 +143,8 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
         UpdateBurnState(now);
 
         if (dirty) MarkDirty(true);
-        else if (++saveTickCounter >= 150) { saveTickCounter = 0; MarkDirty(); }
+        // Resync a few times a minute while smoking so the progress tooltip stays live (~3s at 100ms ticks).
+        else if (++saveTickCounter >= 30) { saveTickCounter = 0; MarkDirty(); }
     }
 
     void UpdateBurnState(double now)
@@ -205,20 +194,7 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
         return IsBurning ? 10f : (IsSmoldering ? 0.25f : 0f);
     }
 
-    // ---------------- rack / smoking ----------------
-
-    // What a hung item turns into, and how long it takes. The recipes are data-driven
-    // (assets/<domain>/recipes/drying/*.json); we just delegate to the loaded set. Returns null if the
-    // item can't go on the rack, so we never hang something that would never convert.
-    private PemmicanModSystem? rackRecipes;
-    public DryingResult? Match(ItemStack? stack)
-    {
-        if (Api == null) return null;
-        rackRecipes ??= Api.ModLoader.GetModSystem<PemmicanModSystem>();
-        return rackRecipes?.Match(Api.World, stack);
-    }
-
-    public bool IsRackable(ItemStack? stack) => Match(stack) != null;
+    // ---------------- smoking ----------------
 
     // The batch finishes when smoking reaches the slowest hung piece's required hours.
     double RequiredHours()
@@ -229,25 +205,24 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
         return hours > 0 ? hours : SmokeHoursRequired;
     }
 
+    void ConvertContents()
+    {
+        for (int i = 1; i <= RackSlots; i++)
+        {
+            ItemSlot slot = inventory[i];
+            if (Match(slot.Itemstack) is not DryingResult m) continue;
+
+            slot.Itemstack = new ItemStack(m.Output, m.Quantity);
+            slot.MarkDirty();
+        }
+    }
+
     public bool IsFuelItem(ItemStack? stack)
     {
         if (stack?.Collectible?.Code == null) return false;
         if (Array.IndexOf(AcceptedFuels, stack.Collectible.Code.FirstCodePart()) < 0) return false;
         CombustibleProperties? props = stack.Collectible.GetCombustibleProperties(Api.World, stack, null);
         return props != null && props.BurnTemperature > 0;
-    }
-
-    public int CountMeat()
-    {
-        int n = 0;
-        for (int i = 1; i <= RackSlots; i++) if (!inventory[i].Empty) n++;
-        return n;
-    }
-
-    bool HasRackable()
-    {
-        for (int i = 1; i <= RackSlots; i++) if (IsRackable(inventory[i].Itemstack)) return true;
-        return false;
     }
 
     public bool TryAddFuel(ItemSlot handSlot)
@@ -263,69 +238,6 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
         return false;
     }
 
-    // Hang meat from the held stack onto the rack: one piece, or — when `all` — as many as fit.
-    public bool TryAddMeat(ItemSlot handSlot, bool all = false)
-    {
-        if (handSlot.Empty || !IsRackable(handSlot.Itemstack)) return false;
-
-        bool added = false;
-        for (int i = 1; i <= RackSlots; i++)
-        {
-            if (!inventory[i].Empty) continue;
-            if (handSlot.Empty || !IsRackable(handSlot.Itemstack)) break;
-            if (handSlot.TryPutInto(Api.World, inventory[i], 1) > 0) added = true;
-            if (!all) break;
-        }
-
-        if (added)
-        {
-            handSlot.MarkDirty();
-            MarkDirty(true);
-        }
-        return added;
-    }
-
-    // Takes the top-most piece of meat/jerky off the rack, or — when `all` — every piece.
-    // Returns false if the rack is empty.
-    public bool TryTakeMeat(IPlayer byPlayer, bool all = false)
-    {
-        bool took = false;
-        for (int i = RackSlots; i >= 1; i--)
-        {
-            if (inventory[i].Empty) continue;
-
-            ItemStack stack = inventory[i].TakeOutWhole();
-            if (!byPlayer.InventoryManager.TryGiveItemstack(stack))
-            {
-                Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.7, 0.5));
-            }
-            inventory[i].MarkDirty();
-            took = true;
-            if (!all) break;
-        }
-
-        if (took) MarkDirty(true);
-        return took;
-    }
-
-    public bool RackIsEmpty()
-    {
-        for (int i = 1; i <= RackSlots; i++) if (!inventory[i].Empty) return false;
-        return true;
-    }
-
-    void ConvertContents()
-    {
-        for (int i = 1; i <= RackSlots; i++)
-        {
-            ItemSlot slot = inventory[i];
-            if (Match(slot.Itemstack) is not DryingResult m) continue;
-
-            slot.Itemstack = new ItemStack(m.Output, m.Quantity);
-            slot.MarkDirty();
-        }
-    }
-
     // ---------------- attach / detach state transfer ----------------
 
     // Pull the fuel stack out without dropping it (used during block swaps).
@@ -335,44 +247,7 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
         return FuelSlot.Empty ? null : FuelSlot.TakeOutWhole();
     }
 
-    public void DropContents()
-    {
-        inventory.DropAll(Pos.ToVec3d().Add(0.5, 0.5, 0.5));
-    }
-
     // ---------------- rendering ----------------
-
-    // --- ITexPositionSource: lets us tesselate item meshes into the BLOCK texture atlas so meat/jerky
-    //     render correctly when added to the chunk mesh (items normally live in a different atlas). ---
-    public Size2i AtlasSize => capi!.BlockTextureAtlas.Size;
-
-    public TextureAtlasPosition this[string textureCode]
-    {
-        get
-        {
-            IDictionary<string, CompositeTexture>? textures =
-                nowTesselatingObj is Item it ? it.Textures : (nowTesselatingObj as Block)?.Textures;
-
-            AssetLocation? path = null;
-            if (textures != null && textures.TryGetValue(textureCode, out CompositeTexture? ct)) path = ct.Baked.BakedName;
-            if (path == null && textures != null && textures.TryGetValue("all", out ct)) path = ct.Baked.BakedName;
-            if (path == null) nowTesselatingShape?.Textures.TryGetValue(textureCode, out path);
-            path ??= new AssetLocation(textureCode);
-
-            return GetOrCreateTexPos(path);
-        }
-    }
-
-    TextureAtlasPosition GetOrCreateTexPos(AssetLocation texturePath)
-    {
-        TextureAtlasPosition? pos = capi!.BlockTextureAtlas[texturePath];
-        if (pos == null)
-        {
-            capi.BlockTextureAtlas.GetOrInsertTexture(texturePath, out int _, out TextureAtlasPosition inserted);
-            pos = inserted;
-        }
-        return pos ?? capi.BlockTextureAtlas.UnknownTexturePosition;
-    }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tessThreadTesselator)
     {
@@ -394,31 +269,16 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
         if (rackMesh == null)
         {
             Block rackBlock = Api.World.GetBlock(new AssetLocation(PemmicanModSystem.ModId, "smokerack"));
-            if (rackBlock != null)
+            Shape? rackShape = rackBlock?.Shape?.Base == null ? null : capi.TesselatorManager.GetCachedShape(rackBlock.Shape.Base);
+            if (rackBlock != null && rackShape != null)
             {
-                capi.Tesselator.TesselateBlock(rackBlock, out rackMesh);
+                capi.Tesselator.TesselateShape(rackBlock, rackShape, out rackMesh, null, null, LoneRackElements);
                 rackMesh.Translate(0f, RackYOffset, 0f);
             }
         }
         if (rackMesh != null) mesher.AddMeshData(rackMesh);
 
-        Vec3f center = new Vec3f(0.5f, 0.5f, 0.5f);
-        for (int i = 1; i <= RackSlots; i++)
-        {
-            ItemStack? stack = inventory[i].Itemstack;
-            if (stack?.Item == null) continue;
-
-            nowTesselatingObj = stack.Item;
-            nowTesselatingShape = stack.Item.Shape?.Base != null ? capi.TesselatorManager.GetCachedShape(stack.Item.Shape.Base) : null;
-            capi.Tesselator.TesselateItem(stack.Item, out MeshData mesh, this);
-            mesh.RenderPassesAndExtraBits.Fill((short)EnumChunkRenderPass.Opaque);
-
-            mesh.Scale(center, ItemScale, ItemScale, ItemScale);
-
-            int idx = i - 1;
-            mesh.Translate(PosX[idx] - 0.5f, ItemY - 0.5f, PosZ[idx] - 0.5f);
-            mesher.AddMeshData(mesh);
-        }
+        RenderRackItems(mesher);
 
         // If we drew our own firepit base, skip the block's default (with-logs) shape to avoid doubling up.
         return renderedBase;
@@ -437,10 +297,10 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
 
         if (FuelCount > 0) sb.AppendLine(Lang.Get("pemmican:smokingfirepit-fuelcount", FuelCount));
 
-        int meat = CountMeat();
-        sb.AppendLine(meat == 0
+        int racked = CountRacked();
+        sb.AppendLine(racked == 0
             ? Lang.Get("pemmican:smokerack-empty")
-            : Lang.Get("pemmican:smokerack-contents", meat, RackSlots));
+            : Lang.Get("pemmican:smokerack-contents", racked, RackSlots));
 
         if (HasRackable())
         {
@@ -454,10 +314,6 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
     {
         base.ToTreeAttributes(tree);
 
-        ITreeAttribute invTree = new TreeAttribute();
-        inventory.ToTreeAttributes(invTree);
-        tree["inventory"] = invTree;
-
         tree.SetFloat("furnaceTemperature", furnaceTemperature);
         tree.SetInt("maxTemperature", maxTemperature);
         tree.SetFloat("fuelBurnTime", fuelBurnTime);
@@ -465,15 +321,11 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
         tree.SetBool("canIgniteFuel", canIgniteFuel);
         tree.SetDouble("extinguishedTotalHours", extinguishedTotalHours);
         tree.SetDouble("smokeHours", smokeHours);
-        tree.SetDouble("lastCalendarHours", lastCalendarHours);
     }
 
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
     {
         base.FromTreeAttributes(tree, worldForResolving);
-
-        ITreeAttribute? invTree = tree.GetTreeAttribute("inventory");
-        if (invTree != null) inventory.FromTreeAttributes(invTree);
 
         furnaceTemperature = tree.GetFloat("furnaceTemperature", 20f);
         maxTemperature = tree.GetInt("maxTemperature");
@@ -482,8 +334,5 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
         canIgniteFuel = tree.GetBool("canIgniteFuel");
         extinguishedTotalHours = tree.GetDouble("extinguishedTotalHours");
         smokeHours = tree.GetDouble("smokeHours");
-        lastCalendarHours = tree.GetDouble("lastCalendarHours", -1);
-
-        if (Api?.Side == EnumAppSide.Client) MarkDirty(true);
     }
 }

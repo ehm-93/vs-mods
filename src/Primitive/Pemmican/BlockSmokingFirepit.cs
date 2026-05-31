@@ -68,7 +68,7 @@ public class BlockSmokingFirepit : Block, IIgnitable
         // Hang meat (or fresh fruit, with Expanded Foods) on the rack.
         if (held != null && be.IsRackable(held))
         {
-            if (world.Side == EnumAppSide.Server) be.TryAddMeat(hand, bulk);
+            if (world.Side == EnumAppSide.Server) be.TryHang(hand, bulk);
             return true;
         }
 
@@ -91,7 +91,7 @@ public class BlockSmokingFirepit : Block, IIgnitable
             if (world.Side == EnumAppSide.Server)
             {
                 if (be.RackIsEmpty()) DetachRack(world, blockSel.Position, byPlayer, be);
-                else be.TryTakeMeat(byPlayer, bulk);
+                else be.TryTake(byPlayer, bulk);
             }
             return true;
         }

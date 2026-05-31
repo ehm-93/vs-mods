@@ -1,10 +1,9 @@
 {
 	"code": "smokerack",
 	"class": "SmokeRack",
-	"behaviors": [
-		{ "name": "Unplaceable" }
-	],
+	"entityClass": "DryingRack",
 	"shape": { "base": "pemmican:block/smokerack" },
+	"shapeInventory": { "base": "pemmican:block/smokerack-lone" },
 	"textures": {
 		"wood": { "base": "game:block/wood/debarked/aged" }
 	},

@@ -4,7 +4,7 @@ using Vintagestory.API.Util;
 
 namespace Ehm93.VS.Primitive.Pemmican;
 
-// One drying/smoking recipe, loaded from assets/<domain>/recipes/drying/*.json. The fields mirror VS
+// One drying/smoking recipe, loaded from assets/<domain>/config/drying/*.json. The fields mirror VS
 // grid-recipe conventions so anyone who has written a grid recipe recognizes them: an input `code` with
 // a `*` wildcard, an optional `name` that captures what the `*` matched, and an output `code` that
 // interpolates that capture with `{name}`. `allowedVariants`/`skipVariants` are BARE variant names
@@ -109,5 +109,8 @@ public readonly struct DryingResult
     public readonly Item Output;
     public readonly int Quantity;
     public readonly double Hours;
-    public DryingResult(Item output, int quantity, double hours) { Output = output; Quantity = quantity; Hours = hours; }
+    // When true the recipe only finishes over active fire/smoke; the standalone air-drying rack skips it.
+    public readonly bool RequiresFire;
+    public DryingResult(Item output, int quantity, double hours, bool requiresFire)
+    { Output = output; Quantity = quantity; Hours = hours; RequiresFire = requiresFire; }
 }
