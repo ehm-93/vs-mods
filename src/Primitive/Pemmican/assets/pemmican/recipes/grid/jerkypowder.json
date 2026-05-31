@@ -1,11 +1,38 @@
-{
-	"ingredientPattern": "JR",
-	"width": 2,
-	"height": 1,
-	"shapeless": true,
-	"ingredients": {
-		"J": { "type": "item", "code": "pemmican:jerky-*", "name": "type", "allowedVariants": ["redmeat", "bushmeat", "fish", "poultry"] },
-		"R": { "type": "item", "code": "game:stone-*", "isTool": true }
+[
+	{
+		"_comment": "Loose stone: consumed.",
+		"ingredientPattern": "JR",
+		"width": 2,
+		"height": 1,
+		"shapeless": true,
+		"ingredients": {
+			"J": { "type": "item", "code": "pemmican:jerky-*", "name": "type", "allowedVariants": ["redmeat", "bushmeat", "fish", "poultry"] },
+			"R": { "type": "item", "code": "game:stone-*" }
+		},
+		"output": { "type": "item", "code": "pemmican:jerkypowder-{type}", "quantity": 1 }
 	},
-	"output": { "type": "item", "code": "pemmican:jerkypowder-{type}", "quantity": 1 }
-}
+	{
+		"_comment": "Smashing rock: durable tool, not consumed.",
+		"ingredientPattern": "JR",
+		"width": 2,
+		"height": 1,
+		"shapeless": true,
+		"ingredients": {
+			"J": { "type": "item", "code": "pemmican:jerky-*", "name": "type", "allowedVariants": ["redmeat", "bushmeat", "fish", "poultry"] },
+			"R": { "type": "item", "code": "pemmican:smashingrock", "isTool": true }
+		},
+		"output": { "type": "item", "code": "pemmican:jerkypowder-{type}", "quantity": 1 }
+	},
+	{
+		"_comment": "Hammer: durable tool, not consumed.",
+		"ingredientPattern": "JR",
+		"width": 2,
+		"height": 1,
+		"shapeless": true,
+		"ingredients": {
+			"J": { "type": "item", "code": "pemmican:jerky-*", "name": "type", "allowedVariants": ["redmeat", "bushmeat", "fish", "poultry"] },
+			"R": { "type": "item", "tags": ["tool-hammer"], "isTool": true }
+		},
+		"output": { "type": "item", "code": "pemmican:jerkypowder-{type}", "quantity": 1 }
+	}
+]

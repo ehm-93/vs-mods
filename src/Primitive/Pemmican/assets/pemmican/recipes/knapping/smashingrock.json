@@ -1,0 +1,28 @@
+{
+	"ingredient": {
+		"type": "item",
+		"code": "game:stone-*",
+		"name": "rock",
+		"allowedVariants": ["granite", "andesite", "basalt", "obsidian", "peridotite"]
+	},
+	"pattern": [
+		[
+			"__________",
+			"__________",
+			"__######__",
+			"_########_",
+			"_########_",
+			"_########_",
+			"_########_",
+			"__######__",
+			"__________",
+			"__________"
+		]
+	],
+	"name": "Smashing rock",
+	"output": {
+		"type": "item",
+		"code": "pemmican:smashingrock",
+		"stacksize": 1
+	}
+}

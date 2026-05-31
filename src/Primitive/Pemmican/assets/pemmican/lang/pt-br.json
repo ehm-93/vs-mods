@@ -12,6 +12,10 @@
 	"item-jerkypowder-bushmeat": "Pó de carne de caça seca",
 	"item-jerkypowder-fish": "Pó de peixe seco",
 	"item-jerkypowder-poultry": "Pó de ave seca",
+	"item-jerky-primemeat": "Carne nobre seca",
+	"item-jerkypowder-primemeat": "Pó de carne nobre seca",
+	"item-smashingrock": "Pedra de esmagamento",
+	"item-handbooktext-smashingrock": "Uma pedra bruta lascada em ferramenta de esmagamento. Use-a na grade de fabricação para triturar carne seca em <a href=\"handbook://item-jerkypowder-redmeat\">pó de carne seca</a>. Desgasta-se com o uso. Veja o <a href=\"handbook://craftinginfo-pemmican\">Guia do pemmican</a>.",
 	"block-smokerack": "Grelha de defumação",
 	"block-smokingfirepit-*": "Fogueira de defumação",
 

@@ -12,6 +12,10 @@
 	"item-jerkypowder-bushmeat": "Порошок із в'яленої дичини",
 	"item-jerkypowder-fish": "Порошок із в'яленої риби",
 	"item-jerkypowder-poultry": "Порошок із в'яленої птиці",
+	"item-jerky-primemeat": "В'ялене прем'ясо",
+	"item-jerkypowder-primemeat": "Порошок із в'яленого прем'яса",
+	"item-smashingrock": "Подрібнювальний камінь",
+	"item-handbooktext-smashingrock": "Грубий камінь обробленої форми для подрібнення. Використовуйте його в сітці крафту, щоб перемолоти в'ялене м'ясо на <a href=\"handbook://item-jerkypowder-redmeat\">порошок із в'яленого м'яса</a>. Він зношується з часом. Дивіться <a href=\"handbook://craftinginfo-pemmican\">Посібник із пемікану</a>.",
 	"block-smokerack": "Коптильна решітка",
 	"block-smokingfirepit-*": "Коптильне багаття",
 

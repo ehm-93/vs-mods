@@ -22,7 +22,9 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
     // (burnDuration 24) -> ~4 in-game hours, so a full 24h batch needs ~6 logs (a low, slow, smoky fire).
     public const float FuelHourFactor = 0.167f;
 
-    static readonly string[] AcceptedMeats = { "redmeat", "bushmeat", "fish", "poultry" };
+    // "primemeat" is Butchering's prime cut; it only resolves to jerky-primemeat when the
+    // Butchering compat patch adds that variant, and is harmless (no such raw meat) without it.
+    static readonly string[] AcceptedMeats = { "redmeat", "bushmeat", "fish", "poultry", "primemeat" };
 
     // Smoking wants smoky, organic fuel — not coal/charcoal/coke. Matched by first code part, so this
     // is a quick list to fine-tune later.
@@ -212,6 +214,9 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
     public bool IsAcceptedMeat(ItemStack? stack)
     {
         if (stack?.Collectible?.Code == null) return false;
+        // Butchering's cured-healing prime meat is a rare medicinal food, not jerky stock —
+        // keep it off the rack so it can't be smoked away into ordinary jerky.
+        if (stack.Collectible.Code.Path.Contains("healing")) return false;
         return Array.IndexOf(AcceptedMeats, stack.Collectible.Code.FirstCodePart()) >= 0;
     }
 

@@ -12,6 +12,10 @@
 	"item-jerkypowder-bushmeat": "Порошок из вяленой дичи",
 	"item-jerkypowder-fish": "Порошок из вяленой рыбы",
 	"item-jerkypowder-poultry": "Порошок из вяленой птицы",
+	"item-jerky-primemeat": "Вяленое премиум-мясо",
+	"item-jerkypowder-primemeat": "Порошок из вяленого премиум-мяса",
+	"item-smashingrock": "Дробящий камень",
+	"item-handbooktext-smashingrock": "Грубо обработанный камень, расколотый в инструмент для дробления. Используйте его в сетке крафта для измельчения вяленого мяса в <a href=\"handbook://item-jerkypowder-redmeat\">порошок из вяленого мяса</a>. Изнашивается при использовании. Смотрите <a href=\"handbook://craftinginfo-pemmican\">Руководство по пеммикану</a>.",
 	"block-smokerack": "Коптильная решётка",
 	"block-smokingfirepit-*": "Коптильный костёр",
 

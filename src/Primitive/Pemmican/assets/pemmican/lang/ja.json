@@ -12,6 +12,10 @@
 	"item-jerkypowder-bushmeat": "ブッシュミートジャーキーの粉",
 	"item-jerkypowder-fish": "魚ジャーキーの粉",
 	"item-jerkypowder-poultry": "鳥肉ジャーキーの粉",
+	"item-jerky-primemeat": "最高級肉ジャーキー",
+	"item-jerkypowder-primemeat": "最高級肉ジャーキーの粉",
+	"item-smashingrock": "つぶし用石",
+	"item-handbooktext-smashingrock": "粗く加工した石の砕く道具です。クラフトグリッドで使用してジャーキーを<a href=\"handbook://item-jerkypowder-redmeat\">ジャーキーの粉</a>に挽きます。使用するとすり減ります。<a href=\"handbook://craftinginfo-pemmican\">ペミカンガイド</a>を参照してください。",
 	"block-smokerack": "燻製ラック",
 	"block-smokingfirepit-*": "燻製用焚き火",
 

@@ -12,6 +12,10 @@
 	"item-jerkypowder-bushmeat": "Dörrfleischpulver (Wildfleisch)",
 	"item-jerkypowder-fish": "Dörrfischpulver",
 	"item-jerkypowder-poultry": "Dörrfleischpulver (Geflügel)",
+	"item-jerky-primemeat": "Dörrfleisch (Edelwild)",
+	"item-jerkypowder-primemeat": "Dörrfleischpulver (Edelwild)",
+	"item-smashingrock": "Mahlstein",
+	"item-handbooktext-smashingrock": "Ein roher Stein, der zu einem Werkzeug zum Zerstoßen geschliffen wurde. Nutze ihn im Handwerksraster, um Dörrfleisch zu <a href=\"handbook://item-jerkypowder-redmeat\">Dörrfleischpulver</a> zu mahlen. Es verschleißt mit der Nutzung. Siehe den <a href=\"handbook://craftinginfo-pemmican\">Pemmikan-Leitfaden</a>.",
 	"block-smokerack": "Räuchergestell",
 	"block-smokingfirepit-*": "Räucher-Feuerstelle",
 

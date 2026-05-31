@@ -12,6 +12,10 @@
 	"item-jerkypowder-bushmeat": "Poudre de viande de brousse séchée",
 	"item-jerkypowder-fish": "Poudre de poisson séché",
 	"item-jerkypowder-poultry": "Poudre de volaille séchée",
+	"item-jerky-primemeat": "Viande de première qualité séchée",
+	"item-jerkypowder-primemeat": "Poudre de viande de première qualité séchée",
+	"item-smashingrock": "Pierre de concassage",
+	"item-handbooktext-smashingrock": "Une pierre brute taillée en outil de concassage. Utilisez-la dans la grille d'artisanat pour broyer la viande séchée en <a href=\"handbook://item-jerkypowder-redmeat\">poudre de viande séchée</a>. Elle s'use avec l'utilisation. Voir le <a href=\"handbook://craftinginfo-pemmican\">Guide du pemmican</a>.",
 	"block-smokerack": "Grille de fumage",
 	"block-smokingfirepit-*": "Foyer de fumage",
 
