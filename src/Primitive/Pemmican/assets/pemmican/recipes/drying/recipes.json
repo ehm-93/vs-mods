@@ -1,0 +1,37 @@
+[
+	{
+    "code": "redmeat",
+    "input": { "code": "game:redmeat-*" },
+    "output": { "code": "pemmican:jerky-redmeat" }
+  },
+	{
+    "code": "bushmeat",
+    "input": { "code": "game:bushmeat-*" },
+    "output": { "code": "pemmican:jerky-bushmeat" }
+  },
+	{
+    "code": "fish",
+    "input": { "code": "game:fish-*" },
+    "output": { "code": "pemmican:jerky-fish" }
+  },
+	{
+    "code": "poultry",
+    "input": { "code": "game:poultry-*" },
+    "output": { "code": "pemmican:jerky-poultry" }
+  },
+	{
+    "code": "primemeat",
+		"dependsOn": [{ "modid": "butchering" }],
+    "input": {
+      "code": "butchering:primemeat-*",
+      "skipVariants": ["healing", "curedhealing"]
+    },
+    "output": { "code": "pemmican:jerky-primemeat" }
+  },
+	{
+    "code": "fruit",
+    "dependsOn": [{ "modid": "expandedfoods" }],
+    "input": { "code": "game:fruit-*", "name": "type" },
+    "output": { "code": "expandedfoods:dryfruit-{type}" }
+  }
+]

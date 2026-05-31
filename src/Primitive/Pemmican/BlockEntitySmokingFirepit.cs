@@ -22,10 +22,6 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
     // (burnDuration 24) -> ~4 in-game hours, so a full 24h batch needs ~6 logs (a low, slow, smoky fire).
     public const float FuelHourFactor = 0.167f;
 
-    // "primemeat" is Butchering's prime cut; it only resolves to jerky-primemeat when the
-    // Butchering compat patch adds that variant, and is harmless (no such raw meat) without it.
-    static readonly string[] AcceptedMeats = { "redmeat", "bushmeat", "fish", "poultry", "primemeat" };
-
     // Smoking wants smoky, organic fuel — not coal/charcoal/coke. Matched by first code part, so this
     // is a quick list to fine-tune later.
     static readonly string[] AcceptedFuels = { "firewood", "stick", "peatbrick" };
@@ -136,12 +132,12 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
             fuelBurnTime -= (float)burn;
             elapsed -= burn;
 
-            if (HasSmokableMeat())
+            if (HasRackable())
             {
                 smokeHours += burn;
-                if (smokeHours >= SmokeHoursRequired)
+                if (smokeHours >= RequiredHours())
                 {
-                    ConvertToJerky();
+                    ConvertContents();
                     smokeHours = 0;
                     dirty = true;
                 }
@@ -154,7 +150,7 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
             }
         }
 
-        if (!HasSmokableMeat() && smokeHours != 0) { smokeHours = 0; dirty = true; }
+        if (!HasRackable() && smokeHours != 0) { smokeHours = 0; dirty = true; }
 
         UpdateBurnState(now);
 
@@ -211,13 +207,26 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
 
     // ---------------- rack / smoking ----------------
 
-    public bool IsAcceptedMeat(ItemStack? stack)
+    // What a hung item turns into, and how long it takes. The recipes are data-driven
+    // (assets/<domain>/recipes/drying/*.json); we just delegate to the loaded set. Returns null if the
+    // item can't go on the rack, so we never hang something that would never convert.
+    private PemmicanModSystem? rackRecipes;
+    public DryingResult? Match(ItemStack? stack)
     {
-        if (stack?.Collectible?.Code == null) return false;
-        // Butchering's cured-healing prime meat is a rare medicinal food, not jerky stock —
-        // keep it off the rack so it can't be smoked away into ordinary jerky.
-        if (stack.Collectible.Code.Path.Contains("healing")) return false;
-        return Array.IndexOf(AcceptedMeats, stack.Collectible.Code.FirstCodePart()) >= 0;
+        if (Api == null) return null;
+        rackRecipes ??= Api.ModLoader.GetModSystem<PemmicanModSystem>();
+        return rackRecipes?.Match(Api.World, stack);
+    }
+
+    public bool IsRackable(ItemStack? stack) => Match(stack) != null;
+
+    // The batch finishes when smoking reaches the slowest hung piece's required hours.
+    double RequiredHours()
+    {
+        double hours = 0;
+        for (int i = 1; i <= RackSlots; i++)
+            if (Match(inventory[i].Itemstack) is DryingResult m && m.Hours > hours) hours = m.Hours;
+        return hours > 0 ? hours : SmokeHoursRequired;
     }
 
     public bool IsFuelItem(ItemStack? stack)
@@ -235,9 +244,9 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
         return n;
     }
 
-    bool HasSmokableMeat()
+    bool HasRackable()
     {
-        for (int i = 1; i <= RackSlots; i++) if (IsAcceptedMeat(inventory[i].Itemstack)) return true;
+        for (int i = 1; i <= RackSlots; i++) if (IsRackable(inventory[i].Itemstack)) return true;
         return false;
     }
 
@@ -257,13 +266,13 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
     // Hang meat from the held stack onto the rack: one piece, or — when `all` — as many as fit.
     public bool TryAddMeat(ItemSlot handSlot, bool all = false)
     {
-        if (handSlot.Empty || !IsAcceptedMeat(handSlot.Itemstack)) return false;
+        if (handSlot.Empty || !IsRackable(handSlot.Itemstack)) return false;
 
         bool added = false;
         for (int i = 1; i <= RackSlots; i++)
         {
             if (!inventory[i].Empty) continue;
-            if (handSlot.Empty || !IsAcceptedMeat(handSlot.Itemstack)) break;
+            if (handSlot.Empty || !IsRackable(handSlot.Itemstack)) break;
             if (handSlot.TryPutInto(Api.World, inventory[i], 1) > 0) added = true;
             if (!all) break;
         }
@@ -305,18 +314,14 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
         return true;
     }
 
-    void ConvertToJerky()
+    void ConvertContents()
     {
         for (int i = 1; i <= RackSlots; i++)
         {
             ItemSlot slot = inventory[i];
-            if (!IsAcceptedMeat(slot.Itemstack)) continue;
+            if (Match(slot.Itemstack) is not DryingResult m) continue;
 
-            string meatType = slot.Itemstack!.Collectible.Code.FirstCodePart();
-            Item? jerky = Api.World.GetItem(new AssetLocation(PemmicanModSystem.ModId, "jerky-" + meatType));
-            if (jerky == null) continue;
-
-            slot.Itemstack = new ItemStack(jerky, slot.Itemstack.StackSize);
+            slot.Itemstack = new ItemStack(m.Output, m.Quantity);
             slot.MarkDirty();
         }
     }
@@ -437,9 +442,9 @@ public class BlockEntitySmokingFirepit : BlockEntity, IHeatSource, ITexPositionS
             ? Lang.Get("pemmican:smokerack-empty")
             : Lang.Get("pemmican:smokerack-contents", meat, RackSlots));
 
-        if (HasSmokableMeat())
+        if (HasRackable())
         {
-            int pct = (int)GameMath.Clamp(smokeHours / SmokeHoursRequired * 100.0, 0, 100);
+            int pct = (int)GameMath.Clamp(smokeHours / RequiredHours() * 100.0, 0, 100);
             sb.AppendLine(Lang.Get("pemmican:smokerack-progress", pct));
             if (!IsBurning) sb.AppendLine(Lang.Get("pemmican:smokerack-needfire"));
         }

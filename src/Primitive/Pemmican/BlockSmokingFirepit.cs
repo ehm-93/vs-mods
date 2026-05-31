@@ -65,8 +65,8 @@ public class BlockSmokingFirepit : Block, IIgnitable
         // Ctrl-click acts on the whole rack at once (hang/take all 8 pieces) instead of one piece.
         bool bulk = byPlayer.Entity.Controls.CtrlKey;
 
-        // Hang meat on the rack.
-        if (held != null && be.IsAcceptedMeat(held))
+        // Hang meat (or fresh fruit, with Expanded Foods) on the rack.
+        if (held != null && be.IsRackable(held))
         {
             if (world.Side == EnumAppSide.Server) be.TryAddMeat(hand, bulk);
             return true;

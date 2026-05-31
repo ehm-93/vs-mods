@@ -48,7 +48,7 @@
 	"game:handbook-mealingredient-fruit": "dried fruit",
 
 	"smokerack-empty": "Rack empty.",
-	"smokerack-contents": "Rack holding {0} / {1} pieces of meat.",
+	"smokerack-contents": "Rack holding {0} / {1} pieces.",
 	"smokerack-progress": "Smoking: {0}% done.",
 	"smokerack-needfire": "Smoking paused — the fire is out.",
 
