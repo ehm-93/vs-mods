@@ -1,3 +1,17 @@
 {
   "dotnet.defaultSolution": "vs-mods.sln",
+  "cSpell.words": [
+    "bushmeat",
+    "foodcategory",
+    "itemtypes",
+    "jerkypowder",
+    "labelpemmican",
+    "labelsaltedpemmican",
+    "meatystew",
+    "modid",
+    "primemeat",
+    "redmeat",
+    "saltedpemmican",
+    "variantgroups"
+  ]
 }

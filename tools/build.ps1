@@ -212,6 +212,12 @@ function Invoke-Package {
             Copy-Item $iconPath $staging/
         }
 
+        # Copy the repo LICENSE into every package
+        $licensePath = Join-Path $RepoRoot "LICENSE"
+        if (Test-Path $licensePath) {
+            Copy-Item $licensePath $staging/
+        }
+
         # Copy assets
         $assetsPath = Join-Path $mod.Path "assets"
         if (Test-Path $assetsPath) {
