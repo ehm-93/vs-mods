@@ -16,7 +16,7 @@
 	"item-jerkypowder-primemeat": "最高級肉ジャーキーの粉",
 	"item-smashingrock": "つぶし用石",
 	"item-handbooktext-smashingrock": "粗く加工した石の砕く道具です。クラフトグリッドで使用してジャーキーを<a href=\"handbook://item-jerkypowder-redmeat\">ジャーキーの粉</a>に挽きます。使用するとすり減ります。<a href=\"handbook://craftinginfo-pemmican\">ペミカンガイド</a>を参照してください。",
-	"block-smokerack": "燻製ラック",
+	"block-smokerack": "乾燥ラック",
 	"block-smokingfirepit-*": "燻製用焚き火",
 
 	"pemmican": "ペミカン",
@@ -50,6 +50,10 @@
 	"smokerack-contents": "ラックに肉が {0} / {1} 切れあります。",
 	"smokerack-progress": "燻製中：{0}% 完了。",
 	"smokerack-needfire": "燻製停止中——火が消えています。",
+	"dryingrack-drying": "乾燥中：{0}% 完了。",
+	"dryingrack-drying-avg": "風乾中：{0}% 完了（平均）。",
+	"dryingrack-spoilage": "腐敗：{0}%。",
+	"dryingrack-spoilage-avg": "腐敗：{0}%（平均）。",
 
 	"smokingfirepit-burning": "燻製中",
 	"smokingfirepit-smoldering": "くすぶり中",
@@ -64,10 +68,16 @@
 	"blockhelp-smokingfirepit-take": "ラックを外す",
 	"blockhelp-smokingfirepit-take-bulk": "すべて取る",
 
-	"guide-pemmican-title": "クラフト機構：ジャーキーとペミカン",
-	"guide-pemmican-text": "<strong>ペミカン &amp; ジャーキー</strong><br><i>何ヶ月も持つ携帯食。</i><br><br>肉を保存するには三つの手順があります。燻製して<strong>ジャーキー</strong>にし、ジャーキーを<strong>粉</strong>に挽き、その粉を脂と一緒に煮て<strong>ペミカン</strong>にします。<br><br><strong>1. 肉を燻製してジャーキーにする</strong><br>3本の<a href=\"handbook://item-stick\">棒</a>、1本の<a href=\"handbook://item-rope\">縄</a>、ナイフから<a href=\"handbook://block-smokerack\">燻製ラック</a>を作り、空の<a href=\"handbook://block-firepit-lit\">焚き火</a>を右クリックしてラックを火の上に取り付けます。<a href=\"handbook://item-firewood\">薪</a>か<a href=\"handbook://block-peatbrick\">泥炭</a>を与え（クリックごとに1個）、松明か火起こし器で点火し、生の赤身肉・ブッシュミート・魚・鳥肉を持って右クリックすると最大8切れまで吊るせます——右クリック時にCtrlを押し続けると一山まとめて吊るせます。低温でゆっくり燻すので、燃料1個がかなり長持ちします。火を絶やさず、約1日燻製すると、各切れがジャーキーになります。素手で一切れずつ取り出せます（Ctrlですべて取り出せます）。ラックが空になったら、素手で右クリックするとラックが外れ、普通の焚き火に戻ります。ジャーキーは何ヶ月も持ち——生肉や調理した肉よりずっと長持ちし——そのまま食べたりシチューに加えたりできます。<br><br><strong>2. ジャーキーを粉に挽く</strong><br>ジャーキーを<a href=\"handbook://block-quern\">石臼</a>で挽くか、クラフトグリッドで任意の石と一緒に砕きます。各肉はそれぞれの栄養を保つので、赤身肉ジャーキーからは赤身肉の<a href=\"handbook://item-jerkypowder-redmeat\">ジャーキーの粉</a>ができます。<br><br><strong>3. ペミカンを作る</strong><br>焚き火にかけた調理鍋で、1個の<a href=\"handbook://item-fat-rendered\">精製脂</a>と1～3個のジャーキーの粉を組み合わせて<strong>ペミカン</strong>——濃厚で携帯しやすいタンパク質の料理——を作ります。<a href=\"handbook://item-salt\">塩</a>を一つ加えると<strong>塩漬けペミカン</strong>になり、約2倍長持ちします。ボウルに盛り付けるか、壺に封をしてさらに長く保存できます。",
+	"blockhelp-dryingrack-hang": "吊るす",
+	"blockhelp-dryingrack-hang-bulk": "すべて吊るす",
+	"blockhelp-dryingrack-take": "取る",
+	"blockhelp-dryingrack-take-bulk": "すべて取る",
+	"blockhelp-dryingrack-addtier": "段を追加",
 
-	"block-handbooktext-smokerack": "これを持って空の<a href=\"handbook://block-firepit-lit\">焚き火</a>を右クリックすると取り付けられ、焚き火が最大8切れの肉を吊るせる燻製ラックになります。ラックを空にして素手で右クリックすると取り外せます。<a href=\"handbook://craftinginfo-pemmican\">ペミカンガイド</a>を参照してください。",
+	"guide-pemmican-title": "クラフト機構：ジャーキーとペミカン",
+	"guide-pemmican-text": "<strong>ペミカン &amp; ジャーキー</strong><br><i>何ヶ月も持つ携帯食。</i><br><br>肉を保存するには三つの手順があります。燻製または乾燥して<strong>ジャーキー</strong>にし、ジャーキーを<strong>粉</strong>に挽き、その粉を脂と一緒に煮て<strong>ペミカン</strong>にします。<br><br><strong>1. 肉を乾燥または燻製してジャーキーにする</strong><br>5本の<a href=\"handbook://item-stick\">棒</a>、1本の<a href=\"handbook://item-rope\">縄</a>、ナイフから<a href=\"handbook://block-smokerack\">乾燥ラック</a>を作ります——最大6切れを置ける低い棚です。生の赤身肉・ブッシュミート・魚・鳥肉を持って右クリックすると吊るせます——場所を狙うか、Ctrlを押し続けると一山まとめて吊るせます。空の棚を別のラックで右クリックすると上に2段目を追加でき、ラックを横に並べたり縦に積み重ねて柱状にしたりして、より大きな乾燥用の壁を作れます——同じラック同士は一つの枠に結合し、柱は常につながったままになります。乾燥には二つの方法があります：<br><br><strong>風乾</strong>——ラックを地面に置きます。天候によってゆっくり乾き、暖かく晴れて乾燥した空気で最も速く、雨で停止して後戻りし、寒さや湿気の中では腐敗との競争になります。地下貯蔵庫ではゆっくり乾きますが、腐敗を食い止めてくれます。<br><br><strong>燻製</strong>——空の<a href=\"handbook://block-firepit-lit\">焚き火</a>をラックで右クリックすると火の上に取り付けられ、燻製ラックになります。<a href=\"handbook://item-firewood\">薪</a>か<a href=\"handbook://block-peatbrick\">泥炭</a>を与え（クリックごとに1個）、松明か火起こし器で点火すると、低温でゆっくり燻されます——1バッチあたり約1日で、どんな天候でも速く確実です。ラックを空にして素手で右クリックすると外れ、普通の焚き火に戻ります。<br><br>どちらの方法でも、素手で切れを取り出せます（一切れを狙うか、Ctrlですべてつかみます）。ジャーキーは何ヶ月も持ち——生肉や調理した肉よりずっと長持ちし——そのまま食べたりシチューに加えたりできます。<br><br><strong>2. ジャーキーを粉に挽く</strong><br>ジャーキーを<a href=\"handbook://block-quern\">石臼</a>で挽くか、クラフトグリッドで<a href=\"handbook://item-smashingrock\">つぶし用石</a>（石から加工）で砕きます。各肉はそれぞれの栄養を保つので、赤身肉ジャーキーからは赤身肉の<a href=\"handbook://item-jerkypowder-redmeat\">ジャーキーの粉</a>ができます。<br><br><strong>3. ペミカンを作る</strong><br>焚き火にかけた調理鍋で、1個の<a href=\"handbook://item-fat-rendered\">精製脂</a>と1～3個のジャーキーの粉を組み合わせて<strong>ペミカン</strong>——濃厚で携帯しやすいタンパク質の料理——を作ります。<a href=\"handbook://item-salt\">塩</a>を一つ加えると<strong>塩漬けペミカン</strong>になり、約2倍長持ちします。ボウルに盛り付けるか、壺に封をしてさらに長く保存できます。",
+
+	"block-handbooktext-smokerack": "肉や果物用の低い乾燥棚で、最大6切れを置けます。地面（地下貯蔵庫でも可）に置くとゆっくり<strong>風乾</strong>します——暖かく晴れて乾燥した天候で速く、雨で停止または後戻りし、寒さや湿気の中では腐敗との競争になります。空の棚を別のラックで右クリックすると上に2段目を追加でき、ラックを横に並べたり柱状に積み重ねたりして、より高いラックや広い壁を作れます——同じラック同士は一つの枠に結合し、縦の柱は常につながったままになります。または、空の<a href=\"handbook://block-firepit-lit\">焚き火</a>をこれで右クリックすると火の上に取り付けられ、代わりに<strong>燻製</strong>できます。こちらははるかに速く、どんな天候でも機能します。壊すと取り戻せます。<a href=\"handbook://craftinginfo-pemmican\">ペミカンガイド</a>を参照してください。",
 	"block-handbooktext-smokingfirepit-*": "燻製ラックが取り付けられた焚き火です。薪か泥炭を与えて点火し、最大8切れの肉を吊るしてゆっくり燻製しジャーキーにします（Ctrlクリックで一山まとめて吊るす／取り外せます）。ラックを空にして素手で右クリックするとラックを取り外し、普通の焚き火に戻ります。<a href=\"handbook://craftinginfo-pemmican\">ペミカンガイド</a>を参照してください。",
 	"item-handbooktext-jerky-*": "何ヶ月も持つ燻製した干し肉です。そのまま食べたり、シチューに加えたり、<a href=\"handbook://item-jerkypowder-redmeat\">ジャーキーの粉</a>に挽いてペミカンを作ったりできます。<a href=\"handbook://craftinginfo-pemmican\">ペミカンガイド</a>を参照してください。",
 	"item-handbooktext-jerkypowder-*": "元の肉の栄養を保つ、挽いたジャーキーです。鍋で<a href=\"handbook://item-fat-rendered\">精製脂</a>と一緒に煮てペミカンを作ります。<a href=\"handbook://craftinginfo-pemmican\">ペミカンガイド</a>を参照してください。"

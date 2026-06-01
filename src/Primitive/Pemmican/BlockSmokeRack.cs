@@ -46,6 +46,13 @@ public class BlockSmokeRack : Block
                 ActionLangCode = "pemmican:blockhelp-dryingrack-take-bulk",
                 MouseButton = EnumMouseButton.Right,
                 HotKeyCode = "ctrl"
+            },
+            // Holding the rack item, aiming at the empty upper half: stack a second tier on top.
+            new WorldInteraction
+            {
+                ActionLangCode = "pemmican:blockhelp-dryingrack-addtier",
+                MouseButton = EnumMouseButton.Right,
+                Itemstacks = new[] { new ItemStack(this) }
             }
         };
     }
