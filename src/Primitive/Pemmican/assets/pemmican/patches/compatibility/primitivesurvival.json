@@ -1,0 +1,156 @@
+[
+	{
+		"__comment": "Primitive Survival compat (every op gated on primitivesurvival): PS jerky is made 1 raw meat -> 4 jerky, so it grinds 4-to-1 into our jerky powder (vs our 1-to-1). One recipe per PS meat (redmeat/bushmeat/fish) x grinding tool (loose stone consumed / smashing rock / hammer). Only finished jerky grinds — the cooked or cured states, not raw (still curing).",
+		"file": "pemmican:recipes/grid/jerkypowder.json",
+		"op": "add",
+		"path": "/-",
+		"value": {
+			"ingredientPattern": "JR",
+			"width": 2,
+			"height": 1,
+			"shapeless": true,
+			"ingredients": {
+				"J": { "type": "item", "code": "primitivesurvival:jerky-redmeat-*", "name": "state", "allowedVariants": [ "cooked", "cured" ], "quantity": 4 },
+				"R": { "type": "item", "code": "game:stone-*" }
+			},
+			"output": { "type": "item", "code": "pemmican:jerkypowder-redmeat", "quantity": 1 }
+		},
+		"dependsOn": [ { "modid": "primitivesurvival" } ]
+	},
+	{
+		"file": "pemmican:recipes/grid/jerkypowder.json",
+		"op": "add",
+		"path": "/-",
+		"value": {
+			"ingredientPattern": "JR",
+			"width": 2,
+			"height": 1,
+			"shapeless": true,
+			"ingredients": {
+				"J": { "type": "item", "code": "primitivesurvival:jerky-redmeat-*", "name": "state", "allowedVariants": [ "cooked", "cured" ], "quantity": 4 },
+				"R": { "type": "item", "code": "pemmican:smashingrock", "isTool": true }
+			},
+			"output": { "type": "item", "code": "pemmican:jerkypowder-redmeat", "quantity": 1 }
+		},
+		"dependsOn": [ { "modid": "primitivesurvival" } ]
+	},
+	{
+		"file": "pemmican:recipes/grid/jerkypowder.json",
+		"op": "add",
+		"path": "/-",
+		"value": {
+			"ingredientPattern": "JR",
+			"width": 2,
+			"height": 1,
+			"shapeless": true,
+			"ingredients": {
+				"J": { "type": "item", "code": "primitivesurvival:jerky-redmeat-*", "name": "state", "allowedVariants": [ "cooked", "cured" ], "quantity": 4 },
+				"R": { "type": "item", "tags": [ "tool-hammer" ], "isTool": true }
+			},
+			"output": { "type": "item", "code": "pemmican:jerkypowder-redmeat", "quantity": 1 }
+		},
+		"dependsOn": [ { "modid": "primitivesurvival" } ]
+	},
+	{
+		"file": "pemmican:recipes/grid/jerkypowder.json",
+		"op": "add",
+		"path": "/-",
+		"value": {
+			"ingredientPattern": "JR",
+			"width": 2,
+			"height": 1,
+			"shapeless": true,
+			"ingredients": {
+				"J": { "type": "item", "code": "primitivesurvival:jerky-bushmeat-*", "name": "state", "allowedVariants": [ "cooked", "cured" ], "quantity": 4 },
+				"R": { "type": "item", "code": "game:stone-*" }
+			},
+			"output": { "type": "item", "code": "pemmican:jerkypowder-bushmeat", "quantity": 1 }
+		},
+		"dependsOn": [ { "modid": "primitivesurvival" } ]
+	},
+	{
+		"file": "pemmican:recipes/grid/jerkypowder.json",
+		"op": "add",
+		"path": "/-",
+		"value": {
+			"ingredientPattern": "JR",
+			"width": 2,
+			"height": 1,
+			"shapeless": true,
+			"ingredients": {
+				"J": { "type": "item", "code": "primitivesurvival:jerky-bushmeat-*", "name": "state", "allowedVariants": [ "cooked", "cured" ], "quantity": 4 },
+				"R": { "type": "item", "code": "pemmican:smashingrock", "isTool": true }
+			},
+			"output": { "type": "item", "code": "pemmican:jerkypowder-bushmeat", "quantity": 1 }
+		},
+		"dependsOn": [ { "modid": "primitivesurvival" } ]
+	},
+	{
+		"file": "pemmican:recipes/grid/jerkypowder.json",
+		"op": "add",
+		"path": "/-",
+		"value": {
+			"ingredientPattern": "JR",
+			"width": 2,
+			"height": 1,
+			"shapeless": true,
+			"ingredients": {
+				"J": { "type": "item", "code": "primitivesurvival:jerky-bushmeat-*", "name": "state", "allowedVariants": [ "cooked", "cured" ], "quantity": 4 },
+				"R": { "type": "item", "tags": [ "tool-hammer" ], "isTool": true }
+			},
+			"output": { "type": "item", "code": "pemmican:jerkypowder-bushmeat", "quantity": 1 }
+		},
+		"dependsOn": [ { "modid": "primitivesurvival" } ]
+	},
+	{
+		"file": "pemmican:recipes/grid/jerkypowder.json",
+		"op": "add",
+		"path": "/-",
+		"value": {
+			"ingredientPattern": "JR",
+			"width": 2,
+			"height": 1,
+			"shapeless": true,
+			"ingredients": {
+				"J": { "type": "item", "code": "primitivesurvival:jerky-fish-*", "name": "state", "allowedVariants": [ "cooked", "cured" ], "quantity": 4 },
+				"R": { "type": "item", "code": "game:stone-*" }
+			},
+			"output": { "type": "item", "code": "pemmican:jerkypowder-fish", "quantity": 1 }
+		},
+		"dependsOn": [ { "modid": "primitivesurvival" } ]
+	},
+	{
+		"file": "pemmican:recipes/grid/jerkypowder.json",
+		"op": "add",
+		"path": "/-",
+		"value": {
+			"ingredientPattern": "JR",
+			"width": 2,
+			"height": 1,
+			"shapeless": true,
+			"ingredients": {
+				"J": { "type": "item", "code": "primitivesurvival:jerky-fish-*", "name": "state", "allowedVariants": [ "cooked", "cured" ], "quantity": 4 },
+				"R": { "type": "item", "code": "pemmican:smashingrock", "isTool": true }
+			},
+			"output": { "type": "item", "code": "pemmican:jerkypowder-fish", "quantity": 1 }
+		},
+		"dependsOn": [ { "modid": "primitivesurvival" } ]
+	},
+	{
+		"file": "pemmican:recipes/grid/jerkypowder.json",
+		"op": "add",
+		"path": "/-",
+		"value": {
+			"ingredientPattern": "JR",
+			"width": 2,
+			"height": 1,
+			"shapeless": true,
+			"ingredients": {
+				"J": { "type": "item", "code": "primitivesurvival:jerky-fish-*", "name": "state", "allowedVariants": [ "cooked", "cured" ], "quantity": 4 },
+				"R": { "type": "item", "tags": [ "tool-hammer" ], "isTool": true }
+			},
+			"output": { "type": "item", "code": "pemmican:jerkypowder-fish", "quantity": 1 }
+		},
+		"dependsOn": [ { "modid": "primitivesurvival" } ]
+	}
+]
