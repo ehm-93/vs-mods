@@ -23,11 +23,21 @@ public class BlockEntityDryingRack : BlockEntity, ITexPositionSource
     const int Slots = HalfSlots * 2; // 0..5 = bottom half, 6..11 = top half
 
     // --- drying-rate model (starter constants; tune in-game) ---
-    const float AirBaseRate = 0.35f;
+    const float AirBaseRate = 0.35f;   // base coefficient; ~1/3 of a lit rack on a warm (30C), sunny, dry day
     const float BackslideRate = 0.20f;
     const float TempMin = 0f;
-    const float TempMax = 30f;
-    const float RainThreshold = 0.04f;
+    const float TempMax = 30f;         // warmth reference: this is "1x"; hotter multiplies higher (uncapped to WarmthCap)
+    const float WarmthFloor = 0.2f;    // even at/below freezing drying still creeps at this fraction of a 30C day
+    const float WarmthCap = 3f;        // hottest drying boost (~90C); 51C lands ~1.7x a 30C day
+    const float RainThreshold = 0.04f; // live precipitation above this counts as "raining"
+    const float ShelteredSky = 0.4f;   // air factor when something's overhead (shed/cellar) vs open sky (1.0)
+    const double LiveTickMaxHours = 1.0; // ticks longer than this are catch-up/fast-forward, not "present" — skip live rain
+    // Spoilage on the rack is slowed (drying IS preservation), modulated by climate humidity: the perish-speed
+    // multiplier runs from PerishMulDry in bone-dry air up to PerishMulWet in soaking air. Both are well below
+    // 1.0 — even a damp rack airs the meat, but raw meat (fresh 36h, rots by 60h at 1x) only out-dries the rot
+    // when it's dry. Raw vanilla perish can hit ~2.4x in heat, so these need to be low. Lower = preserves harder.
+    const float PerishMulDry = 0.05f;
+    const float PerishMulWet = 0.4f;
 
     readonly InventoryGeneric inventory = new InventoryGeneric(Slots, null, null, null);
     public bool HasBottom;
@@ -37,6 +47,7 @@ public class BlockEntityDryingRack : BlockEntity, ITexPositionSource
     readonly InWorldContainer perishContainer;
 
     double lastCalendarHours = -1;
+    int saveTickCounter; // throttles the idle tooltip re-sync (see Resync)
 
     ICoreClientAPI? capi;
     CollectibleObject? nowTesselatingObj;
@@ -63,6 +74,14 @@ public class BlockEntityDryingRack : BlockEntity, ITexPositionSource
         inventory.Pos = Pos;
         capi = api as ICoreClientAPI;
         perishContainer.Init(Api, () => Pos, () => MarkDirty(true));
+        // Dry air preserves: layer a humidity factor on top of the container's temperature/room perish rate.
+        // Added AFTER Init so this is the last subscriber — the event returns its value, and we fold the
+        // container's own GetPerishRate() back in so room + temperature still count. Only Perish is changed;
+        // other transitions mirror what InWorldContainer would return.
+        inventory.OnAcquireTransitionSpeed += (transType, stack, baseMul) =>
+            transType == EnumTransitionType.Perish
+                ? perishContainer.GetPerishRate() * PerishHumidityMul()
+                : (transType == EnumTransitionType.Dry || transType == EnumTransitionType.Melt ? 0.25f : 1f);
         if (lastCalendarHours < 0) lastCalendarHours = api.World.Calendar.TotalHours;
         if (api.Side == EnumAppSide.Server) RegisterGameTickListener(OnRackTick, 10000);
     }
@@ -186,71 +205,96 @@ public class BlockEntityDryingRack : BlockEntity, ITexPositionSource
         perishContainer.OnTick(dt);
 
         double now = Api.World.Calendar.TotalHours;
-        double elapsed = now - lastCalendarHours;
+        double windowStart = lastCalendarHours;
+        double elapsed = now - windowStart;
         if (elapsed <= 0) return;
 
         ClimateCondition? cc = Api.World.BlockAccessor.GetClimateAt(Pos, EnumGetClimateMode.NowValues);
-        if (cc == null) return;
+        if (cc == null) return; // chunk not ready — retry next tick without consuming the window
         lastCalendarHours = now;
 
+        // Time-INVARIANT air favourability: climate-average dryness + sky exposure. Sun magnitude is dropped on
+        // purpose — OnlySunLight is geometric (same at noon and midnight) and daylight averages to ~constant
+        // over any multi-hour window; the diurnal/seasonal swing is carried entirely by per-step temperature.
         bool openToSky = Pos.Y >= Api.World.BlockAccessor.GetRainMapHeightAt(Pos.X, Pos.Z);
-        int sun = Api.World.BlockAccessor.GetLightLevel(Pos, EnumLightLevelType.OnlySunLight);
-        float rate = ComputeDryingRate(cc, openToSky, sun);
+        float dry01 = 1f - GameMath.Clamp(cc.WorldgenRainfall, 0f, 1f);
+        float air = 0.15f + 0.85f * ((openToSky ? 1f : ShelteredSky) + dry01) / 2f;
 
-        bool dirty = false;
-        if (rate < 0f)
+        // Live rain only: when we're actually present (a short real-time tick) and rain is falling on an open
+        // rack, rehydrate for just this short slice. Skipped for catch-up/fast-forward ticks — the instantaneous
+        // reading says nothing about the window's real rain history (there is no historical precipitation API),
+        // so a stale reload-instant shower must not nuke days of progress.
+        if (elapsed <= LiveTickMaxHours && openToSky && cc.Rainfall > RainThreshold)
         {
-            float delta = (float)(rate * elapsed);
+            float back = (float)(BackslideRate * elapsed);
             for (int i = 0; i < Slots; i++)
             {
                 if (Match(inventory[i].Itemstack) is not DryingResult m || m.RequiresFire) continue;
-                float p = dryProgress[i] + delta;
-                dryProgress[i] = p < 0f ? 0f : p;
+                dryProgress[i] = Math.Max(0f, dryProgress[i] - back);
             }
+            Resync(false);
+            return;
         }
-        else if (rate > 0f)
+
+        DryingResult?[] matches = new DryingResult?[Slots];
+        bool any = false;
+        for (int i = 0; i < Slots; i++)
+            if (Match(inventory[i].Itemstack) is DryingResult m && !m.RequiresFire) { matches[i] = m; any = true; }
+        if (!any) { Resync(false); return; }
+
+        // Integrate drying across the window, RE-SAMPLING temperature at each step's historical date (mirrors
+        // BEBehaviorBerryChilling.CheckChill) so a fast-forward sees the real day/night + seasonal heat curve
+        // rather than a single reload-instant snapshot. Step coarsens for very large jumps to bound the work.
+        bool dirty = false;
+        double hoursPerDay = Api.World.Calendar.HoursPerDay;
+        double step = Math.Max(1.0, elapsed / 1000.0); // <= ~1000 climate samples per tick
+        for (double t = windowStart; t < now - 1e-6; t += step)
         {
-            DryingResult?[] matches = new DryingResult?[Slots];
+            double chunk = Math.Min(step, now - t);
+            float temp = Api.World.BlockAccessor
+                .GetClimateAt(Pos, EnumGetClimateMode.ForSuppliedDate_TemperatureOnly, (t + chunk * 0.5) / hoursPerDay)
+                .Temperature;
+            float warmth = GameMath.Clamp((temp - TempMin) / (TempMax - TempMin), WarmthFloor, WarmthCap);
+            float delta = (float)(AirBaseRate * air * warmth * chunk);
+
             for (int i = 0; i < Slots; i++)
-                if (Match(inventory[i].Itemstack) is DryingResult m && !m.RequiresFire) matches[i] = m;
-
-            const double step = 1.0;
-            double remaining = elapsed;
-            int safety = 200_000;
-            while (remaining > 1e-6 && safety-- > 0)
             {
-                double chunk = Math.Min(step, remaining);
-                remaining -= chunk;
-                float delta = (float)(rate * chunk);
-
-                for (int i = 0; i < Slots; i++)
+                if (matches[i] is not DryingResult m) continue;
+                float p = dryProgress[i] + delta;
+                if (p >= m.Hours)
                 {
-                    if (matches[i] is not DryingResult m) continue;
-                    float p = dryProgress[i] + delta;
-                    if (p >= m.Hours)
-                    {
-                        inventory[i].Itemstack = new ItemStack(m.Output, m.Quantity);
-                        inventory[i].MarkDirty();
-                        dryProgress[i] = 0f;
-                        matches[i] = null;
-                        dirty = true;
-                    }
-                    else dryProgress[i] = p;
+                    inventory[i].Itemstack = new ItemStack(m.Output, m.Quantity);
+                    inventory[i].MarkDirty();
+                    dryProgress[i] = 0f;
+                    matches[i] = null;
+                    dirty = true;
                 }
+                else dryProgress[i] = p;
             }
         }
 
-        if (dirty) MarkDirty(true);
-        else if (HasRackable()) MarkDirty();
+        Resync(dirty);
     }
 
-    float ComputeDryingRate(ClimateCondition cc, bool openToSky, int sunLight)
+    // A conversion forces an immediate re-sync + re-mesh; otherwise keep the progress/spoilage tooltip roughly
+    // live by re-syncing every few ticks (drying % only moves over hours), throttled like the smoking firepit.
+    void Resync(bool dirty)
     {
-        if (openToSky && cc.Rainfall > RainThreshold) return -BackslideRate;
-        float sun01 = sunLight / 32f;
-        float temp01 = GameMath.Clamp((cc.Temperature - TempMin) / (TempMax - TempMin), 0f, 1f);
-        float dry01 = 1f - GameMath.Clamp(cc.WorldgenRainfall, 0f, 1f);
-        return AirBaseRate * (sun01 + temp01 + dry01) / 3f;
+        if (dirty) { saveTickCounter = 0; MarkDirty(true); return; }
+        if (++saveTickCounter < 3) return;
+        saveTickCounter = 0;
+        if (HasRackable()) MarkDirty();
+    }
+
+    // Perish-speed factor from the local climate humidity: PerishMulWet in a wet climate down to PerishMulDry
+    // in a bone-dry one (both < 1). Multiplied onto the container's temperature/room perish rate so the rack
+    // preserves, hardest in dry air.
+    float PerishHumidityMul()
+    {
+        if (Api == null) return 1f;
+        ClimateCondition? cc = Api.World.BlockAccessor.GetClimateAt(Pos, EnumGetClimateMode.NowValues);
+        float humidity = cc != null ? GameMath.Clamp(cc.WorldgenRainfall, 0f, 1f) : 1f;
+        return PerishMulDry + (PerishMulWet - PerishMulDry) * humidity;
     }
 
     // ---------------- rendering ----------------

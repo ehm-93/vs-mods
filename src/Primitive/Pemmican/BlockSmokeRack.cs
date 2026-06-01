@@ -15,6 +15,7 @@ namespace Ehm93.VS.Primitive.Pemmican;
 public class BlockSmokeRack : Block
 {
     WorldInteraction[]? interactions;
+    WorldInteraction? addTierInteraction; // shown only while the rack has no top tier yet
 
     public override void OnLoaded(ICoreAPI api)
     {
@@ -46,14 +47,14 @@ public class BlockSmokeRack : Block
                 ActionLangCode = "pemmican:blockhelp-dryingrack-take-bulk",
                 MouseButton = EnumMouseButton.Right,
                 HotKeyCode = "ctrl"
-            },
-            // Holding the rack item, aiming at the empty upper half: stack a second tier on top.
-            new WorldInteraction
-            {
-                ActionLangCode = "pemmican:blockhelp-dryingrack-addtier",
-                MouseButton = EnumMouseButton.Right,
-                Itemstacks = new[] { new ItemStack(this) }
             }
+        };
+        // Holding the rack item: stack a second tier on top. Only offered when the top tier is still empty.
+        addTierInteraction = new WorldInteraction
+        {
+            ActionLangCode = "pemmican:blockhelp-dryingrack-addtier",
+            MouseButton = EnumMouseButton.Right,
+            Itemstacks = new[] { new ItemStack(this) }
         };
     }
 
@@ -109,20 +110,21 @@ public class BlockSmokeRack : Block
             return true;
         }
 
-        // Hang meat (or fresh fruit, with Expanded Foods) on the targeted half: the piece nearest the aim
-        // point first, else the first free spot so the click never silently no-ops.
+        // Hang meat (or fresh fruit, with Expanded Foods) on the targeted half. Ctrl (bulk) always hangs as
+        // many as fit, ignoring the aim point; otherwise fill the piece nearest the aim, else the first free.
         if (held != null && be.HasHalf(level) && be.IsRackable(held))
         {
-            int slot = SlotFromHit(blockSel);
+            int slot = bulk ? 0 : SlotFromHit(blockSel);
             if (world.Side == EnumAppSide.Server && !(slot > 0 && be.TryHangSlot(level, slot, hand)))
                 be.TryHang(level, hand, bulk);
             return true;
         }
 
-        // Empty hand: take the piece nearest the aim point, or fall back to the top piece of that half.
+        // Empty hand: Ctrl (bulk) always takes the whole half; otherwise take the piece nearest the aim, else
+        // the top piece.
         if (held == null && be.HasHalf(level))
         {
-            int slot = SlotFromHit(blockSel);
+            int slot = bulk ? 0 : SlotFromHit(blockSel);
             if (world.Side == EnumAppSide.Server && !(slot > 0 && be.TryTakeSlot(level, slot, byPlayer)))
                 be.TryTake(level, byPlayer, bulk);
             return true;
@@ -152,7 +154,11 @@ public class BlockSmokeRack : Block
 
     public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer)
     {
-        return (interactions ?? System.Array.Empty<WorldInteraction>()).Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer));
+        List<WorldInteraction> help = new(interactions ?? System.Array.Empty<WorldInteraction>());
+        // Only offer "Add a tier" while the top tier is empty (i.e. the rack isn't already two-high).
+        BlockEntityDryingRack? be = world.BlockAccessor.GetBlockEntity<BlockEntityDryingRack>(selection.Position);
+        if (addTierInteraction != null && be != null && !be.HasTop) help.Add(addTierInteraction);
+        return help.ToArray().Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer));
     }
 
     static ItemStack[] RackableStacks(IWorldAccessor world)
