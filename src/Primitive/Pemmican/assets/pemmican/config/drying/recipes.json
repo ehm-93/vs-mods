@@ -1,37 +1,38 @@
 [
 	{
-    "code": "redmeat",
-    "input": { "code": "game:redmeat-*" },
-    "output": { "code": "pemmican:jerky-redmeat" }
-  },
+		"code": "redmeat",
+		"input": { "code": "game:redmeat-*", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } },
+		"output": { "code": "pemmican:jerky-redmeat", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } }
+	},
 	{
-    "code": "bushmeat",
-    "input": { "code": "game:bushmeat-*" },
-    "output": { "code": "pemmican:jerky-bushmeat" }
-  },
+		"code": "bushmeat",
+		"input": { "code": "game:bushmeat-*", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } },
+		"output": { "code": "pemmican:jerky-bushmeat", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } }
+	},
 	{
-    "code": "fish",
-    "input": { "code": "game:fish-*" },
-    "output": { "code": "pemmican:jerky-fish" }
-  },
+		"code": "fish",
+		"input": { "code": "game:fish-*", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } },
+		"output": { "code": "pemmican:jerky-fish", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } }
+	},
 	{
-    "code": "poultry",
-    "input": { "code": "game:poultry-*" },
-    "output": { "code": "pemmican:jerky-poultry" }
-  },
+		"code": "poultry",
+		"input": { "code": "game:poultry-*", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } },
+		"output": { "code": "pemmican:jerky-poultry", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } }
+	},
 	{
-    "code": "primemeat",
-		"dependsOn": [{ "modid": "butchering" }],
-    "input": {
-      "code": "butchering:primemeat-*",
-      "skipVariants": ["healing", "curedhealing"]
-    },
-    "output": { "code": "pemmican:jerky-primemeat" }
-  },
+		"code": "primemeat",
+		"dependsOn": [ { "modid": "butchering" } ],
+		"input": {
+			"code": "butchering:primemeat-*",
+			"skipVariants": [ "healing", "curedhealing" ],
+			"render": { "scale": 0.68, "translation": [ 0, 0, 0 ] }
+		},
+		"output": { "code": "pemmican:jerky-primemeat", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } }
+	},
 	{
-    "code": "fruit",
-    "dependsOn": [{ "modid": "expandedfoods" }],
-    "input": { "code": "game:fruit-*", "name": "type" },
-    "output": { "code": "expandedfoods:dryfruit-{type}" }
-  }
+		"code": "fruit",
+		"dependsOn": [ { "modid": "expandedfoods" } ],
+		"input": { "code": "game:fruit-*", "name": "type", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } },
+		"output": { "code": "expandedfoods:dryfruit-{type}", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } }
+	}
 ]

@@ -50,22 +50,35 @@ public class BlockSmokeRack : Block
         };
     }
 
-    // Selection box 0 is the whole frame (general hang/take); boxes 1..RackSlots are the individual hang
-    // spots, matched to the rendered item layout so the player can target one piece.
-    static Cuboidf[]? selectionBoxes;
-    public override Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos)
+    // The standalone rack is a half-slab: a cell always has a BOTTOM (level 0) half-rack and, once you stack
+    // a second one on it, a TOP (level 1). One clean selection box per PRESENT half (no busy per-slot boxes);
+    // the exact hang spot is picked from the aim point (HitPosition) instead. The top box only appears once
+    // the top half exists, so a single slab shows just one outline.
+    static readonly Cuboidf BottomBox = new Cuboidf(0.12f, 0f, 0.12f, 0.88f, 0.5f, 0.88f);
+    static readonly Cuboidf TopBox = new Cuboidf(0.12f, 0.5f, 0.12f, 0.88f, 1.0f, 0.88f);
+    static readonly Cuboidf[] BottomOnly = { BottomBox };
+    static readonly Cuboidf[] BothBoxes = { BottomBox, TopBox };
+
+    Cuboidf[] HalfBoxes(IBlockAccessor blockAccessor, BlockPos pos)
+        => blockAccessor.GetBlockEntity<BlockEntityDryingRack>(pos)?.HasTop == true ? BothBoxes : BottomOnly;
+
+    public override Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos) => HalfBoxes(blockAccessor, pos);
+    public override Cuboidf[] GetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos) => HalfBoxes(blockAccessor, pos);
+
+    // Nearest hang spot to the aim point within a half (0 = none/frame). HitPosition is block-relative 0..1.
+    static int SlotFromHit(BlockSelection sel)
     {
-        if (selectionBoxes == null)
+        Vec3d hit = sel.HitPosition;
+        int best = 0;
+        double bestD = 0.02; // ~0.14-block radius around a hang spot
+        for (int i = 0; i < BlockEntityDryingRack.HalfSlots; i++)
         {
-            List<Cuboidf> boxes = new() { new Cuboidf(0.12f, 0f, 0.12f, 0.88f, 0.69f, 0.88f) };
-            for (int i = 0; i < BlockEntityRack.RackSlots; i++)
-            {
-                float x = BlockEntityRack.PosX[i], z = BlockEntityRack.PosZ[i];
-                boxes.Add(new Cuboidf(x - 0.13f, 0.62f, z - 0.13f, x + 0.13f, 1.0f, z + 0.13f));
-            }
-            selectionBoxes = boxes.ToArray();
+            double dx = hit.X - BlockEntityDryingRack.PosX[i];
+            double dz = hit.Z - BlockEntityDryingRack.PosZ[i];
+            double d = dx * dx + dz * dz;
+            if (d < bestD) { bestD = d; best = i + 1; }
         }
-        return selectionBoxes;
+        return best;
     }
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
@@ -73,28 +86,38 @@ public class BlockSmokeRack : Block
         BlockEntityDryingRack? be = world.BlockAccessor.GetBlockEntity<BlockEntityDryingRack>(blockSel.Position);
         if (be == null) return base.OnBlockInteractStart(world, byPlayer, blockSel);
 
+        int level = blockSel.SelectionBoxIndex >= 1 ? 1 : 0; // box 1 = top half (only present once HasTop)
         ItemSlot hand = byPlayer.InventoryManager.ActiveHotbarSlot;
         ItemStack? held = hand.Itemstack;
         bool bulk = byPlayer.Entity.Controls.CtrlKey;
-        // Box 1..RackSlots targets that exact hang spot; box 0 (frame) keeps the general behavior.
-        int targeted = blockSel.SelectionBoxIndex >= 1 && blockSel.SelectionBoxIndex <= BlockEntityRack.RackSlots
-            ? blockSel.SelectionBoxIndex : 0;
 
-        // Hang meat (or fresh fruit, with Expanded Foods) on the rack. If a specific (empty) spot is
-        // targeted, fill it; otherwise — including when the targeted spot is already full — fall back to
-        // the first free spot so the click never silently no-ops.
-        if (held != null && be.IsRackable(held))
+        // Holding the rack item with no top yet -> stack a second half-rack on top of this one.
+        if (held?.Collectible?.Code == Code && !be.HasTop)
         {
-            if (world.Side == EnumAppSide.Server && !(targeted > 0 && be.TryHangSlot(targeted, hand)))
-                be.TryHang(hand, bulk);
+            if (world.Side == EnumAppSide.Server)
+            {
+                be.InstallHalf(1);
+                if (byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative) { hand.TakeOut(1); hand.MarkDirty(); }
+            }
             return true;
         }
 
-        // Empty hand: take the targeted piece, or — if that spot is empty — fall back to the top piece.
-        if (held == null)
+        // Hang meat (or fresh fruit, with Expanded Foods) on the targeted half: the piece nearest the aim
+        // point first, else the first free spot so the click never silently no-ops.
+        if (held != null && be.HasHalf(level) && be.IsRackable(held))
         {
-            if (world.Side == EnumAppSide.Server && !(targeted > 0 && be.TryTakeSlot(targeted, byPlayer)))
-                be.TryTake(byPlayer, bulk);
+            int slot = SlotFromHit(blockSel);
+            if (world.Side == EnumAppSide.Server && !(slot > 0 && be.TryHangSlot(level, slot, hand)))
+                be.TryHang(level, hand, bulk);
+            return true;
+        }
+
+        // Empty hand: take the piece nearest the aim point, or fall back to the top piece of that half.
+        if (held == null && be.HasHalf(level))
+        {
+            int slot = SlotFromHit(blockSel);
+            if (world.Side == EnumAppSide.Server && !(slot > 0 && be.TryTakeSlot(level, slot, byPlayer)))
+                be.TryTake(level, byPlayer, bulk);
             return true;
         }
 
@@ -108,6 +131,8 @@ public class BlockSmokeRack : Block
             world.BlockAccessor.GetBlockEntity<BlockEntityDryingRack>(pos)?.DropContents();
         }
         base.OnBlockBroken(world, pos, byPlayer, dropQuantityMultiplier);
+        // Removing a rack can re-shape the whole group's convex decomposition, so re-mesh the lot.
+        BlockEntityDryingRack.RemeshGroup(world, pos);
     }
 
     // A neighbouring rack appearing or disappearing changes which legs we merge, so re-mesh this one.

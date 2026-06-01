@@ -78,6 +78,19 @@ public class PemmicanModSystem : ModSystem
         return null;
     }
 
+    // The per-recipe render override for a hung stack (matched as either a drying input or a dried output),
+    // or null to use the rack's default scale/position. Used by the rack when tesselating hung pieces.
+    public RenderTransform? RenderFor(ItemStack? stack)
+    {
+        if (stack?.Collectible?.Code is not AssetLocation code) return null;
+        foreach (DryingRecipe r in dryingRecipes)
+        {
+            RenderTransform? rt = r.RenderFor(code);
+            if (rt != null) return rt;
+        }
+        return null;
+    }
+
     public override void Dispose()
     {
         patcher?.UnpatchAll(ModId);

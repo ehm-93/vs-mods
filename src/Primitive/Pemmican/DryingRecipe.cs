@@ -68,6 +68,33 @@ public class DryingRecipe
         }
         return new AssetLocation(Output.Code);
     }
+
+    // The render override for a hung stack: the input's when the stack is a drying input, the output's when
+    // it is this recipe's dried result, else null (so the rack falls back to its default scale/position).
+    public RenderTransform? RenderFor(AssetLocation code)
+    {
+        if (OutputFor(code) != null) return Input.Render;
+        if (MatchesOutput(code)) return Output.Render;
+        return null;
+    }
+
+    bool MatchesOutput(AssetLocation code)
+    {
+        string outCode = Output.Code.Contains(':') ? Output.Code : "game:" + Output.Code;
+        string token = "{" + (Input.Name ?? "variant") + "}";
+        if (outCode.Contains(token))
+            return WildcardUtil.Match(new AssetLocation(outCode.Replace(token, "*")), code);
+        return new AssetLocation(outCode).Equals(code);
+    }
+}
+
+// Per-recipe override for how a hung piece renders on the drying rack: an absolute item `scale` and/or a
+// `translation` [x, y, z] offset (block units, 0..1) from the piece's default hang position. Either may be
+// omitted, in which case the rack's default is used for that part.
+public class RenderTransform
+{
+    [JsonProperty("scale")] public float? Scale;
+    [JsonProperty("translation")] public float[]? Translation;
 }
 
 public class DryingInput
@@ -84,6 +111,9 @@ public class DryingInput
 
     // Blacklist: these bare variant names are excluded (e.g. ["healing","curedhealing"]).
     [JsonProperty("skipVariants")] public string[]? SkipVariants;
+
+    // Optional override for how a hung INPUT (raw) piece renders on the rack.
+    [JsonProperty("render")] public RenderTransform? Render;
 }
 
 // Mirrors the vanilla JSON-patch dependency object ({ "modid": "...", "invert": false }).
@@ -100,6 +130,9 @@ public class DryingOutput
 
     // Output stack size per piece dried (default 1).
     [JsonProperty("quantity")] public int Quantity = 1;
+
+    // Optional override for how the dried OUTPUT piece renders on the rack.
+    [JsonProperty("render")] public RenderTransform? Render;
 }
 
 // A resolved match for an input stack: the output item plus how much/how long. A struct so Match()

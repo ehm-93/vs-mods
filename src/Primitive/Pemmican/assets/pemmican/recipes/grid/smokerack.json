@@ -1,8 +1,7 @@
 {
-	"ingredientPattern": "SSR,S_K",
+	"ingredientPattern": "SSS,SRS,_K_",
 	"width": 3,
-	"height": 2,
-	"shapeless": true,
+	"height": 3,
 	"ingredients": {
 		"S": { "type": "item", "code": "game:stick" },
 		"R": { "type": "item", "code": "game:rope" },
