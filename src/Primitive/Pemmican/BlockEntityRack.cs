@@ -14,7 +14,7 @@ namespace Ehm93.VS.Primitive.Pemmican;
 // 1..RackSlots. Subclasses add their own processing (burning + batch smoke, or climate-driven drying).
 public abstract class BlockEntityRack : BlockEntity, ITexPositionSource
 {
-    public const int RackSlots = 8;
+    public const int RackSlots = 6;
 
     protected InventoryGeneric inventory;
     public InventoryBase Inventory => inventory;
@@ -30,10 +30,12 @@ public abstract class BlockEntityRack : BlockEntity, ITexPositionSource
 
     // On-rack item layout (block-local 0..1): a 3 / 2 / 3 arrangement (back, middle, front rows). Public
     // so the block can build matching per-slot selection boxes. Index i here maps to rack slot i+1.
-    protected const float ItemScale = 0.7f;
-    protected const float ItemY = 0.98f;
-    public static readonly float[] PosX = { 0.2f, 0.5f, 0.8f, 0.35f, 0.65f, 0.2f, 0.5f, 0.8f };
-    public static readonly float[] PosZ = { 0.2f, 0.2f, 0.2f, 0.5f, 0.5f, 0.8f, 0.8f, 0.8f };
+    protected const float ItemScale = 0.68f;
+    protected const float ItemY = 0.64f; // sit on the full-height rack's rungs (the half-slab drying rack uses 0.32)
+    // Same 6-spot layout as the standalone drying rack (2 per rung, inboard of the posts) so the two racks
+    // render identically; only ItemY differs since this rack is full-height rather than a half-slab.
+    public static readonly float[] PosX = { 0.36f, 0.64f, 0.36f, 0.64f, 0.36f, 0.64f };
+    public static readonly float[] PosZ = { 0.25f, 0.25f, 0.5f, 0.5f, 0.75f, 0.75f };
 
     // Distinguishes inventories per block type (used as the inventory network/save id).
     protected abstract string InventoryId { get; }
@@ -204,7 +206,7 @@ public abstract class BlockEntityRack : BlockEntity, ITexPositionSource
     {
         if (capi == null) return;
 
-        Vec3f center = new Vec3f(0.5f, 0.5f, 0.5f);
+        Vec3f center = new Vec3f(0.5f, 0f, 0.5f);
         for (int i = 1; i <= RackSlots; i++)
         {
             ItemStack? stack = inventory[i].Itemstack;
@@ -215,10 +217,17 @@ public abstract class BlockEntityRack : BlockEntity, ITexPositionSource
             capi.Tesselator.TesselateItem(stack.Item, out MeshData mesh, this);
             mesh.RenderPassesAndExtraBits.Fill((short)EnumChunkRenderPass.Opaque);
 
-            mesh.Scale(center, ItemScale, ItemScale, ItemScale);
+            // Per-recipe render override (scale / [x,y,z] offset), else the rack defaults — same as the drying rack.
+            RenderTransform? rt = (rackRecipes ??= Api.ModLoader.GetModSystem<PemmicanModSystem>())?.RenderFor(stack);
+            float scale = rt?.Scale ?? ItemScale;
+            float[]? t = rt?.Translation;
+            float tx = t != null && t.Length > 0 ? t[0] : 0f;
+            float ty = t != null && t.Length > 1 ? t[1] : 0f;
+            float tz = t != null && t.Length > 2 ? t[2] : 0f;
+            mesh.Scale(center, scale, scale, scale);
 
             int idx = i - 1;
-            mesh.Translate(PosX[idx] - 0.5f, ItemY - 0.5f, PosZ[idx] - 0.5f);
+            mesh.Translate(PosX[idx] - 0.5f + tx, ItemY + ty, PosZ[idx] - 0.5f + tz);
             mesher.AddMeshData(mesh);
         }
     }
