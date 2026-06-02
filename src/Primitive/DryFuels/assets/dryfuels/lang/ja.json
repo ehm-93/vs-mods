@@ -1,0 +1,20 @@
+{
+	"__comment": "AIによる翻訳です。出来が悪ければ修正の貢献をお願いします。作者はこの言語を話せません。",
+
+	"dryfuels:modname": "乾燥燃料",
+	"dryfuels:moddesc": "薪と泥炭は乾燥するにつれて熟成し、乾けばより長く燃えます。",
+
+	"dryfuels:item-firewood": "乾燥した薪",
+	"dryfuels:block-peatbrick": "乾燥した泥炭レンガ",
+
+	"dryfuels:block-seasonedcharcoalpile-1": "乾燥木炭 1層",
+	"dryfuels:block-seasonedcharcoalpile-2": "乾燥木炭 2層",
+	"dryfuels:block-seasonedcharcoalpile-3": "乾燥木炭 3層",
+	"dryfuels:block-seasonedcharcoalpile-4": "乾燥木炭 4層",
+	"dryfuels:block-seasonedcharcoalpile-5": "乾燥木炭 5層",
+	"dryfuels:block-seasonedcharcoalpile-6": "乾燥木炭 6層",
+	"dryfuels:block-seasonedcharcoalpile-7": "乾燥木炭 7層",
+	"dryfuels:block-seasonedcharcoalpile-8": "乾燥木炭 8層",
+
+	"dryfuels:seasoning-progress": "乾燥: {0}%"
+}

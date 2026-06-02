@@ -13,6 +13,7 @@ public class DryFuelsModSystem : ModSystem
     {
         base.Start(api);
         api.RegisterBlockEntityBehaviorClass("FuelSeasoning", typeof(BEBehaviorFuelSeasoning));
+        api.RegisterBlockEntityClass("SeasonedCharcoalPit", typeof(BlockEntitySeasonedCharcoalPit));
 
         if (!Harmony.HasAnyPatches(ModId))
         {

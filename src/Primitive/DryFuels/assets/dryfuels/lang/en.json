@@ -3,5 +3,13 @@
   "dryfuels:moddesc": "Firewood and peat season as they dry, burning longer once cured.",
   "dryfuels:item-firewood": "Seasoned Firewood",
   "dryfuels:block-peatbrick": "Dried Peat Brick",
+  "dryfuels:block-seasonedcharcoalpile-1": "1 layer of seasoned charcoal",
+  "dryfuels:block-seasonedcharcoalpile-2": "2 layers of seasoned charcoal",
+  "dryfuels:block-seasonedcharcoalpile-3": "3 layers of seasoned charcoal",
+  "dryfuels:block-seasonedcharcoalpile-4": "4 layers of seasoned charcoal",
+  "dryfuels:block-seasonedcharcoalpile-5": "5 layers of seasoned charcoal",
+  "dryfuels:block-seasonedcharcoalpile-6": "6 layers of seasoned charcoal",
+  "dryfuels:block-seasonedcharcoalpile-7": "7 layers of seasoned charcoal",
+  "dryfuels:block-seasonedcharcoalpile-8": "8 layers of seasoned charcoal",
   "dryfuels:seasoning-progress": "Seasoning: {0}%"
 }

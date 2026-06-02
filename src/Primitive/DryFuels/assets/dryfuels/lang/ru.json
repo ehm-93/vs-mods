@@ -1,0 +1,20 @@
+{
+	"__comment": "Перевод сгенерирован ИИ. Пожалуйста, предложите исправления, если он плохой — автор не говорит на этом языке.",
+
+	"dryfuels:modname": "Сухое топливо",
+	"dryfuels:moddesc": "Дрова и торф выдерживаются по мере высыхания и горят дольше после просушки.",
+
+	"dryfuels:item-firewood": "Выдержанные дрова",
+	"dryfuels:block-peatbrick": "Сухой торфяной брикет",
+
+	"dryfuels:block-seasonedcharcoalpile-1": "1 слой выдержанного древесного угля",
+	"dryfuels:block-seasonedcharcoalpile-2": "2 слоя выдержанного древесного угля",
+	"dryfuels:block-seasonedcharcoalpile-3": "3 слоя выдержанного древесного угля",
+	"dryfuels:block-seasonedcharcoalpile-4": "4 слоя выдержанного древесного угля",
+	"dryfuels:block-seasonedcharcoalpile-5": "5 слоёв выдержанного древесного угля",
+	"dryfuels:block-seasonedcharcoalpile-6": "6 слоёв выдержанного древесного угля",
+	"dryfuels:block-seasonedcharcoalpile-7": "7 слоёв выдержанного древесного угля",
+	"dryfuels:block-seasonedcharcoalpile-8": "8 слоёв выдержанного древесного угля",
+
+	"dryfuels:seasoning-progress": "Выдержка: {0}%"
+}

@@ -1,0 +1,8 @@
+[
+  {
+    "file": "game:blocktypes/charcoalpit.json",
+    "op": "replace",
+    "path": "/entityClass",
+    "value": "SeasonedCharcoalPit"
+  }
+]

@@ -1,0 +1,20 @@
+{
+	"__comment": "KI-generierte Übersetzung. Bitte Korrekturen beitragen, wenn sie schlecht sind – der Autor spricht diese Sprache nicht.",
+
+	"dryfuels:modname": "Trockenbrennstoffe",
+	"dryfuels:moddesc": "Brennholz und Torf reifen beim Trocknen und brennen länger, sobald sie abgelagert sind.",
+
+	"dryfuels:item-firewood": "Abgelagertes Brennholz",
+	"dryfuels:block-peatbrick": "Getrockneter Torfziegel",
+
+	"dryfuels:block-seasonedcharcoalpile-1": "1 Schicht abgelagerte Holzkohle",
+	"dryfuels:block-seasonedcharcoalpile-2": "2 Schichten abgelagerte Holzkohle",
+	"dryfuels:block-seasonedcharcoalpile-3": "3 Schichten abgelagerte Holzkohle",
+	"dryfuels:block-seasonedcharcoalpile-4": "4 Schichten abgelagerte Holzkohle",
+	"dryfuels:block-seasonedcharcoalpile-5": "5 Schichten abgelagerte Holzkohle",
+	"dryfuels:block-seasonedcharcoalpile-6": "6 Schichten abgelagerte Holzkohle",
+	"dryfuels:block-seasonedcharcoalpile-7": "7 Schichten abgelagerte Holzkohle",
+	"dryfuels:block-seasonedcharcoalpile-8": "8 Schichten abgelagerte Holzkohle",
+
+	"dryfuels:seasoning-progress": "Ablagerung: {0}%"
+}

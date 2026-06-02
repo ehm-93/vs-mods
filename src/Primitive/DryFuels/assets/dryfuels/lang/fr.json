@@ -1,0 +1,20 @@
+{
+	"__comment": "Traduction générée par IA. Merci de contribuer des corrections si elles sont mauvaises – l'auteur ne parle pas cette langue.",
+
+	"dryfuels:modname": "Combustibles secs",
+	"dryfuels:moddesc": "Le bois de chauffage et la tourbe sèchent avec le temps et brûlent plus longtemps une fois séchés.",
+
+	"dryfuels:item-firewood": "Bois de chauffage séché",
+	"dryfuels:block-peatbrick": "Brique de tourbe séchée",
+
+	"dryfuels:block-seasonedcharcoalpile-1": "1 couche de charbon de bois séché",
+	"dryfuels:block-seasonedcharcoalpile-2": "2 couches de charbon de bois séché",
+	"dryfuels:block-seasonedcharcoalpile-3": "3 couches de charbon de bois séché",
+	"dryfuels:block-seasonedcharcoalpile-4": "4 couches de charbon de bois séché",
+	"dryfuels:block-seasonedcharcoalpile-5": "5 couches de charbon de bois séché",
+	"dryfuels:block-seasonedcharcoalpile-6": "6 couches de charbon de bois séché",
+	"dryfuels:block-seasonedcharcoalpile-7": "7 couches de charbon de bois séché",
+	"dryfuels:block-seasonedcharcoalpile-8": "8 couches de charbon de bois séché",
+
+	"dryfuels:seasoning-progress": "Séchage : {0}%"
+}

@@ -1,0 +1,20 @@
+{
+	"__comment": "Переклад згенеровано ШІ. Будь ласка, запропонуйте виправлення, якщо він поганий — автор не розмовляє цією мовою.",
+
+	"dryfuels:modname": "Сухе паливо",
+	"dryfuels:moddesc": "Дрова та торф визрівають під час сушіння й горять довше після просушування.",
+
+	"dryfuels:item-firewood": "Витримані дрова",
+	"dryfuels:block-peatbrick": "Сухий торф'яний брикет",
+
+	"dryfuels:block-seasonedcharcoalpile-1": "1 шар витриманого деревного вугілля",
+	"dryfuels:block-seasonedcharcoalpile-2": "2 шари витриманого деревного вугілля",
+	"dryfuels:block-seasonedcharcoalpile-3": "3 шари витриманого деревного вугілля",
+	"dryfuels:block-seasonedcharcoalpile-4": "4 шари витриманого деревного вугілля",
+	"dryfuels:block-seasonedcharcoalpile-5": "5 шарів витриманого деревного вугілля",
+	"dryfuels:block-seasonedcharcoalpile-6": "6 шарів витриманого деревного вугілля",
+	"dryfuels:block-seasonedcharcoalpile-7": "7 шарів витриманого деревного вугілля",
+	"dryfuels:block-seasonedcharcoalpile-8": "8 шарів витриманого деревного вугілля",
+
+	"dryfuels:seasoning-progress": "Витримка: {0}%"
+}

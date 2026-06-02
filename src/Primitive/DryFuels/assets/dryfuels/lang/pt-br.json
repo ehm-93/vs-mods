@@ -1,0 +1,20 @@
+{
+	"__comment": "Tradução gerada por IA. Por favor, contribua com correções se estiverem ruins – o autor não fala este idioma.",
+
+	"dryfuels:modname": "Combustíveis Secos",
+	"dryfuels:moddesc": "Lenha e turfa curam ao secar, queimando por mais tempo depois de curadas.",
+
+	"dryfuels:item-firewood": "Lenha Curada",
+	"dryfuels:block-peatbrick": "Tijolo de Turfa Seco",
+
+	"dryfuels:block-seasonedcharcoalpile-1": "1 camada de carvão curado",
+	"dryfuels:block-seasonedcharcoalpile-2": "2 camadas de carvão curado",
+	"dryfuels:block-seasonedcharcoalpile-3": "3 camadas de carvão curado",
+	"dryfuels:block-seasonedcharcoalpile-4": "4 camadas de carvão curado",
+	"dryfuels:block-seasonedcharcoalpile-5": "5 camadas de carvão curado",
+	"dryfuels:block-seasonedcharcoalpile-6": "6 camadas de carvão curado",
+	"dryfuels:block-seasonedcharcoalpile-7": "7 camadas de carvão curado",
+	"dryfuels:block-seasonedcharcoalpile-8": "8 camadas de carvão curado",
+
+	"dryfuels:seasoning-progress": "Secagem: {0}%"
+}
