@@ -4,13 +4,16 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.Server;
-using Vintagestory.GameContent;
 using Ehm93.VS.Shared;
 using Ehm93.VS.Crops.Common;
 
 namespace Ehm93.VS.Crops.Vernalization;
 
-public class BEBehaviorBerryChilling : BlockEntityBehavior, ICheckGrow, IOnExchanged
+// Cold-dormancy ("vernalization") requirement for fruiting bushes. A bush must accumulate enough
+// chill hours (temperature <= chillTemp) before it may begin a new fruiting cycle. The
+// Mature -> Flowering transition is gated on Vernalized (see FruitingBushPatches); beginning to
+// flower consumes the accumulated chill, so the bush needs a fresh cold period to fruit again.
+public class BEBehaviorBerryChilling : BlockEntityBehavior
 {
     protected readonly Func<bool> InGreenhouse;
     protected double chilledHours = 0;
@@ -23,30 +26,15 @@ public class BEBehaviorBerryChilling : BlockEntityBehavior, ICheckGrow, IOnExcha
     protected double forceDevernalizationTemperature = 0;
     protected double forceDevernalizationFactor = 0;
 
-    public bool Chilling
-    {
-        get => ChillProgress < 1;
-        set
-        {
-            if (Chilling == value) return;
-            if (!Chilling) chilledHours = 0;
-            else chilledHours = chilledHoursRequired;
-            Blockentity.MarkDirty(true);
-        }
-    }
+    public double ChillProgress => chilledHoursRequired <= 0 ? 1 : Math.Clamp(chilledHours / chilledHoursRequired, 0, 1);
 
-    public double ChillProgress => chilledHoursRequired == 0 ? 1 : Math.Clamp(chilledHours / chilledHoursRequired, 0, 1);
+    public bool Vernalized => ChillProgress >= 1;
 
     public BEBehaviorBerryChilling(BlockEntity blockentity) : base(blockentity)
     {
         InGreenhouse = FunctionUtils.MemoizeFor(
             TimeSpan.FromMinutes(2),
-            () =>
-            {
-                var rooms = Api.ModLoader.GetModSystem<RoomRegistry>();
-                var room = rooms.GetRoomForPosition(Pos);
-                return room != null && room.SkylightCount > room.NonSkylightCount && room.ExitCount == 0;
-            }
+            () => GreenhouseUtil.IsGreenhouse(Api, Pos)
         );
     }
 
@@ -62,9 +50,7 @@ public class BEBehaviorBerryChilling : BlockEntityBehavior, ICheckGrow, IOnExcha
         forceDevernalizationTemperature = properties["forceDevernalizationTemperature"].AsDouble(devernalizationTemperature + 5);
         forceDevernalizationFactor = properties["forceDevernalizationFactor"].AsDouble(forceDevernalizationFactor);
 
-        if (Block.Variant?["state"] == "ripe") Chilling = false;
-
-        if (Api is ICoreServerAPI) Blockentity.RegisterGameTickListener(ServerTick, 4500 + Api.World.Rand.Next(1000));
+        if (api is ICoreServerAPI) Blockentity.RegisterGameTickListener(ServerTick, 4500 + Api.World.Rand.Next(1000));
     }
 
     public override void ToTreeAttributes(ITreeAttribute tree)
@@ -84,22 +70,18 @@ public class BEBehaviorBerryChilling : BlockEntityBehavior, ICheckGrow, IOnExcha
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder dsc)
     {
         base.GetBlockInfo(forPlayer, dsc);
-        if (Chilling)
-        {
-            dsc.Clear();
-            dsc.AppendLine(Lang.Get("Dormant"));
-            dsc.AppendLine(Lang.Get("Vernalized below: {0}°C", chillTemp));
-            dsc.AppendLine(Lang.Get("Vernalization progress: {0}%", Math.Round(ChillProgress * 100)));
-        }
+        if (chilledHoursRequired <= 0 || Vernalized) return;
+        dsc.AppendLine(Lang.Get("Vernalizing: {0}% (needs cold below {1}°C to fruit)", (int)Math.Round(ChillProgress * 100), chillTemp));
     }
 
-    public virtual void OnExchanged(Block block)
+    // Called by the growth gate when a bush successfully begins flowering: the cold period has been
+    // "used up", so the bush must accumulate a fresh dormancy before its next fruiting cycle.
+    public virtual void ConsumeVernalization()
     {
-        if (Block == block) return;
-        if (block?.Variant?["state"] == "empty") Chilling = true;
+        if (chilledHours == 0) return;
+        chilledHours = 0;
+        Blockentity.MarkDirty(true);
     }
-
-    public virtual bool CheckGrow() => !Chilling || ChillProgress >= 1;
 
     protected virtual void ServerTick(float df) => CheckChill();
 
@@ -108,15 +90,17 @@ public class BEBehaviorBerryChilling : BlockEntityBehavior, ICheckGrow, IOnExcha
         const double intervalHours = 2.0;
         var now = Api.World.Calendar.TotalHours;
 
-        if (!Chilling || lastCheckTotalHours == 0)
+        if (lastCheckTotalHours == 0)
         {
             lastCheckTotalHours = now;
             return;
         }
 
-        double progressBefore = ChillProgress;
-        double checkTime = lastCheckTotalHours;
+        var before = chilledHours;
+        var checkTime = lastCheckTotalHours;
 
+        // Catch up over any time the bush went unticked (e.g. while its chunk was unloaded),
+        // sampling historical temperature in 2-hour steps.
         while (checkTime + intervalHours <= now)
         {
             checkTime += intervalHours;
@@ -126,20 +110,23 @@ public class BEBehaviorBerryChilling : BlockEntityBehavior, ICheckGrow, IOnExcha
                 checkTime / Api.World.Calendar.HoursPerDay
             ).Temperature;
             temp += InGreenhouse() ? 5 : 0;
-            if (temp <= chillTemp) chilledHours += intervalHours;
-            else if (temp > forceDevernalizationTemperature) chilledHours *= Math.Pow(forceDevernalizationFactor, intervalHours);
-            else if (temp > devernalizationTemperature && ChillProgress < devernalizationThreshold)
-                chilledHours *= Math.Pow(devernalizationFactor, intervalHours);
+            AccumulateChill(temp, intervalHours);
         }
 
         var tempNow = Api.World.BlockAccessor.GetClimateAt(Pos).Temperature + (InGreenhouse() ? 5 : 0);
-        var remainingHours = now - checkTime;
-        if (tempNow <= chillTemp) chilledHours += remainingHours;
-        else if (tempNow > forceDevernalizationTemperature) chilledHours *= Math.Pow(forceDevernalizationFactor, remainingHours);
-        else if (tempNow > devernalizationTemperature && ChillProgress < devernalizationThreshold)
-            chilledHours *= Math.Pow(devernalizationFactor, remainingHours);
+        AccumulateChill(tempNow, now - checkTime);
 
         lastCheckTotalHours = now;
-        if (progressBefore != ChillProgress) Blockentity.MarkDirty(true);
+        chilledHours = Math.Clamp(chilledHours, 0, chilledHoursRequired);
+        if (before != chilledHours) Blockentity.MarkDirty(true);
+    }
+
+    protected virtual void AccumulateChill(double temp, double hours)
+    {
+        if (hours <= 0) return;
+        if (temp <= chillTemp) chilledHours += hours;
+        else if (temp > forceDevernalizationTemperature) chilledHours *= Math.Pow(forceDevernalizationFactor, hours);
+        else if (temp > devernalizationTemperature && ChillProgress < devernalizationThreshold)
+            chilledHours *= Math.Pow(devernalizationFactor, hours);
     }
 }
