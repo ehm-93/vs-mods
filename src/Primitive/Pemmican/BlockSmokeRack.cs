@@ -144,6 +144,23 @@ public class BlockSmokeRack : Block
         BlockEntityDryingRack.RemeshGroup(world, pos);
     }
 
+    // A cell can hold two stacked half-slabs (bottom + top), so breaking it should return one rack item per
+    // installed half, not just the block's single default drop. GetDrops runs (server-side, skipped in
+    // creative) before base.OnBlockBroken removes the block entity, so HasTop is still readable here.
+    public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1f)
+    {
+        ItemStack[] drops = base.GetDrops(world, pos, byPlayer, dropQuantityMultiplier);
+        BlockEntityDryingRack? be = world.BlockAccessor.GetBlockEntity<BlockEntityDryingRack>(pos);
+        if (be != null)
+        {
+            int halves = (be.HasBottom ? 1 : 0) + (be.HasTop ? 1 : 0);
+            if (halves > 1)
+                foreach (ItemStack drop in drops)
+                    if (drop.Collectible?.Code == Code) drop.StackSize *= halves;
+        }
+        return drops;
+    }
+
     // A neighbouring rack appearing or disappearing changes which legs we merge, so re-mesh this one.
     public override void OnNeighbourBlockChange(IWorldAccessor world, BlockPos pos, BlockPos neibpos)
     {
