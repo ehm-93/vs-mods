@@ -1,0 +1,8 @@
+[
+  {
+    "file": "game:itemtypes/resource/firewood.json",
+    "op": "addmerge",
+    "path": "/attributes",
+    "value": { "dryfuelsSeasonsTo": "dryfuels:firewood" }
+  }
+]

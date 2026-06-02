@@ -1,0 +1,13 @@
+{
+  "type": "code",
+  "modid": "dryfuels",
+  "name": "Dry Fuels",
+  "description": "Firewood and peat season over time.",
+  "authors": [
+    "ehm-93"
+  ],
+  "version": "0.1.0",
+  "dependencies": {
+    "game": "1.22.0"
+  }
+}

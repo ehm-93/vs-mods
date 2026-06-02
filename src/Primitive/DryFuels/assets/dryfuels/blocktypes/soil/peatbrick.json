@@ -1,0 +1,57 @@
+{
+	"code": "peatbrick",
+	"class": "BlockPeatbrick",
+	"behaviors": [{
+		"name": "GroundStorable",
+		"properties": {
+			"layout": "Stacking",
+			"placeRemoveSound": "game:block/dirt",
+			"stackingModel": "game:block/peatpile",
+			"modelItemsToStackSizeRatio": 1,
+			"upSolid": true,
+			"stackingCapacity": 32,
+			"transferQuantity": 1,
+			"bulkTransferQuantity": 4,
+			"collisionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.125, "z2": 1 },
+			"cbScaleYByLayer": 0.25,
+			"burnHoursPerItem": 0.75
+		}
+	}],
+	"attributes": {
+		"mapColorCode": "settlement",
+		"placeSound": "game:block/dirt",
+		"inContainerTexture": { "base": "game:block/soil/peat" }
+	},
+	"shape": { "base": "game:block/peatbrick" },
+	"shapeinventory": { "base": "game:block/peatbrick" },
+	"creativeinventory": { "general": ["*"], "items": ["*"] },
+	"blockmaterial": "Soil",
+	"replaceable": 700,
+	"resistance": 2,
+	"textures": {
+		"all": { "base": "game:block/soil/peat" }
+	},
+	"sounds": {
+		"place": "game:block/dirt",
+		"break": "game:block/dirt",
+		"hit": "game:block/dirt"
+	},
+	"maxStackSize": 32,
+	"combustibleProps": {
+		"burnTemperature": 900,
+		"burnDuration": 38
+	},
+	"guiTransform": {
+		"origin": { "x": 0.5, "y": 0.125, "z": 0.5 },
+		"scale": 2.65
+	},
+	"groundTransform": {
+		"scale": 3.25
+	},
+	"tpHandTransform": {
+		"translation": { "x": -0.66, "y": 0, "z": -0.51 },
+		"rotation": { "x": -77, "y": 59, "z": -1 },
+		"origin": { "x": 0.5, "y": 0, "z": 0.5 },
+		"scale": 0.73
+	}
+}

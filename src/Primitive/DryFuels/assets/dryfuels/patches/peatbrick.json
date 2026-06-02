@@ -1,0 +1,8 @@
+[
+  {
+    "file": "game:blocktypes/soil/peatbrick.json",
+    "op": "addmerge",
+    "path": "/attributes",
+    "value": { "dryfuelsSeasonsTo": "dryfuels:peatbrick" }
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "dryfuels:modname": "Dry Fuels",
+  "dryfuels:moddesc": "Firewood and peat season as they dry, burning longer once cured.",
+  "dryfuels:item-firewood": "Seasoned Firewood",
+  "dryfuels:block-peatbrick": "Dried Peat Brick",
+  "dryfuels:seasoning-progress": "Seasoning: {0}%"
+}
