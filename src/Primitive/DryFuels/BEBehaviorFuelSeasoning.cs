@@ -7,9 +7,13 @@ using Vintagestory.GameContent;
 namespace Ehm93.VS.Primitive.DryFuels;
 
 // Seasons stacked fuel in place. Rides on ground-storage block entities — firewood and peat piles are these —
-// accumulating "seasoning" by the pile's local climate (warm, dry, sheltered spots season faster) and swapping
-// fresh fuel for its longer-burning seasoned form once cured. Fuel opts in via the collectible attribute
-// "dryfuelsSeasonsTo" (the seasoned variant's block/item code), added to firewood/peat by our patches.
+// accumulating "seasoning" by the pile's local climate (warm, dry, sheltered, indoors season faster) and
+// swapping fresh fuel for its longer-burning seasoned form once cured. Fuel opts in via the collectible
+// attribute "dryfuelsSeasonsTo" (the seasoned variant's block/item code), added to firewood/peat by our patches.
+//
+// The behavior sits on ALL ground storage, but only piles that actually hold seasonable fuel register a tick:
+// registration is driven by the inventory's SlotModified event (plus a one-shot check on load), so the vast
+// majority of ground-storage piles never tick or write save data.
 public class BEBehaviorFuelSeasoning : BlockEntityBehavior
 {
     public const string SeasonsToAttr = "dryfuelsSeasonsTo";
@@ -17,6 +21,11 @@ public class BEBehaviorFuelSeasoning : BlockEntityBehavior
     protected double seasonedHours;
     protected double lastCheckTotalHours;
     protected double seasonHoursRequired = 240; // base at a temperate, sheltered spot (rate ~1); tunable via behavior props
+
+    private long tickListenerId;        // 0 = no tick registered
+    private InventoryBase? watchedInv;  // the inventory we're subscribed to (for clean unsubscribe)
+    private bool ticking;               // true while OnServerTick runs, so a conversion's SlotModified defers
+    private bool resyncPending;         // a SlotModified arrived mid-tick; re-evaluate registration afterwards
 
     public BEBehaviorFuelSeasoning(BlockEntity blockentity) : base(blockentity) { }
 
@@ -40,15 +49,84 @@ public class BEBehaviorFuelSeasoning : BlockEntityBehavior
     {
         base.Initialize(api, properties);
         seasonHoursRequired = properties["seasonHours"].AsDouble(seasonHoursRequired);
+
+        // Defer the first check so the inventory is populated (FromTreeAttributes has run); thereafter
+        // SlotModified keeps the tick registration in sync. Server-only — seasoning is a server-side sim.
         if (api is ICoreServerAPI)
-            Blockentity.RegisterGameTickListener(OnServerTick, 10000 + api.World.Rand.Next(2000));
+            Blockentity.RegisterDelayedCallback(_ => StartWatching(), 200);
+    }
+
+    private void StartWatching()
+    {
+        InventoryBase? inv = Inventory;
+        if (inv == null) return;
+        if (watchedInv == null)
+        {
+            inv.SlotModified += OnSlotModified;
+            watchedInv = inv;
+        }
+        SyncTickState();
+    }
+
+    private void OnSlotModified(int slotId)
+    {
+        if (ticking) { resyncPending = true; return; } // defer: don't touch the listener from inside its own tick
+        SyncTickState();
+    }
+
+    // Register the seasoning tick only while seasonable fuel is present; drop it (and reset progress) otherwise.
+    private void SyncTickState()
+    {
+        if (Api is not ICoreServerAPI) return;
+
+        bool hasFuel = HasSeasonable;
+        if (hasFuel && tickListenerId == 0)
+        {
+            tickListenerId = Blockentity.RegisterGameTickListener(OnServerTick, 10000 + Api.World.Rand.Next(2000));
+        }
+        else if (!hasFuel && tickListenerId != 0)
+        {
+            Blockentity.UnregisterGameTickListener(tickListenerId);
+            tickListenerId = 0;
+            if (seasonedHours != 0 || lastCheckTotalHours != 0)
+            {
+                seasonedHours = 0;
+                lastCheckTotalHours = 0;
+                Blockentity.MarkDirty(true);
+            }
+        }
+    }
+
+    public override void OnBlockUnloaded()
+    {
+        base.OnBlockUnloaded();
+        Unsubscribe();
+    }
+
+    public override void OnBlockRemoved()
+    {
+        base.OnBlockRemoved();
+        Unsubscribe();
+    }
+
+    private void Unsubscribe()
+    {
+        if (watchedInv != null)
+        {
+            watchedInv.SlotModified -= OnSlotModified;
+            watchedInv = null;
+        }
     }
 
     public override void ToTreeAttributes(ITreeAttribute tree)
     {
         base.ToTreeAttributes(tree);
-        tree.SetDouble("seasonedHours", seasonedHours);
-        tree.SetDouble("lastCheckTotalHours", lastCheckTotalHours);
+        // Idle / non-fuel piles (the vast majority of ground storage) keep nothing extra in the save.
+        if (seasonedHours != 0 || lastCheckTotalHours != 0)
+        {
+            tree.SetDouble("seasonedHours", seasonedHours);
+            tree.SetDouble("lastCheckTotalHours", lastCheckTotalHours);
+        }
     }
 
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldAccessForResolve)
@@ -63,25 +141,30 @@ public class BEBehaviorFuelSeasoning : BlockEntityBehavior
         InventoryBase? inv = Inventory;
         if (inv == null) return;
 
-        double now = Api.World.Calendar.TotalHours;
-        if (lastCheckTotalHours == 0) { lastCheckTotalHours = now; return; } // fresh pile / first tick: just anchor
-        double elapsed = now - lastCheckTotalHours;
-        lastCheckTotalHours = now;
-        if (elapsed <= 0) return;
-
-        if (!HasSeasonable)
+        ticking = true;
+        try
         {
-            if (seasonedHours != 0) { seasonedHours = 0; Blockentity.MarkDirty(true); }
-            return;
-        }
+            double now = Api.World.Calendar.TotalHours;
+            if (lastCheckTotalHours == 0) { lastCheckTotalHours = now; return; } // freshly started: anchor only
+            double elapsed = now - lastCheckTotalHours;
+            lastCheckTotalHours = now;
+            if (elapsed <= 0) return;
 
-        seasonedHours += elapsed * SeasoningRateMul();
-        if (seasonedHours >= seasonHoursRequired)
-        {
-            ConvertSeasonable(inv);
-            seasonedHours = 0;
+            if (!HasSeasonable) return; // safety: fuel removed between a deferred SlotModified and this tick
+
+            seasonedHours += elapsed * SeasoningRateMul();
+            if (seasonedHours >= seasonHoursRequired)
+            {
+                ConvertSeasonable(inv);
+                seasonedHours = 0;
+            }
+            Blockentity.MarkDirty(true);
         }
-        Blockentity.MarkDirty(true);
+        finally
+        {
+            ticking = false;
+            if (resyncPending) { resyncPending = false; SyncTickState(); }
+        }
     }
 
     // Swap each fresh fuel stack for its seasoned variant, preserving the stack size.
@@ -116,8 +199,11 @@ public class BEBehaviorFuelSeasoning : BlockEntityBehavior
         return item != null ? new ItemStack(item, quantity) : null;
     }
 
-    // Tunable seasoning-rate multiplier from the pile's local climate. ~1.0 at a temperate, sheltered spot;
-    // > 1 when warm/dry, < 1 when cold/wet/exposed.
+    // Stored in a fully enclosed room (a woodshed / indoor store) seasons faster, on top of climate. Tunable.
+    protected const double RoomDryingBonus = 2.0;
+
+    // Tunable seasoning-rate multiplier from the pile's local conditions. ~1.0 at a temperate, sheltered spot;
+    // > 1 when warm/dry/indoors, < 1 when cold/wet/exposed.
     protected virtual double SeasoningRateMul()
     {
         ClimateCondition? cc = Api.World.BlockAccessor.GetClimateAt(Pos, EnumGetClimateMode.NowValues);
@@ -128,7 +214,15 @@ public class BEBehaviorFuelSeasoning : BlockEntityBehavior
         double dryFactor = 0.6 + 0.8 * dry01;                                  // 0.6x in a soaking climate .. 1.4x arid
         bool openToSky = Pos.Y >= Api.World.BlockAccessor.GetRainMapHeightAt(Pos.X, Pos.Z);
         double shelter = openToSky ? (0.6 + 0.4 * dry01) : 1.0;                // exposed wood seasons slower in wet climates
+        double room = InEnclosedRoom() ? RoomDryingBonus : 1.0;                // a woodshed / indoor store seasons faster
 
-        return warmth * dryFactor * shelter;
+        return warmth * dryFactor * shelter * room;
+    }
+
+    // True when the pile sits in a fully enclosed room (no openings to the outside).
+    protected virtual bool InEnclosedRoom()
+    {
+        Room? room = Api.ModLoader.GetModSystem<RoomRegistry>()?.GetRoomForPosition(Pos);
+        return room != null && room.ExitCount == 0;
     }
 }

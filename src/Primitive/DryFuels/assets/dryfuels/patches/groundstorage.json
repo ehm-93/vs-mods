@@ -3,6 +3,6 @@
     "file": "game:blocktypes/groundstorage.json",
     "op": "addmerge",
     "path": "/entityBehaviors",
-    "value": [{ "name": "FuelSeasoning", "properties": { "seasonHours": 240 } }]
+    "value": [{ "name": "FuelSeasoning", "properties": { "seasonHours": 2160 } }]
   }
 ]
