@@ -1,8 +1,7 @@
 [
   {
     "file": "game:blocktypes/soil/farmland.json",
-    "side": "Server",
-    "op": "add",
+    "op": "addmerge",
     "path": "/entityBehaviors",
     "value": [{ "name": "FarmlandGeneration" }]
   }

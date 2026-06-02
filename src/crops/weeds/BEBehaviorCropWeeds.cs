@@ -328,7 +328,8 @@ public class BEBehaviorCropWeeds : BlockEntityBehavior, IWeedSource
                 if (farmland == null) return 0;
                 var temp = api.World.BlockAccessor.GetClimateAt(farmland.Pos, EnumGetClimateMode.NowValues).Temperature;
                 if (GreenhouseUtil.IsGreenhouse(api, farmland.Pos)) temp += 5; // greenhouse
-                return CalculatePressure(temp);
+                // Clamp into the memoized range; extreme climates would otherwise throw out-of-range.
+                return CalculatePressure(Math.Clamp(temp, -40, 60));
             }
         }
 

@@ -212,9 +212,20 @@ public class BEBehaviorFarmlandBlight : BlockEntityBehavior, IOnBlockInteract, I
     {
         CheckHistory();
         ResetBlightIfCropChanged();
-        CheckBlightDeath();
-        CheckOutbreak();
-        ReduceSpores();
+
+        var now = Api.World.Calendar.TotalHours;
+        if (lastCheckTotalHours == 0)
+        {
+            lastCheckTotalHours = now;
+            return;
+        }
+
+        var deltaDays = (now - lastCheckTotalHours) / Api.World.Calendar.HoursPerDay;
+        lastCheckTotalHours = now;
+
+        CheckBlightDeath(deltaDays);
+        CheckOutbreak(deltaDays);
+        ReduceSpores(deltaDays);
     }
 
     protected virtual void ClientTick(float df)
@@ -248,11 +259,12 @@ public class BEBehaviorFarmlandBlight : BlockEntityBehavior, IOnBlockInteract, I
         }
     }
 
-    protected virtual void CheckBlightDeath()
+    protected virtual void CheckBlightDeath(double deltaDays)
     {
-        if (blightLevel < 100) return;
-        var roll = Api.World.Rand.NextDouble();
-        if (roll < DeathChance()) Die();
+        if (blightLevel <= 0) return;
+        // DeathChance is a per-day probability and returns 0 below blight 33; scale it to the elapsed time.
+        var chance = 1 - Math.Pow(1 - DeathChance(), deltaDays);
+        if (Api.World.Rand.NextDouble() < chance) Die();
     }
 
     protected virtual void Die()
@@ -282,18 +294,9 @@ public class BEBehaviorFarmlandBlight : BlockEntityBehavior, IOnBlockInteract, I
         );
     }
 
-    protected virtual void CheckOutbreak()
+    protected virtual void CheckOutbreak(double deltaDays)
     {
         if (CropAbove() == null) return;
-        if (lastCheckTotalHours == 0)
-        {
-            lastCheckTotalHours = Api.World.Calendar.TotalHours;
-            return;
-        }
-
-        var now = Api.World.Calendar.TotalHours;
-        var deltaDays = (now - lastCheckTotalHours) / Api.World.Calendar.HoursPerDay;
-        lastCheckTotalHours = now;
 
         var chance = 1 - Math.Pow(1 - OutbreakChance(), deltaDays);
         if (Api.World.Rand.NextDouble() < chance)
@@ -302,19 +305,16 @@ public class BEBehaviorFarmlandBlight : BlockEntityBehavior, IOnBlockInteract, I
         }
     }
 
-    protected virtual void ReduceSpores()
+    protected virtual void ReduceSpores(double deltaDays)
     {
-        if (sporeTreatment > 0) TreatSpores();
-        else DecaySpores(0.02);
+        if (sporeTreatment > 0) TreatSpores(deltaDays);
+        else DecaySpores(0.02, deltaDays);
     }
 
-    protected virtual void TreatSpores()
+    protected virtual void TreatSpores(double deltaDays)
     {
         var normalized = sporeTreatment / 100;
-        DecaySpores(Math.Max(normalized * 0.2, 0.04));
-
-        var now = Api.World.Calendar.TotalHours;
-        var deltaDays = (now - lastCheckTotalHours) / Api.World.Calendar.HoursPerDay;
+        DecaySpores(Math.Max(normalized * 0.2, 0.04), deltaDays);
 
         if (sporeTreatment < 0.5) SporeTreatment = 0;
         else SporeTreatment *= Math.Pow(1 - 0.05, deltaDays);
@@ -324,10 +324,8 @@ public class BEBehaviorFarmlandBlight : BlockEntityBehavior, IOnBlockInteract, I
         FarmlandEntity.Nutrients[2] *= (float)Math.Pow(1 - 0.1, deltaDays);
     }
 
-    protected virtual void DecaySpores(double decayRate)
+    protected virtual void DecaySpores(double decayRate, double deltaDays)
     {
-        var now = Api.World.Calendar.TotalHours;
-        var deltaDays = (now - lastCheckTotalHours) / Api.World.Calendar.HoursPerDay;
         if (sporeLevel < 0.5) SporeLevel = 0;
         else SporeLevel *= Math.Pow(1 - decayRate, deltaDays);
     }
@@ -344,20 +342,10 @@ public class BEBehaviorFarmlandBlight : BlockEntityBehavior, IOnBlockInteract, I
         var now = Api.World.Calendar.TotalHours;
         var threeYears = 3 * Api.World.Calendar.DaysPerYear * Api.World.Calendar.HoursPerDay;
         var threeYearsAgo = now - threeYears;
-        for (var i = 0; i < history.Count; i++)
-        {
-            var h = history[i];
-            if (h.EndTimeHours != null && h.EndTimeHours > threeYearsAgo)
-            {
-                if (i > 0)
-                {
-                    history = history.GetRange(i, history.Count - i);
-                    return true;
-                }
-                return false;
-            }
-        }
-        return false;
+        var before = history.Count;
+        // Keep ongoing entries (no end yet) and anything that ended within the last 3 years.
+        history = history.Where(h => h.EndTimeHours == null || h.EndTimeHours > threeYearsAgo).ToList();
+        return history.Count != before;
     }
 
     protected virtual bool CheckAppendHistory()
@@ -712,9 +700,12 @@ public class BEBehaviorFarmlandBlight : BlockEntityBehavior, IOnBlockInteract, I
         {
             get
             {
-                var gen = farmland.Behaviors.OfType<IGenerationSource>().FirstOrDefault()?.Generation ?? 0;
-                if (gen <= 0) return 0;
-                return PressureCurve(Math.Clamp(gen / 10.0, 0, 1));
+                var genSource = farmland.Behaviors.OfType<IGenerationSource>().FirstOrDefault();
+                // Generations mod absent: neutral factor (1.0) so the geometric mean doesn't zero out
+                // and disable blight entirely. When present, gen-0 (wild/first) crops stay immune.
+                if (genSource == null) return 1.0;
+                if (genSource.Generation <= 0) return 0;
+                return PressureCurve(Math.Clamp(genSource.Generation / 10.0, 0, 1));
             }
         }
     }
