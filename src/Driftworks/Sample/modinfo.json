@@ -1,0 +1,14 @@
+{
+  "type": "code",
+  "modid": "driftworkssample",
+  "name": "Driftworks Sample Tileset",
+  "description": "Placeholder room tileset for Driftworks runs — the reference content pack.",
+  "authors": [
+    "ehm-93"
+  ],
+  "version": "0.1.0",
+  "dependencies": {
+    "game": "1.22.0",
+    "driftworkscore": "0.1.0"
+  }
+}

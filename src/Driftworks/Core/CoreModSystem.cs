@@ -47,9 +47,10 @@ public class CoreModSystem : ModSystem
             return;
         }
 
-        Runs = new RunManager(api, manifold);
+        var content = api.ModLoader.GetModSystem<DriftworksContentModSystem>();
+        Runs = new RunManager(api, manifold, content);
         sandbox = new RunSandbox(api, Runs);
         sandbox.RegisterCommands();
-        api.Logger.Notification("[{0}] Ready. Map device active; debug: /dw open | exit | close | status | cycle [n].", ModId);
+        api.Logger.Notification("[{0}] Ready. Map device active; debug: /dw open | exit | close | status | cycle [n] | house.", ModId);
     }
 }
