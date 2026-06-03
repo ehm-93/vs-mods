@@ -1,0 +1,14 @@
+{
+  "type": "code",
+  "modid": "driftworkscore",
+  "name": "Driftworks Core",
+  "description": "Core framework for Driftworks roguelite extraction dungeons. Content packs add the flavor.",
+  "authors": [
+    "ehm-93"
+  ],
+  "version": "0.1.0",
+  "dependencies": {
+    "game": "1.22.0",
+    "manifold": "0.4.0"
+  }
+}

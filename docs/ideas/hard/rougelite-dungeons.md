@@ -58,6 +58,18 @@ A light unlock layer. More modifier types and more sockets as you go. That is al
 
 No Atlas passive tree. It is hundreds of hours of balance work for depth the game does not need. The light version gets most of the feeling for a fraction of the cost.
 
+## Core and content
+
+The shape is a core mod plus content mods, the way VS Village does it. The core owns the machinery; content mods own the flavor, and nothing in the core knows or cares what flavors exist.
+
+The core is the framework. The dimension lifecycle, the map device and its gate, the run controller and the loop, and the systems behind keys, modifiers, and rewards — expressed as registries and interfaces rather than concrete content. It ships no playable dungeon of its own beyond one reference tileset thin enough to prove the pipe end to end. Everything the core defines, it defines as an extension point.
+
+A content mod fills those points. A roguelite content pack contributes a dungeon tileset of prefab rooms, a set of modifiers, drop and reward tables, custom entities and encounters, themes and biome selectors — keyed to a tier and a layout the core understands. Most of it is data. Code only where a flavor needs logic the data cannot express: a modifier that does something a knob list cannot, an entity with real behavior.
+
+Compartmentalize the flavors. Each content pack is its own asset domain, self-contained and removable. The core degrades gracefully: an unknown tileset, modifier, or drop id is skipped, never fatal, so pulling a pack subtracts its flavor and leaves everything else standing. Two packs never reach into each other; they only register against the core.
+
+This is also what makes external contribution realistic. The contract is the core's API plus the content schema, both documented and kept small and stable. A contributor writes a pack against the extension points without ever touching the core, the same way VS Village's addon packs never touch VS Village itself. It fits the repo we already have, where a mod's asset domain equals its modid and content references the core through the core's domain.
+
 ## Technical shape
 
 A C# code mod, not a content pack. Dimension lifecycle, the device behavior, and the run controller all need code. The mod depends on Manifold (1.21+), a library built on the public engine API that exposes ephemeral custom dimensions with their own worldgen, transit events, and dimension-index recycling. We read its source: an ephemeral dimension releases its index back to a shared pool on teardown, so the number of runs over a save's lifetime is unbounded. What it does not do is delete the run's blocks from disk — and we are fine with that, see below.
