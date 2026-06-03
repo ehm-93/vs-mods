@@ -4,7 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
-  <!-- Optional dependency DLLs fetched by deps/fetch.ps1 -->
+  <!-- Dependency DLLs fetched by tools/build.ps1 from modinfo (dependencies + optionalDependencies) -->
   <ItemGroup>
     <DepAssembly Include="$(MSBuildProjectDirectory)/deps/*/*.dll" />
   </ItemGroup>

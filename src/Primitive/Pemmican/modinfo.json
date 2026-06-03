@@ -9,5 +9,11 @@
   "version": "0.2.0",
   "dependencies": {
     "game": "1.22.0"
+  },
+  "optionalDependencies": {
+    "primitivesurvival": "5.0.5",
+    "expandedfoods": "2.0.0-dev.8",
+    "aculinaryartillery": "2.0.0-dev.15",
+    "butchering": "1.13.4"
   }
 }

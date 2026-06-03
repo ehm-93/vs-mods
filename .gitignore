@@ -19,3 +19,7 @@ Thumbs.db
 pp.xml
 
 tmp
+
+# Dependency mods: zip cache + per-mod extracted DLLs, fetched by tools/build.ps1 from modinfo
+.depcache/
+**/deps/

@@ -113,13 +113,29 @@ $langContent = @{
 Set-Content -Path (Join-Path $assetsPath "lang" "en.json") -Value $langContent
 
 if ($Type -eq "code") {
-    # Create .csproj (minimal - inherits from Directory.Build.props)
+    # Create .csproj (inherits from Directory.Build.props; globs fetched dep DLLs)
     $csproj = @"
 <Project Sdk="Microsoft.NET.Sdk">
   <!-- Inherits from root and domain Directory.Build.props -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
+
+  <!-- Dependency DLLs fetched by tools/build.ps1 from this mod's modinfo
+       (dependencies + optionalDependencies). Compile-only (Private=false):
+       provided by the player's install, never bundled into our output. -->
+  <ItemGroup>
+    <DepAssembly Include="`$(MSBuildProjectDirectory)/deps/*/*.dll" />
+  </ItemGroup>
+
+  <Target Name="AddDepReferences" BeforeTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <Reference Include="%(DepAssembly.Filename)">
+        <HintPath>%(DepAssembly.FullPath)</HintPath>
+        <Private>false</Private>
+      </Reference>
+    </ItemGroup>
+  </Target>
 </Project>
 "@
     Set-Content -Path (Join-Path $ModPath "$Name.csproj") -Value $csproj

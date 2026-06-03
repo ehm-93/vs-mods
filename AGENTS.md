@@ -13,8 +13,9 @@ by working here but a bot won't guess.
 - **A green build does not mean the mod works.** `build.ps1` only compiles C#. JSON assets,
   patches, recipes, lang, and textures are validated only when the *game* loads them — see below.
 - Scripts are `.ps1`. PowerShell silently no-ops a `.ps` file (the extension matters).
-- Cosmetic: when exactly one mod matches a filter, build.ps1 prints "Building 8 mod(s)…". That's
-  a hashtable `.Count` quirk (8 = number of keys), not 8 mods. Ignore it.
+- **`install` wipes the whole VS Mods folder first**, then deploys exactly the filtered repo mods +
+  their fetched dependencies. The install target is treated as a clean test instance — don't keep
+  unrelated/manually-added mods there, they'll be deleted on the next `install`.
 
 ## Telling whether a change actually worked
 
@@ -28,13 +29,21 @@ by working here but a bot won't guess.
   copy asset formats from `assets/survival` & `assets/game`, read the API from
   `VintagestoryAPI.xml`, and reference vanilla assets with the `game:` domain prefix.
 
-## Optional dependencies
+## Dependencies
 
-- A mod's optional deps live in `<mod>/deps/`, pulled from the VS ModDB by `<mod>/deps/fetch.ps1`.
-  **`deps/` is gitignored** (only the script is tracked), so a fresh checkout has no dep DLLs.
-  Run `build.ps1` (it auto-fetches when they're missing) or `deps/fetch.ps1` before expecting the
-  project to compile. The `.csproj` globs `deps/*/*.dll` as compile-only references
-  (`Private=false` — never bundled into the mod).
+- A mod declares its dependency mods in **modinfo.json**: `dependencies` (required) and
+  `optionalDependencies` (compat, not required at runtime), each as `modid: version` (`*` = latest).
+  `tools/build.ps1` is the single source — it reads both maps, skips `game` and any mod defined in
+  this repo, and fetches the rest from the VS ModDB **transitively** (each fetched dep's own modinfo is
+  read for its sub-dependencies, BFS-deduped): zips cached in `.depcache/`, the whole closure extracted
+  per-mod to `<mod>/deps/<modid>/`. There are no per-mod `fetch.ps1` scripts anymore.
+- Both `.depcache/` and `**/deps/` are **gitignored**, so a fresh checkout has no dep DLLs — `build.ps1`
+  auto-fetches when they're missing (re-fetches on a modinfo change, or with `-Force`). The `.csproj`
+  globs `deps/*/*.dll` as compile-only references (`Private=false` — never bundled into the mod).
+- `build.ps1 install` copies the **full transitive closure** of external deps into the Mods folder, so an
+  installed mod can actually load (e.g. a mod depending on ExpandedFoods also gets ACulinaryArtillery, which
+  ExpandedFoods requires). The whole closure is resolved/downloaded *before* the Mods folder is emptied, so a
+  fetch failure can't leave a half-installed folder.
 
 ## Asset JSON (this is where bots go wrong)
 

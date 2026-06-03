@@ -46,6 +46,13 @@ $ErrorActionPreference = "Stop"
 $RepoRoot = Split-Path $PSScriptRoot -Parent
 $SrcRoot = Join-Path $RepoRoot "src"
 
+# Shared cache for downloaded dependency-mod zips (gitignored). Each dep is extracted
+# per-mod into deps/<modid>/ for compile-time references; the zips are reused for install.
+$DepCacheDir = Join-Path $RepoRoot ".depcache"
+$ModDbApiBase = "https://mods.vintagestory.at/api/mod"
+$script:DepZipCache = @{}   # "modid@version" -> cached zip path (memoized per run)
+$script:DepInfoCache = @{}  # dep zip path -> its external deps (memoized per run)
+
 # Discover all domains (directories under src/ containing mods with modinfo.json)
 function Get-Domains {
     Get-ChildItem $SrcRoot -Directory |
@@ -85,43 +92,197 @@ function Get-ModInfo($domainName, $modName) {
         Path = $modPath
         CsprojPath = $csprojPath
         HasCode = Test-Path $csprojPath
+        Dependencies = $info.dependencies
+        OptionalDependencies = $info.optionalDependencies
     }
 }
 
-# Fetch a mod's optional dependencies if it ships a deps/fetch.ps1.
-# Skips when deps are already extracted (fast, offline) unless -Force is set.
-function Invoke-FetchDeps($mod) {
-    $depsDir = Join-Path $mod.Path "deps"
-    $fetchScript = Join-Path $depsDir "fetch.ps1"
-    if (-not (Test-Path $fetchScript)) {
-        return  # mod has no optional dependencies
+# --- Dependencies (driven by each modinfo's dependencies / optionalDependencies) ---
+
+# All mod ids defined in this repo, lowercased. Used to skip internal deps (built locally,
+# not fetched from the ModDB) when resolving a mod's dependency list.
+function Get-LocalModIds {
+    $ids = @{}
+    foreach ($domain in (Get-Domains)) {
+        foreach ($modName in (Get-ModsInDomain $domain)) {
+            $id = (Get-ModInfo $domain $modName).ModId
+            if ($id) { $ids[$id.ToString().ToLower()] = $true }
+        }
+    }
+    return $ids
+}
+
+# External (ModDB) dependencies for a mod: every entry in dependencies + optionalDependencies
+# except 'game' and any mod id defined in this repo. Returns objects with ModId + Version.
+# Tolerant of modinfo shape — `dependencies` may be an object {modid:version}, an array of bare
+# modids, or a single modid string; a value may itself be an object carrying a .version member.
+function Get-ExternalDeps($mod, $localModIds) {
+    $deps = @()
+    foreach ($section in @($mod.Dependencies, $mod.OptionalDependencies)) {
+        if (-not $section) { continue }
+
+        # Normalise the section into a list of @{ Id; Version } regardless of its JSON shape.
+        # (A bare array/string carries no versions, so those default to '' = latest.)
+        $pairs = @()
+        if ($section -is [string]) {
+            $pairs += @{ Id = $section; Version = '' }
+        }
+        elseif ($section -is [System.Collections.IEnumerable]) {
+            foreach ($el in $section) { $pairs += @{ Id = [string]$el; Version = '' } }
+        }
+        else {
+            foreach ($prop in $section.PSObject.Properties) {
+                $v = if ($prop.Value -is [System.Management.Automation.PSCustomObject]) {
+                    [string]$prop.Value.version
+                } else { [string]$prop.Value }
+                $pairs += @{ Id = $prop.Name; Version = $v }
+            }
+        }
+
+        foreach ($p in $pairs) {
+            $depId = ([string]$p.Id).Trim()
+            if ([string]::IsNullOrWhiteSpace($depId)) { continue }
+            if ($depId -eq 'game') { continue }
+            if ($localModIds.ContainsKey($depId.ToLower())) { continue }
+            $deps += [pscustomobject]@{ ModId = $depId; Version = $p.Version }
+        }
+    }
+    return $deps
+}
+
+# Resolve a ModDB release for modid@version. Empty or '*' version = latest release.
+function Resolve-DepRelease($modid, $version) {
+    $resp = Invoke-RestMethod -Uri "$ModDbApiBase/$modid" -ErrorAction Stop
+    if ($resp.statuscode -and $resp.statuscode -ne "200") {
+        throw "ModDB returned status $($resp.statuscode) for '$modid'"
+    }
+    $releases = $resp.mod.releases
+    if (-not $releases) { throw "ModDB has no releases for '$modid'" }
+
+    if ($version -and $version -ne '*') {
+        $release = $releases | Where-Object { $_.modversion -eq $version } | Select-Object -First 1
+        if (-not $release) {
+            $recent = ($releases | Select-Object -First 5 | ForEach-Object { $_.modversion }) -join ", "
+            throw "No release of '$modid' for version '$version' (recent: $recent)"
+        }
+        return $release
+    }
+    return ($releases | Select-Object -First 1)  # latest
+}
+
+# Ensure the dep's zip is in the shared cache; return its path. Memoized per run.
+function Get-DepZip($modid, $version) {
+    $key = "$modid@$version"
+    if (-not $Force -and $script:DepZipCache.ContainsKey($key)) {
+        return $script:DepZipCache[$key]
     }
 
-    # "Already fetched" = at least one extracted dep dir exists. fetch.ps1 unpacks
-    # each dep to deps/<dependency-modid>/ and caches zips in deps/.cache/, so any
-    # subdirectory other than .cache means a prior fetch succeeded. A clean checkout
-    # has none (deps/ is gitignored apart from fetch.ps1 and .gitignore).
-    if (-not $Force) {
-        $extracted = Get-ChildItem $depsDir -Directory -ErrorAction SilentlyContinue |
-            Where-Object { $_.Name -ne ".cache" }
-        if ($extracted) {
-            # fetch.ps1 re-extracts every run, so the dep dirs are newer than the
-            # script after a successful fetch. If fetch.ps1 is newer, its dep list
-            # was edited (version bump / added dep) and we re-fetch; otherwise skip.
-            $newestDep = ($extracted | Sort-Object LastWriteTime -Descending |
-                Select-Object -First 1).LastWriteTime
-            if ((Get-Item $fetchScript).LastWriteTime -le $newestDep) {
-                return  # deps present and up to date
-            }
+    New-Item -ItemType Directory -Force -Path $DepCacheDir | Out-Null
+    $release = Resolve-DepRelease $modid $version
+    $zip = Join-Path $DepCacheDir $release.filename
+    if ((Test-Path $zip) -and -not $Force) {
+        Write-Host "      = cached $($release.filename)" -ForegroundColor DarkGray
+    }
+    else {
+        Write-Host "      > $($release.filename)" -ForegroundColor Gray
+        Invoke-WebRequest -Uri $release.mainfile -OutFile $zip
+    }
+
+    $script:DepZipCache[$key] = $zip
+    return $zip
+}
+
+# Read a fetched dependency mod's bundled modinfo.json (from inside its zip) and return its
+# external REQUIRED dependencies (its own 'dependencies' minus 'game' and repo-local mods).
+# A dependency's *optional* dependencies are not followed. Parse failures are non-fatal.
+function Get-DepsFromZip($zipPath, $localModIds) {
+    if ($script:DepInfoCache.ContainsKey($zipPath)) { return $script:DepInfoCache[$zipPath] }
+
+    $raw = $null
+    Add-Type -AssemblyName System.IO.Compression.FileSystem | Out-Null
+    $archive = [System.IO.Compression.ZipFile]::OpenRead($zipPath)
+    try {
+        # Prefer a root-level modinfo.json (shortest path) over any nested one.
+        $entry = $archive.Entries |
+            Where-Object { $_.Name -ieq 'modinfo.json' } |
+            Sort-Object { $_.FullName.Length } |
+            Select-Object -First 1
+        if ($entry) {
+            $reader = [System.IO.StreamReader]::new($entry.Open())
+            try { $raw = $reader.ReadToEnd() } finally { $reader.Dispose() }
+        }
+    }
+    finally { $archive.Dispose() }
+
+    $result = @()
+    if ($raw) {
+        try {
+            $info = $raw | ConvertFrom-Json
+            $result = @(Get-ExternalDeps @{ Dependencies = $info.dependencies; OptionalDependencies = $null } $localModIds)
+        }
+        catch {
+            Write-Host "      ! couldn't parse modinfo in $(Split-Path $zipPath -Leaf); skipping its transitive deps" -ForegroundColor DarkYellow
         }
     }
 
-    Write-Host "    Fetching dependencies..." -ForegroundColor Gray
-    try {
-        if ($Force) { & $fetchScript -Force } else { & $fetchScript }
+    $script:DepInfoCache[$zipPath] = $result
+    return $result
+}
+
+# Full transitive closure of external (ModDB) dependencies, starting from a set of root deps.
+# Fetches each (downloads its zip), then reads that zip's modinfo for sub-dependencies. BFS with
+# a visited set, so cycles and diamonds terminate. Deduped by mod id: the first-resolved version
+# wins; a differing version reached later is skipped with a warning. Returns @{ModId;Version;Zip}.
+function Get-TransitiveDeps($rootDeps, $localModIds) {
+    $resolved = [ordered]@{}
+    $queue = [System.Collections.Generic.Queue[object]]::new()
+    foreach ($d in $rootDeps) { $queue.Enqueue($d) }
+
+    while ($queue.Count -gt 0) {
+        $dep = $queue.Dequeue()
+        $key = ([string]$dep.ModId).Trim().ToLower()
+        if (-not $key) { continue }
+        if ($resolved.Contains($key)) {
+            if ($resolved[$key].Version -ne $dep.Version) {
+                Write-Host "      ! version conflict for '$($dep.ModId)': keeping $($resolved[$key].Version), ignoring $($dep.Version)" -ForegroundColor DarkYellow
+            }
+            continue
+        }
+
+        $zip = Get-DepZip $dep.ModId $dep.Version
+        $resolved[$key] = [pscustomobject]@{ ModId = $dep.ModId; Version = $dep.Version; Zip = $zip }
+
+        foreach ($sub in (Get-DepsFromZip $zip $localModIds)) {
+            if (-not $resolved.Contains($sub.ModId.ToLower())) { $queue.Enqueue($sub) }
+        }
     }
-    catch {
-        throw "Dependency fetch failed for $($mod.Domain)/$($mod.Name): $($_.Exception.Message)"
+
+    return $resolved.Values
+}
+
+# Fetch a mod's full transitive external-dependency closure (from its modinfo) into deps/<modid>/
+# for compile-time references — transitive so a dep-of-a-dep's DLL is present too. Skips deps
+# already extracted and up to date (modinfo not newer) unless -Force.
+function Invoke-FetchDeps($mod, $localModIds) {
+    $rootDeps = @(Get-ExternalDeps $mod $localModIds)
+    if ($rootDeps.Count -eq 0) { return }
+    $closure = @(Get-TransitiveDeps $rootDeps $localModIds)
+
+    $depsDir = Join-Path $mod.Path "deps"
+    New-Item -ItemType Directory -Force -Path $depsDir | Out-Null
+    $modinfoTime = (Get-Item (Join-Path $mod.Path "modinfo.json")).LastWriteTime
+
+    foreach ($dep in $closure) {
+        $target = Join-Path $depsDir $dep.ModId
+        $present = (Test-Path $target) -and (Get-ChildItem $target -Force -ErrorAction SilentlyContinue)
+        # Offline-fast skip: present (non-empty) and modinfo hasn't changed since extraction.
+        if (-not $Force -and $present -and $modinfoTime -le (Get-Item $target).LastWriteTime) {
+            continue
+        }
+
+        Write-Host "    dep $($dep.ModId)@$($dep.Version)" -ForegroundColor Gray
+        if (Test-Path $target) { Remove-Item -Recurse -Force $target }
+        Expand-Archive -Path $dep.Zip -DestinationPath $target -Force
     }
 }
 
@@ -148,12 +309,12 @@ function Get-BuildTargets {
         }
     }
 
-    return $targets
+    return ,$targets  # leading comma stops PowerShell unwrapping a 1-element array to a scalar
 }
 
 function Invoke-Build {
     $targets = Get-BuildTargets
-    $codeTargets = $targets | Where-Object { $_.HasCode }
+    $codeTargets = @($targets | Where-Object { $_.HasCode })
 
     if ($codeTargets.Count -eq 0) {
         Write-Host "No code mods to build" -ForegroundColor Yellow
@@ -162,9 +323,10 @@ function Invoke-Build {
 
     Write-Host "Building $($codeTargets.Count) mod(s)..." -ForegroundColor Cyan
 
+    $localModIds = Get-LocalModIds
     foreach ($mod in $codeTargets) {
         Write-Host "  $($mod.Domain)/$($mod.Name)" -ForegroundColor Gray
-        Invoke-FetchDeps $mod
+        Invoke-FetchDeps $mod $localModIds
         dotnet build $mod.CsprojPath -c $Configuration --nologo -v q
         if ($LASTEXITCODE -ne 0) {
             throw "Build failed for $($mod.Domain)/$($mod.Name)"
@@ -252,14 +414,34 @@ function Invoke-Install {
         throw "Mods directory not found: $modsDir`nSet VINTAGE_STORY_DATA environment variable."
     }
 
-    $targets = Get-BuildTargets
-    Write-Host "Installing to $modsDir..." -ForegroundColor Cyan
+    $targets = @(Get-BuildTargets)
+    $localModIds = Get-LocalModIds
 
+    # Resolve and download EVERYTHING to be deployed (the built target zips + the full transitive
+    # closure of all their external deps) BEFORE touching the Mods folder, so a fetch failure can
+    # never leave a wiped, half-installed folder. The closure is computed once over the union of
+    # all targets' root deps, so a shared dep's version is chosen deterministically (first wins).
+    $rootDeps = @()
+    foreach ($mod in $targets) { $rootDeps += Get-ExternalDeps $mod $localModIds }
+    $closure = @(Get-TransitiveDeps $rootDeps $localModIds)
+
+    # Now it's safe to wipe and redeploy. Emptying clears the WHOLE folder (including any mods
+    # added manually) so the deploy is exactly what this repo builds — a clean test instance.
+    $existing = @(Get-ChildItem $modsDir -Force)
+    if ($existing.Count -gt 0) {
+        Write-Host "Emptying $modsDir ($($existing.Count) item(s))..." -ForegroundColor Yellow
+        $existing | Remove-Item -Recurse -Force
+    }
+
+    Write-Host "Installing to $modsDir..." -ForegroundColor Cyan
     foreach ($mod in $targets) {
-        $zipName = "$($mod.ModId)_$($mod.Version).zip"
-        $zipPath = Join-Path $RepoRoot "releases" $zipName
+        $zipPath = Join-Path $RepoRoot "releases" "$($mod.ModId)_$($mod.Version).zip"
         Copy-Item $zipPath $modsDir/ -Force
         Write-Host "  $($mod.ModId)" -ForegroundColor Green
+    }
+    foreach ($dep in $closure) {
+        Copy-Item $dep.Zip $modsDir/ -Force
+        Write-Host "    + dep $($dep.ModId)@$($dep.Version)" -ForegroundColor DarkGray
     }
 
     Write-Host "Install complete!" -ForegroundColor Green
@@ -311,11 +493,13 @@ function Invoke-List {
     Write-Host ""
 }
 
-# Main
-switch ($Target.ToLower()) {
-    "build"   { Invoke-Build }
-    "package" { Invoke-Package }
-    "install" { Invoke-Install }
-    "clean"   { Invoke-Clean }
-    "list"    { Invoke-List }
+# Main (skipped when the script is dot-sourced, so individual functions can be tested)
+if ($MyInvocation.InvocationName -ne '.') {
+    switch ($Target.ToLower()) {
+        "build"   { Invoke-Build }
+        "package" { Invoke-Package }
+        "install" { Invoke-Install }
+        "clean"   { Invoke-Clean }
+        "list"    { Invoke-List }
+    }
 }
