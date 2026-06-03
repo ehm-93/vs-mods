@@ -1,4 +1,5 @@
 {
-  "driftworkscore:modname": "Driftworks/core",
-  "driftworkscore:moddesc": "TODO: Add description"
+  "driftworkscore:modname": "Driftworks Core",
+  "driftworkscore:moddesc": "Core framework for Driftworks roguelite extraction dungeons.",
+  "block-mapdevice": "Map Device"
 }

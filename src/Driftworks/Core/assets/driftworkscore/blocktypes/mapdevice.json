@@ -1,0 +1,15 @@
+{
+  "code": "mapdevice",
+  "class": "DriftworksMapDevice",
+  "textures": { "all": { "base": "game:block/mantle" } },
+  "creativeinventory": { "general": ["*"] },
+  "blockmaterial": "Stone",
+  "resistance": 6,
+  "replaceable": 100,
+  "sounds": {
+    "place": "game:sounds/block/stone",
+    "break": "game:sounds/block/stone",
+    "hit": "game:sounds/block/stone",
+    "walk": "game:sounds/walk/stone"
+  }
+}

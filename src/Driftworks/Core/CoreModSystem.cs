@@ -7,21 +7,26 @@ using Ehm93.VS.Driftworks.Core.Internal;
 namespace Ehm93.VS.Driftworks.Core;
 
 /// <summary>
-/// Driftworks core. Owns the run-dimension lifecycle, the map device, and the run controller;
-/// content packs supply the flavor (tilesets, modifiers, drops, entities).
-///
-/// At this stage it stands up build-step 1 only: a debug harness (<c>/dw</c>) that proves the
-/// ephemeral run-dimension round trip on top of Manifold — open, enter, exit, and release the
-/// dimension index, with index recycling — before anything real sits on it.
+/// Driftworks core. Owns the run-dimension lifecycle (the <see cref="RunManager"/>), the map
+/// device, and the run controller; content packs supply the flavor (tilesets, modifiers, drops,
+/// entities).
 /// </summary>
 public class CoreModSystem : ModSystem
 {
     public const string ModId = "driftworkscore";
 
+    /// <summary>The run controller, available server-side once Manifold is ready (null otherwise).</summary>
+    internal RunManager? Runs { get; private set; }
+
     private RunSandbox? sandbox;
 
     // Run after Manifold (its facade initialises at ExecuteOrder 0.05) so GetManifoldServer is ready.
     public override double ExecuteOrder() => 0.5;
+
+    public override void Start(ICoreAPI api)
+    {
+        api.RegisterBlockClass("DriftworksMapDevice", typeof(BlockMapDevice));
+    }
 
     public override void StartServerSide(ICoreServerAPI api)
     {
@@ -32,18 +37,19 @@ public class CoreModSystem : ModSystem
         }
         catch (Exception e)
         {
-            api.Logger.Error("[{0}] Manifold not available ({1}). Install Manifold >= 0.4.0; run dimensions disabled.", ModId, e.Message);
+            api.Logger.Error("[{0}] Manifold not available ({1}). Install Manifold >= 0.4.0; runs disabled.", ModId, e.Message);
             return;
         }
 
         if (!manifold.IsHealthy)
         {
-            api.Logger.Warning("[{0}] Manifold reports unhealthy (Harmony patches failed at boot); run dimensions disabled.", ModId);
+            api.Logger.Warning("[{0}] Manifold reports unhealthy (Harmony patches failed at boot); runs disabled.", ModId);
             return;
         }
 
-        sandbox = new RunSandbox(api, manifold);
+        Runs = new RunManager(api, manifold);
+        sandbox = new RunSandbox(api, Runs);
         sandbox.RegisterCommands();
-        api.Logger.Notification("[{0}] Ready. Debug harness: /dw open | exit | close | status | cycle [n].", ModId);
+        api.Logger.Notification("[{0}] Ready. Map device active; debug: /dw open | exit | close | status | cycle [n].", ModId);
     }
 }
