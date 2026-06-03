@@ -414,7 +414,7 @@ function Invoke-Install {
         throw "Mods directory not found: $modsDir`nSet VINTAGE_STORY_DATA environment variable."
     }
 
-    $targets = @(Get-BuildTargets)
+    $targets = Get-BuildTargets  # already an array (Get-BuildTargets returns ,$targets); do not re-wrap with @()
     $localModIds = Get-LocalModIds
 
     # Resolve and download EVERYTHING to be deployed (the built target zips + the full transitive
