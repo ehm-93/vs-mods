@@ -1,0 +1,13 @@
+{
+  "type": "code",
+  "modid": "performancecraftinggrid",
+  "name": "Crafting Grid Performance",
+  "description": "Speeds up crafting-grid recipe matching: indexes recipes for hash lookup instead of scanning every ingredient on each grid change. Pure performance, no gameplay change.",
+  "authors": [
+    "ehm-93"
+  ],
+  "version": "0.1.0",
+  "dependencies": {
+    "game": "1.22.0"
+  }
+}

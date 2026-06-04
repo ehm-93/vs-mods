@@ -1,0 +1,6 @@
+<Project>
+  <!-- Intentionally standalone. By existing here, this file stops MSBuild from auto-importing the
+       repo-root Directory.Build.props (it imports only the nearest one walking up). This bench is a
+       plain console app, NOT a Vintage Story mod, so it must skip the mod reference set, the
+       Shared.dll/ILRepack merge, and the deps/** machinery. References are declared in the csproj. -->
+</Project>

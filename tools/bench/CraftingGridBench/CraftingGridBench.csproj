@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>CraftingGridBench</AssemblyName>
+    <RootNamespace>CraftingGridBench</RootNamespace>
+
+    <!-- VS install: API assembly lives at the root, third-party deps under Lib/. -->
+    <VintageStoryInstall Condition="'$(VINTAGE_STORY)' != ''">$(VINTAGE_STORY)</VintageStoryInstall>
+    <VintageStoryInstall Condition="'$(VintageStoryInstall)' == '' And Exists('$(APPDATA)\Vintagestory\VintagestoryAPI.dll')">$(APPDATA)\Vintagestory</VintageStoryInstall>
+  </PropertyGroup>
+
+  <!-- Compile-only refs (Private=false): loaded at runtime from the VS install via the
+       AssemblyResolve handler in Program.Main, never copied next to the bench exe. -->
+  <ItemGroup>
+    <Reference Include="VintagestoryAPI">
+      <HintPath>$(VintageStoryInstall)\VintagestoryAPI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(VintageStoryInstall)\Lib\Newtonsoft.Json.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="SkiaSharp">
+      <HintPath>$(VintageStoryInstall)\Lib\SkiaSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Benchmark the REAL gather code: compile the mod's index source directly into the bench. -->
+  <ItemGroup>
+    <Compile Include="..\..\..\src\Performance\CraftingGrid\Internal\CraftingRecipeIndex.cs" Link="CraftingRecipeIndex.cs" />
+  </ItemGroup>
+
+</Project>
