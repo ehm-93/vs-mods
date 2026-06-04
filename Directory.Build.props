@@ -7,6 +7,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <!-- deps/ holds fetched dependency DLLs (referenced compile-only) and decompiled reference
+         source under deps/<modid>/src/; never glob its .cs into a mod's own compilation. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);deps/**</DefaultItemExcludes>
   </PropertyGroup>
 
   <!-- Output configuration -->
