@@ -1,0 +1,14 @@
+{
+  "type": "code",
+  "modid": "compatwildcraftexfoods",
+  "name": "Compat/WildcraftExFoods",
+  "description": "TODO: Add description",
+  "authors": [
+    "ehm-93"
+  ],
+  "version": "0.1.0",
+  "dependencies": {
+    "game": "1.22.0",
+    "Compatcommon": "*"
+  }
+}
