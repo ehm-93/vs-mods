@@ -13,5 +13,8 @@
     "redmeat",
     "saltedpemmican",
     "variantgroups"
-  ]
+  ],
+  "files.associations": {
+    "**/deps/**/*.json": "json5"
+  }
 }
