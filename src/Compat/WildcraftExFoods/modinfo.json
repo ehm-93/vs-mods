@@ -1,14 +1,18 @@
 {
   "type": "code",
   "modid": "compatwildcraftexfoods",
-  "name": "Compat/WildcraftExFoods",
-  "description": "TODO: Add description",
+  "name": "Wildcraft Fruit + Expanded Foods",
+  "description": "Dry Wildcraft fruit (clay oven, or a Pemmican rack) and fold it into Expanded Foods and Pemmican recipes.",
   "authors": [
     "ehm-93"
   ],
   "version": "0.1.0",
   "dependencies": {
     "game": "1.22.0",
-    "Compatcommon": "*"
+    "expandedfoods": "2.0.0-dev.8",
+    "wildcraftfruit": "1.4.61"
+  },
+  "optionalDependencies": {
+    "pemmican": "0.2.0"
   }
 }

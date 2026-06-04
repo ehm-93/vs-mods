@@ -1,0 +1,35 @@
+[
+	{
+		"__comment": "Pemmican recipe compat (gated on pemmican): let Wildcraft dried fruit be the optional berry/fruit in pemmican, mirroring Pemmican's own EF dried-fruit slot. Accepts our oven/rack-dried fruit (driedfruit-*) and Wildcraft's naturally-dry fruit (dryfruit-* — juniper, sumac, hackberry...). Uses a distinct ingredient code (wildfruit-base) so it coexists with the EF fruit slot rather than colliding. minQuantity 0 keeps it optional; the shared shapeElement + textureMapping melds it into the pemmican blob (no separate mesh).",
+		"file": "pemmican:recipes/cooking/pemmican.json",
+		"op": "add",
+		"path": "/ingredients/-",
+		"value": {
+			"code": "wildfruit-base",
+			"validStacks": [
+				{ "type": "item", "code": "compatwildcraftexfoods:driedfruit-*", "shapeElement": "bowl/meat stew/*", "textureMapping": ["meat", "group6"] },
+				{ "type": "item", "code": "wildcraftfruit:dryfruit-*", "shapeElement": "bowl/meat stew/*", "textureMapping": ["meat", "group6"] }
+			],
+			"minQuantity": 0,
+			"maxQuantity": 1,
+			"typeName": "fruit"
+		},
+		"dependsOn": [ { "modid": "pemmican" } ]
+	},
+	{
+		"file": "pemmican:recipes/cooking/saltedpemmican.json",
+		"op": "add",
+		"path": "/ingredients/-",
+		"value": {
+			"code": "wildfruit-base",
+			"validStacks": [
+				{ "type": "item", "code": "compatwildcraftexfoods:driedfruit-*", "shapeElement": "bowl/meat stew/*", "textureMapping": ["meat", "group6"] },
+				{ "type": "item", "code": "wildcraftfruit:dryfruit-*", "shapeElement": "bowl/meat stew/*", "textureMapping": ["meat", "group6"] }
+			],
+			"minQuantity": 0,
+			"maxQuantity": 1,
+			"typeName": "fruit"
+		},
+		"dependsOn": [ { "modid": "pemmican" } ]
+	}
+]

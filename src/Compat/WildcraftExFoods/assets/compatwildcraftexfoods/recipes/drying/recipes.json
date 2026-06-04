@@ -1,0 +1,9 @@
+[
+	{
+		"__comment": "Pemmican drying-rack compat. Pemmican loads recipes/drying/ from every mod (server-side) into its synced drying registry, so this is picked up when Pemmican is installed and ignored otherwise (nothing else reads it). Mirrors Pemmican's own EF fruit recipe: air-dry a fresh Wildcraft fruit on the rack into our dried fruit, the same item the clay oven produces.",
+		"code": "wildcraftfruit",
+		"dependsOn": [ { "modid": "wildcraftfruit" } ],
+		"input": { "code": "wildcraftfruit:fruit-*", "name": "type", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } },
+		"output": { "code": "compatwildcraftexfoods:driedfruit-{type}", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } }
+	}
+]
