@@ -1,10 +1,12 @@
+using System.IO;
 using Newtonsoft.Json;
 using Vintagestory.API.Common;
 using Vintagestory.API.Util;
 
 namespace Ehm93.VS.Primitive.Pemmican;
 
-// One drying/smoking recipe, loaded from assets/<domain>/config/drying/*.json. The fields mirror VS
+// One drying/smoking recipe, loaded server-side from assets/<domain>/recipes/drying/*.json into a
+// RecipeRegistryGeneric and synced to clients (which never read recipes/ assets). The fields mirror VS
 // grid-recipe conventions so anyone who has written a grid recipe recognizes them: an input `code` with
 // a `*` wildcard, an optional `name` that captures what the `*` matched, and an output `code` that
 // interpolates that capture with `{name}`. `allowedVariants`/`skipVariants` are BARE variant names
@@ -12,7 +14,7 @@ namespace Ehm93.VS.Primitive.Pemmican;
 // case-sensitivity match the engine; keep codes lower-case. One recipe like
 //   input game:fruit-*  ->  output expandedfoods:dryfruit-{type}
 // therefore covers every fruit variant at once.
-public class DryingRecipe
+public class DryingRecipe : IByteSerializable
 {
     // Optional identifier — handy for debugging, the handbook, or patches that target a single recipe.
     [JsonProperty("code")] public string? Code;
@@ -85,6 +87,85 @@ public class DryingRecipe
         if (outCode.Contains(token))
             return WildcardUtil.Match(new AssetLocation(outCode.Replace(token, "*")), code);
         return new AssetLocation(outCode).Equals(code);
+    }
+
+    // --- IByteSerializable: the server loads recipes from JSON; the registry serializes them to each
+    // client on connect (clients never read recipes/ assets). DependsOn is intentionally NOT serialized —
+    // recipes are filtered by it server-side before being added to the registry, so only satisfied
+    // recipes ever reach a client. Init() rebuilds the (non-serialized) wildcard pattern after a read.
+    public void ToBytes(BinaryWriter writer)
+    {
+        writer.Write(Code ?? "");
+        writer.Write(Enabled);
+        writer.Write(Input.Code ?? "");
+        WriteOpt(writer, Input.Name);
+        WriteArr(writer, Input.AllowedVariants);
+        WriteArr(writer, Input.SkipVariants);
+        WriteRender(writer, Input.Render);
+        writer.Write(Output.Code ?? "");
+        writer.Write(Output.Quantity);
+        WriteRender(writer, Output.Render);
+        writer.Write(Hours);
+        writer.Write(RequiresFire);
+    }
+
+    public void FromBytes(BinaryReader reader, IWorldAccessor resolver)
+    {
+        Code = reader.ReadString();
+        Enabled = reader.ReadBoolean();
+        Input = new DryingInput
+        {
+            Code = reader.ReadString(),
+            Name = ReadOpt(reader),
+            AllowedVariants = ReadArr(reader),
+            SkipVariants = ReadArr(reader),
+            Render = ReadRender(reader),
+        };
+        Output = new DryingOutput
+        {
+            Code = reader.ReadString(),
+            Quantity = reader.ReadInt32(),
+            Render = ReadRender(reader),
+        };
+        Hours = reader.ReadDouble();
+        RequiresFire = reader.ReadBoolean();
+        Init();
+    }
+
+    static void WriteOpt(BinaryWriter w, string? s) { w.Write(s != null); if (s != null) w.Write(s); }
+    static string? ReadOpt(BinaryReader r) => r.ReadBoolean() ? r.ReadString() : null;
+
+    static void WriteArr(BinaryWriter w, string[]? a)
+    {
+        w.Write(a?.Length ?? -1);
+        if (a != null) foreach (string s in a) w.Write(s);
+    }
+    static string[]? ReadArr(BinaryReader r)
+    {
+        int n = r.ReadInt32();
+        if (n < 0) return null;
+        var a = new string[n];
+        for (int i = 0; i < n; i++) a[i] = r.ReadString();
+        return a;
+    }
+
+    static void WriteRender(BinaryWriter w, RenderTransform? rt)
+    {
+        w.Write(rt != null);
+        if (rt == null) return;
+        w.Write(rt.Scale.HasValue);
+        if (rt.Scale.HasValue) w.Write(rt.Scale.Value);
+        w.Write(rt.Translation?.Length ?? -1);
+        if (rt.Translation != null) foreach (float f in rt.Translation) w.Write(f);
+    }
+    static RenderTransform? ReadRender(BinaryReader r)
+    {
+        if (!r.ReadBoolean()) return null;
+        var rt = new RenderTransform();
+        if (r.ReadBoolean()) rt.Scale = r.ReadSingle();
+        int n = r.ReadInt32();
+        if (n >= 0) { rt.Translation = new float[n]; for (int i = 0; i < n; i++) rt.Translation[i] = r.ReadSingle(); }
+        return rt;
     }
 }
 

@@ -17,8 +17,8 @@ public class BlockEntitySmokingFirepit : BlockEntityRack, IHeatSource
 {
     public const double SmokeHoursRequired = 24.0;
     // In-game hours one fuel item burns for, per second of its vanilla burnDuration. Firewood
-    // (burnDuration 24) -> ~4 in-game hours, so a full 24h batch needs ~6 logs (a low, slow, smoky fire).
-    public const float FuelHourFactor = 0.167f;
+    // (burnDuration 24) -> ~8 in-game hours, so a full 24h batch needs ~3 logs (a low, slow, smoky fire).
+    public const float FuelHourFactor = 0.334f;
 
     // Smoking wants smoky, organic fuel — not coal/charcoal/coke. Matched by first code part, so this
     // is a quick list to fine-tune later.

@@ -56,7 +56,7 @@ public abstract class BlockEntityRack : BlockEntity, ITexPositionSource
 
     // ---------------- rack lookup ----------------
 
-    // What a hung item turns into, and how long it takes — data-driven (config/drying/*.json). Null if
+    // What a hung item turns into, and how long it takes — data-driven (recipes/drying/*.json). Null if
     // the item can't go on the rack, so we never hang something that would never convert.
     public DryingResult? Match(ItemStack? stack)
     {

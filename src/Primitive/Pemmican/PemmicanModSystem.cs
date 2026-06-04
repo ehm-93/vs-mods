@@ -9,7 +9,7 @@ public class PemmicanModSystem : ModSystem
     public const string ModId = "pemmican";
 
     private Harmony? patcher;
-    private readonly List<DryingRecipe> dryingRecipes = new();
+    private List<DryingRecipe> dryingRecipes = new();
 
     public override void Start(ICoreAPI api)
     {
@@ -20,6 +20,11 @@ public class PemmicanModSystem : ModSystem
         api.RegisterBlockEntityClass("SmokingFirepit", typeof(BlockEntitySmokingFirepit));
         api.RegisterBlockEntityClass("DryingRack", typeof(BlockEntityDryingRack));
 
+        // Drying recipes use a synced recipe registry: the server loads them from recipes/drying/ (a
+        // server-only asset category) and the engine ships the registry to each client on connect, so
+        // both sides have them while the JSON lives under recipes/ — the same model ACA uses.
+        dryingRecipes = api.RegisterRecipeRegistry<RecipeRegistryGeneric<DryingRecipe>>("pemmican:dryingrecipes").Recipes;
+
         if (!Harmony.HasAnyPatches(ModId))
         {
             patcher = new Harmony(ModId);
@@ -27,18 +32,19 @@ public class PemmicanModSystem : ModSystem
         }
     }
 
-    // Load the data-driven drying/smoking recipes from assets/<domain>/config/drying/*.json so the rack's
-    // input->output mappings live in JSON, not code. These live under config/ (a Universal asset category)
-    // rather than recipes/ — recipes/ is server-only (EnumAppSide.Server), so loading there leaves the
-    // CLIENT with zero recipes, making IsRackable always false client-side and breaking the hang
-    // interaction. config/ loads on both sides, so client and server agree with no network sync. Disabled
-    // recipes and those whose dependsOn is unsatisfied are dropped here.
+    // Load the data-driven drying/smoking recipes from assets/<domain>/recipes/drying/*.json into the
+    // synced registry registered in Start(). recipes/ is a SERVER-only asset category, so the load runs
+    // server-side only; clients receive the resolved recipes via the registry's network sync (see
+    // DryingRecipe.ToBytes/FromBytes). Disabled recipes and those whose dependsOn is unsatisfied are
+    // dropped here, so they never reach a client.
     public override void AssetsFinalize(ICoreAPI api)
     {
         base.AssetsFinalize(api);
+        if (api.Side != EnumAppSide.Server) return; // clients get drying recipes via registry sync
+
         dryingRecipes.Clear();
 
-        foreach (IAsset asset in api.Assets.GetMany("config/drying/", null, true))
+        foreach (IAsset asset in api.Assets.GetMany("recipes/drying/", null, true))
         {
             DryingRecipe[]? entries;
             try { entries = asset.ToObject<DryingRecipe[]>(); }
