@@ -1,26 +1,25 @@
 # vs-mods
 
-Monorepo for Vintage Story mods by ehm-93.
+Monorepo for [Vintage Story](https://www.vintagestory.at/) mods by ehm-93 (Emmett_chef).
 
-## Structure
+Mods are grouped into **domains** (the folders under `src/`). A single build
+script compiles, packages, and installs any subset, and fetches each mod's external
+dependencies automatically.
+
+## Layout
 
 ```
 vs-mods/
-├── src/
-│   ├── crops/            # Crop mechanics (weeds, crop quality, etc.)
-│   │   ├── common/       # Common code shared across crops mods
-│   │   └── weeds/        # Weeds affecting crop growth
-│   ├── worldgen/         # World generation (caves, etc.)
-│   │   ├── common/       # Common code shared across worldgen mods
-│   │   └── caves/        # Multi-tier cave generation system
-│   ├── primitive/        # Primitive survival (thermal fracturing, etc.)
-│   │   └── thermal-fracturing/
-├── tools/                # Build and scaffolding scripts
-│   ├── build.ps1         # Main build script
-│   └── new-mod.ps1       # Scaffold new mods
-├── bin/                  # Build output (gitignored)
-└── releases/             # Packaged mods (gitignored)
+├── src/<Domain>/<Mod>/   # one folder per mod, grouped into PascalCase domains
+├── tools/                # build.ps1, new-mod.ps1, bench/
+├── docs/ideas/           # design backlog (easy / medium / hard)
+├── deps/, .depcache/     # fetched dependencies
+└── bin/, releases/       # build & package output
 ```
+
+Each mod lives in `src/<Domain>/<Mod>/` with its own `modinfo.json` (name, description,
+mod ID, dependencies). For the current set of domains and mods, run `./tools/build.ps1 list`
+rather than relying on a list here.
 
 ## Quick Start
 
@@ -28,33 +27,35 @@ vs-mods/
 # Initialize solution files (run once after clone)
 ./init.ps1
 
-# List all mods
+# List all domains and mods
 ./tools/build.ps1 list
 
-# Create a new mod
-./tools/new-mod.ps1 -Domain farming -Name irrigation
-
-# Build everything
+# Build everything (auto-fetches missing dependencies)
 ./tools/build.ps1 build
 
 # Build one domain
-./tools/build.ps1 build -Domain crops
+./tools/build.ps1 build -Domain Crops
 
 # Build one mod
-./tools/build.ps1 build -Domain crops -Mod weeds
+./tools/build.ps1 build -Domain Primitive -Mod Pemmican
 
-# Visualize caves (quick testing)
-cd src/worldgen/caves-visualizer
-./viz.ps1 stats             # Show cave density by depth
-./viz.ps1 connectivity      # Analyze grid connections
-./viz.ps1 slice -Seed 99    # ASCII art horizontal slice
+# Package a domain (or mod) into releases/
+./tools/build.ps1 package -Domain Crops
+
+# Install to the game's Mods folder for testing
+./tools/build.ps1 install -Domain Primitive -Mod Pemmican
 ```
 
-# Package for release
-./tools/build.ps1 package -Domain crops
+`-Domain` takes the PascalCase folder name; `-Mod` requires `-Domain`. Other targets are
+`clean` and `list`. Add `-Configuration Debug` for a debug build (default is `Release`), and
+`-Force` to re-fetch dependencies even when they're already present.
 
-# Install to game for testing
-./tools/build.ps1 install -Domain crops -Mod weeds
+`install` leaves the Mods folder intact and only replaces the mods (and deps) it deploys, so
+manually-added mods survive. Add `-Clean` to **empty the entire VS Mods folder first** for a
+pristine test instance:
+
+```powershell
+./tools/build.ps1 install -Clean
 ```
 
 ## Environment Setup
@@ -69,44 +70,26 @@ $env:VINTAGE_STORY = "C:\Program Files\Vintage Story"
 $env:VINTAGE_STORY_DATA = "$env:APPDATA\VintagestoryData"
 ```
 
+## Dependencies
+
+External dependency mods are declared per mod in `modinfo.json` under `dependencies`
+(required) and `optionalDependencies` (compat, not required at runtime).
+
+`tools/build.ps1` is the single source for resolving them. It reads both maps, skips `game`
+and any mod defined in this repo, and fetches the rest **transitively** from the
+[VS ModDB](https://mods.vintagestory.at/). `install` copies the whole transitive closure into
+the Mods folder so installed mods can actually load.
+
 ## Adding a New Mod
 
 ```powershell
 # Code mod (C# + assets)
-./tools/new-mod.ps1 -Domain crops -Name irrigation
+./tools/new-mod.ps1 -Domain Crops -Name Irrigation
 
 # Content-only mod (just JSON assets)
-./tools/new-mod.ps1 -Domain crops -Name exotic-crops -Type content
+./tools/new-mod.ps1 -Domain Crops -Name ExoticCrops -Type content
 ```
-
-This creates:
-```
-src/crops/irrigation/
-├── irrigation.csproj
-├── modinfo.json
-├── IrrigationModSystem.cs
-└── assets/cropsirrigation/
-    ├── patches/
-    └── lang/en.json
-```
-
-The mod will automatically:
-- Reference the domain's `common` mod (both as a project reference and mod dependency)
-- Add the common mod to its `modinfo.json` dependencies
-
-If the domain doesn't have a `common` mod yet, create it first:
-```powershell
-./tools/new-mod.ps1 -Domain crops -Name common
-```
-
-## Domains
-
-| Domain | Description |
-|--------|-------------|
-| `crops` | Crop mechanics: weeds, crop quality, seasons |
-| `worldgen` | World generation: caves, structures |
-| `primitive` | Early-game survival: thermal fracturing, tallow candles |
 
 ## License
 
-MIT-0
+[MIT-0](LICENSE) (MIT No Attribution).

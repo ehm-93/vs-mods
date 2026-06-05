@@ -13,9 +13,9 @@ by working here but a bot won't guess.
 - **A green build does not mean the mod works.** `build.ps1` only compiles C#. JSON assets,
   patches, recipes, lang, and textures are validated only when the *game* loads them — see below.
 - Scripts are `.ps1`. PowerShell silently no-ops a `.ps` file (the extension matters).
-- **`install` wipes the whole VS Mods folder first**, then deploys exactly the filtered repo mods +
-  their fetched dependencies. The install target is treated as a clean test instance — don't keep
-  unrelated/manually-added mods there, they'll be deleted on the next `install`.
+- **`install` replaces only the modids it deploys** (the filtered repo mods + their fetched
+  dependencies); unrelated/manually-added mods in the Mods folder survive. Pass **`-Clean`** to empty
+  the whole folder first for a pristine test instance — with `-Clean`, anything else there is deleted.
 
 ## Telling whether a change actually worked
 

@@ -22,6 +22,11 @@
     Re-fetch optional dependencies even if already present (re-downloads cached zips
     and re-extracts). Without this, deps are fetched only when missing.
 
+.PARAMETER Clean
+    Install only: empty the entire VS Mods folder before deploying, for a clean test
+    instance. Without it, install leaves the folder intact and only replaces the mods
+    (and deps) it deploys, so manually-added mods survive.
+
 .EXAMPLE
     ./build.ps1 list
     ./build.ps1 build
@@ -29,6 +34,7 @@
     ./build.ps1 build -Force
     ./build.ps1 package -Domain farming -Mod weeds
     ./build.ps1 install -Domain primitive -Mod thermal-fracturing
+    ./build.ps1 install -Clean
 #>
 
 param(
@@ -39,7 +45,8 @@ param(
     [string]$Domain = "",
     [string]$Mod = "",
     [string]$Configuration = "Release",
-    [switch]$Force
+    [switch]$Force,
+    [switch]$Clean
 )
 
 $ErrorActionPreference = "Stop"
@@ -425,12 +432,21 @@ function Invoke-Install {
     foreach ($mod in $targets) { $rootDeps += Get-ExternalDeps $mod $localModIds }
     $closure = @(Get-TransitiveDeps $rootDeps $localModIds)
 
-    # Now it's safe to wipe and redeploy. Emptying clears the WHOLE folder (including any mods
-    # added manually) so the deploy is exactly what this repo builds — a clean test instance.
-    $existing = @(Get-ChildItem $modsDir -Force)
-    if ($existing.Count -gt 0) {
-        Write-Host "Emptying $modsDir ($($existing.Count) item(s))..." -ForegroundColor Yellow
-        $existing | Remove-Item -Recurse -Force
+    # Now it's safe to touch the Mods folder. With -Clean, empty the WHOLE folder (including any
+    # mods added manually) so the deploy is exactly what this repo builds — a clean test instance.
+    # Without it, leave unrelated mods alone and just drop any prior copies of the modids we're
+    # about to deploy (VS refuses to load two versions of the same modid).
+    if ($Clean) {
+        $existing = @(Get-ChildItem $modsDir -Force)
+        if ($existing.Count -gt 0) {
+            Write-Host "Emptying $modsDir ($($existing.Count) item(s))..." -ForegroundColor Yellow
+            $existing | Remove-Item -Recurse -Force
+        }
+    } else {
+        $deployIds = @($targets | ForEach-Object { $_.ModId }) + @($closure | ForEach-Object { $_.ModId })
+        foreach ($id in $deployIds) {
+            Get-ChildItem $modsDir -Force -Filter "${id}_*.zip" | Remove-Item -Force
+        }
     }
 
     Write-Host "Installing to $modsDir..." -ForegroundColor Cyan
