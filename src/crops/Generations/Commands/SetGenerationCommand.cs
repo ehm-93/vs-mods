@@ -13,12 +13,11 @@ internal class SetGenerationCommand
     public static void Register(ICoreServerAPI sapi)
     {
         var parser = sapi.ChatCommands.Parsers;
-        sapi.ChatCommands.Create("cropsgenerations")
+        sapi.ChatCommands.Create("generation")
             .WithDescription("Crops Generations debug commands")
             .RequiresPrivilege(Privilege.controlserver)
-            .BeginSubCommand("set-generation")
-                .WithAlias("gen")
-                .WithDescription("Set the generation of the target crop's farmland")
+            .BeginSubCommand("set")
+                .WithDescription("Set the generation of the target crop")
                 .RequiresPlayer()
                 .WithArgs(parser.Int("gen"))
                 .HandleWith(new SetGenerationCommand(sapi).Handle)

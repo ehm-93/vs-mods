@@ -12,7 +12,10 @@ namespace Ehm93.VS.Crops.Aging;
 
 public class BEBehaviorFarmlandAging : BlockEntityBehavior
 {
-    private const float DefaultK = 0.0001f;
+    // Tuned so at ~100% moisture + mulch (+ ideal temp ⇒ BoostCoef ≈ 2.96) near-depleted soil
+    // (gap ≈ agingMax) recovers ~1 fertility point ("1%") per 9 days; recovery slows toward agingMax
+    // (exponential approach). k = -ln(1 - 1/65) / (216h · 2.96) ≈ 2.4e-5.
+    private const float DefaultK = 0.0000243f;
     private const float DefaultMaxNutrientsFromAging = 65f;
 
     private float k = DefaultK;

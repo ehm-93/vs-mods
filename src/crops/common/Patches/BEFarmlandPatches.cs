@@ -23,12 +23,17 @@ internal static class BEFarmlandPatches
         }
     }
 
+    // OnTesselation and OnBlockInteract are declared on BlockEntitySoilNutrition (farmland's base), not
+    // on BlockEntityFarmland itself, so the patch must target that type or Harmony reports "undefined
+    // target method". The override there draws only the fertilizer quad and returns — it does NOT call
+    // Behaviors[i].OnTesselation like the base BlockEntity does — so this postfix re-adds the behaviors'
+    // meshes (our crop visuals). Scoped to soil-nutrition BEs (effectively just farmland).
     [HarmonyPatchCategory(CommonModSystem.ModId)]
-    [HarmonyPatch(typeof(BlockEntityFarmland), "OnTesselation")]
+    [HarmonyPatch(typeof(BlockEntitySoilNutrition), "OnTesselation")]
     internal static class OnTesselationPatch
     {
         [HarmonyPostfix]
-        public static void After(BlockEntityFarmland __instance, ref bool __result, ITerrainMeshPool mesher, ITesselatorAPI tessThreadTesselator)
+        public static void After(BlockEntitySoilNutrition __instance, ref bool __result, ITerrainMeshPool mesher, ITesselatorAPI tessThreadTesselator)
         {
             bool flag = false;
             for (int i = 0; i < __instance.Behaviors.Count; i++)
@@ -40,11 +45,11 @@ internal static class BEFarmlandPatches
     }
 
     [HarmonyPatchCategory(CommonModSystem.ModId)]
-    [HarmonyPatch(typeof(BlockEntityFarmland), "OnBlockInteract")]
+    [HarmonyPatch(typeof(BlockEntitySoilNutrition), "OnBlockInteract")]
     internal static class OnBlockInteractPatch
     {
         [HarmonyPrefix]
-        public static bool Before(BlockEntityFarmland __instance, ref bool __result, IPlayer byPlayer)
+        public static bool Before(BlockEntitySoilNutrition __instance, ref bool __result, IPlayer byPlayer)
         {
             var behaviors = __instance.Behaviors.Where(i => i is IOnBlockInteract);
             foreach (IOnBlockInteract behavior in behaviors)

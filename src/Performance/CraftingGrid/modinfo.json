@@ -6,7 +6,7 @@
   "authors": [
     "ehm-93"
   ],
-  "version": "0.1.0",
+  "version": "0.1.1",
   "dependencies": {
     "game": "1.22.0"
   }

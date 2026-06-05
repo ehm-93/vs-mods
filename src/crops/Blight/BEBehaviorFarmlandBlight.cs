@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,8 +33,16 @@ public class BEBehaviorFarmlandBlight : BlockEntityBehavior, IOnBlockInteract, I
 
     // Visual blight overlay rendered at crop position (one block up from farmland).
     protected MeshData? blightMesh;
+    // Crop-equivalent climate/season color-map data so the overlay tints like the crop it replaces (a
+    // farmland-BE mesh carries no climate data on its own). Fed via the AddMeshData overload.
+    protected ColorMapData blightColorMap;
     protected Block? lastMeshedCrop;
     protected int lastMeshedTier = -1;
+
+    // Crop positions (farmland +1Y) whose real block must NOT render because the blight overlay replaces
+    // it. Read by HideBlightedCropPatch from the chunk-tesselation worker thread, so it must stay
+    // thread-safe — that's why the patch reads this set instead of touching a BlockEntity.
+    internal static readonly ConcurrentDictionary<BlockPos, byte> BlightedCrops = new();
 
     public BlockEntityFarmland FarmlandEntity => (BlockEntityFarmland)Blockentity;
 
@@ -105,6 +114,18 @@ public class BEBehaviorFarmlandBlight : BlockEntityBehavior, IOnBlockInteract, I
         }
     }
 
+    public override void OnBlockUnloaded()
+    {
+        base.OnBlockUnloaded();
+        BlightedCrops.TryRemove(Pos.UpCopy(), out _);
+    }
+
+    public override void OnBlockRemoved()
+    {
+        base.OnBlockRemoved();
+        BlightedCrops.TryRemove(Pos.UpCopy(), out _);
+    }
+
     public override void ToTreeAttributes(ITreeAttribute tree)
     {
         base.ToTreeAttributes(tree);
@@ -130,7 +151,7 @@ public class BEBehaviorFarmlandBlight : BlockEntityBehavior, IOnBlockInteract, I
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tessThreadTesselator)
     {
-        if (blightMesh != null) mesher.AddMeshData(blightMesh);
+        if (blightMesh != null) mesher.AddMeshData(blightMesh, blightColorMap);
         return base.OnTesselation(mesher, tessThreadTesselator);
     }
 
@@ -389,6 +410,17 @@ public class BEBehaviorFarmlandBlight : BlockEntityBehavior, IOnBlockInteract, I
         var crop = CropAbove();
         var tier = BlightTier;
 
+        // Flag/unflag the real crop block for hiding (HideBlightedCropPatch empties its mesh) so the overlay
+        // replaces it rather than double-rendering. Only re-tesselate the crop when the hidden state flips.
+        var cropPos = Pos.UpCopy();
+        var hideCrop = tier > 0 && crop != null;
+        if (hideCrop != BlightedCrops.ContainsKey(cropPos))
+        {
+            if (hideCrop) BlightedCrops[cropPos] = 0;
+            else BlightedCrops.TryRemove(cropPos, out _);
+            capi.World.BlockAccessor.MarkBlockDirty(cropPos);
+        }
+
         if (tier == 0 || crop == null)
         {
             if (blightMesh == null && lastMeshedCrop == null && lastMeshedTier == 0) return false;
@@ -409,40 +441,53 @@ public class BEBehaviorFarmlandBlight : BlockEntityBehavior, IOnBlockInteract, I
         if (shapeAsset == null) { blightMesh = null; return true; }
 
         var shape = shapeAsset.Clone();
-        var texMap = new Dictionary<string, TextureAtlasPosition>();
-        if (shape.Textures != null)
-        {
-            foreach (var pair in shape.Textures)
-            {
-                var baseLoc = pair.Value;
-                // Virtual atlas key — atlas caches by AssetLocation, so the filter only runs once per (base, tier).
-                var blightLoc = new AssetLocation("cropsblight", $"dynamic/{baseLoc.Domain}/{baseLoc.Path}-blight{tier}");
-                capi.BlockTextureAtlas.GetOrInsertTexture(
-                    blightLoc,
-                    out _,
-                    out var pos,
-                    () => BlightFilter.Apply(capi, baseLoc, tier)
-                );
-                texMap[pair.Key] = pos;
-            }
-        }
         shape.Textures = null;
 
+        // Texture the overlay from the CROP BLOCK's resolved textures (e{stage}/w{stage}), not the shape
+        // file's generic ones. Vanilla crops paint each growth stage's silhouette into these textures over a
+        // shared cross shape, so using the shape's defaults made the blight overlay always look full-grown.
+        var texMap = new Dictionary<string, TextureAtlasPosition>();
+        foreach (var pair in crop.Textures)
+        {
+            var baseLoc = pair.Value.Base;
+            // Virtual atlas key — atlas caches by AssetLocation, so the filter only runs once per (base, tier).
+            var blightLoc = new AssetLocation("cropsblight", $"dynamic/{baseLoc.Domain}/{baseLoc.Path}-blight{tier}");
+            capi.BlockTextureAtlas.GetOrInsertTexture(
+                blightLoc,
+                out _,
+                out var pos,
+                () => BlightFilter.Apply(capi, baseLoc, tier)
+            );
+            texMap[pair.Key] = pos;
+        }
+
         var texSource = new DictTexSource(texMap, capi.BlockTextureAtlas.Size);
+
+        // Tint like the crop it overlays: capture the crop's ColorMapData (map indices + this spot's
+        // temperature/rainfall) and feed it via the AddMeshData overload in OnTesselation, so climate
+        // sampling has per-vertex data instead of defaulting on the farmland-BE mesh. Crops without color
+        // maps simply yield no tint (the blighted texture renders as authored).
+        blightColorMap = capi.World.GetColorMapData(crop, Pos.X, Pos.Y, Pos.Z);
 
         capi.Tesselator.TesselateShape(
             new TesselationMetaData
             {
                 TexSource = texSource,
                 TypeForLogging = "blighted crop",
-                ClimateColorMapId = 1,
-                SeasonColorMapId = 1,
+                ClimateColorMapId = blightColorMap.ClimateMapIndex,
+                SeasonColorMapId = blightColorMap.SeasonMapIndex,
             },
             shape,
             out blightMesh
         );
 
-        blightMesh?.Translate(new Vec3f(0, 1, 0));
+        if (blightMesh != null)
+        {
+            // Crops render in OpaqueNoCull so both faces of the cross billboard show; match it or the
+            // overlay is backface-culled and only renders from one side.
+            Array.Fill(blightMesh.RenderPassesAndExtraBits, (short)EnumChunkRenderPass.OpaqueNoCull);
+            blightMesh.Translate(new Vec3f(0, 1, 0));
+        }
         return true;
     }
 

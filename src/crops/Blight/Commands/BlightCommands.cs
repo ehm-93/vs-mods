@@ -9,20 +9,18 @@ internal static class BlightCommands
     public static void Register(ICoreServerAPI sapi)
     {
         var parser = sapi.ChatCommands.Parsers;
-        var root = sapi.ChatCommands.Create("cropsblight")
+        var root = sapi.ChatCommands.Create("blight")
             .WithDescription("Crops Blight debug commands")
             .RequiresPrivilege(Privilege.controlserver);
 
-        root.BeginSubCommand("set-blight")
-            .WithAlias("blight")
+        root.BeginSubCommand("set")
             .WithDescription("Set the blight level on the targeted farmland")
             .RequiresPlayer()
             .WithArgs(parser.IntRange("blight", 0, 100))
             .HandleWith(args => SetBlight(sapi, args))
             .EndSubCommand();
 
-        root.BeginSubCommand("set-spores")
-            .WithAlias("spores")
+        root.BeginSubCommand("spores")
             .WithDescription("Set the spore level on the targeted farmland")
             .RequiresPlayer()
             .WithArgs(parser.IntRange("spores", 0, 100))

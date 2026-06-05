@@ -29,6 +29,9 @@ public class BEBehaviorCropWeeds : BlockEntityBehavior, IWeedSource
     protected double weedLevel;
     protected double lastCheckTotalHours = 0;
     protected MeshData? weedMesh;
+    // Grass-equivalent climate/season color-map data (indices + this spot's temperature/rainfall) so the
+    // weed mesh tints exactly like nearby grass. A farmland-BE mesh carries no climate data on its own.
+    protected ColorMapData weedColorMap;
 
     public double WeedLevel
     {
@@ -77,7 +80,7 @@ public class BEBehaviorCropWeeds : BlockEntityBehavior, IWeedSource
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tessThreadTesselator)
     {
-        if (weedMesh != null) mesher.AddMeshData(weedMesh);
+        if (weedMesh != null) mesher.AddMeshData(weedMesh, weedColorMap);
         return base.OnTesselation(mesher, tessThreadTesselator);
     }
 
@@ -135,25 +138,38 @@ public class BEBehaviorCropWeeds : BlockEntityBehavior, IWeedSource
 
         var texSource = WeedTextureSource(capi);
 
+        // Tint like vanilla grass (climatePlantTint + seasonalGrass). Capture the grass block's full
+        // ColorMapData at this spot — the map indices AND this position's temperature/rainfall — and feed
+        // it via the AddMeshData overload in OnTesselation. Setting only the map ids here isn't enough:
+        // climate sampling needs the per-vertex temp/rainfall, which a farmland-BE mesh doesn't carry, so
+        // the climate map would otherwise sample at the default (dry → golden).
+        var grass = capi.World.GetBlock(new AssetLocation("game:tallgrass-medium-free"));
+        weedColorMap = grass == null ? default : capi.World.GetColorMapData(grass, Pos.X, Pos.Y, Pos.Z);
+
         capi.Tesselator.TesselateShape(
             new TesselationMetaData
             {
                 TypeForLogging = "farmland weed mesh",
                 TexSource = texSource,
-                ClimateColorMapId = 1,
-                SeasonColorMapId = 1,
+                ClimateColorMapId = weedColorMap.ClimateMapIndex,
+                SeasonColorMapId = weedColorMap.SeasonMapIndex,
             },
             shape,
             out weedMesh
         );
 
+        // Crops/weeds render in OpaqueNoCull (two-sided billboard); match it or the overlay is
+        // backface-culled and only renders from one side.
+        Array.Fill(weedMesh.RenderPassesAndExtraBits, (short)EnumChunkRenderPass.OpaqueNoCull);
 
         var rotateY = Math.PI * GetJitterOffset(Pos, 0);
         weedMesh.Rotate(new Vec3f(0.5f, 0, 0.5f), 0, (float)rotateY, 0);
 
         var offsetX = GetJitterOffset(Pos, 1);
         var offsetZ = GetJitterOffset(Pos, 2);
-        weedMesh.Translate(new Vec3f(offsetX, 0, offsetZ));
+        // The behavior lives on the farmland, but weeds grow at the crop (soil surface) one block up —
+        // lift the mesh +1Y or it renders buried inside the farmland block.
+        weedMesh.Translate(new Vec3f(offsetX, 1, offsetZ));
 
         return true;
     }

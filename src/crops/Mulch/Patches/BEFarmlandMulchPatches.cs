@@ -8,13 +8,17 @@ namespace Ehm93.VS.Crops.Mulch;
 
 internal class BEFarmlandMulchPatches
 {
+    // updateMoistureLevel (and the moistureLevel field) are declared on BlockEntitySoilNutrition, farmland's
+    // base — not on BlockEntityFarmland — so the patch must name that type or Harmony reports "undefined
+    // target method". __instance stays typed as BlockEntityFarmland: farmland is the only soil-nutrition BE,
+    // and the mulch behavior only exists on farmland (the prefix/postfix no-op without it).
     [HarmonyPatchCategory(MulchModSystem.ModId)]
-    [HarmonyPatch(typeof(BlockEntityFarmland), "updateMoistureLevel", new Type[] {
+    [HarmonyPatch(typeof(BlockEntitySoilNutrition), "updateMoistureLevel", new Type[] {
         typeof(double), typeof(float), typeof(bool), typeof(ClimateCondition)
     })]
     internal static class UpdateMoistureLevelPatch
     {
-        private static readonly FieldInfo moistureLevel = AccessTools.Field(typeof(BlockEntityFarmland), "moistureLevel");
+        private static readonly FieldInfo moistureLevel = AccessTools.Field(typeof(BlockEntitySoilNutrition), "moistureLevel");
 
         [HarmonyPrefix]
         public static void Before(BlockEntityFarmland __instance, ref float __state)

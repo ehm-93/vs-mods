@@ -16,11 +16,10 @@ internal class SetWeedinessCommand
     public static void Register(ICoreServerAPI sapi)
     {
         var parser = sapi.ChatCommands.Parsers;
-        sapi.ChatCommands.Create("cropsweeds")
+        sapi.ChatCommands.Create("weeds")
             .WithDescription("Crops Weeds debug commands")
             .RequiresPrivilege(Privilege.controlserver)
-            .BeginSubCommand("set-weediness")
-                .WithAlias("weed")
+            .BeginSubCommand("set")
                 .WithDescription("Set the weediness of the target farmland")
                 .RequiresPrivilege(Privilege.controlserver)
                 .RequiresPlayer()

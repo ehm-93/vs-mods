@@ -1,8 +1,0 @@
-[
-  {
-    "file": "game:blocktypes/plant/fruitingbush.json",
-    "op": "addmerge",
-    "path": "/entityBehaviors",
-    "value": [{ "name": "BerryChilling", "properties": { "chillTemp": 7, "chilledDaysRequired": 10 } }]
-  }
-]

@@ -6,6 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\common.csproj" />
+    <ProjectReference Include="..\Common\common.csproj">
+      <!-- Compile-only: cropscommon is a separate mod (declared in modinfo deps); do not bundle its dll. -->
+      <Private>false</Private>
+    </ProjectReference>
   </ItemGroup>
 </Project>
