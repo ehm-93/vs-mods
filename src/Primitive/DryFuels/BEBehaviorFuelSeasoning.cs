@@ -20,18 +20,22 @@ public class BEBehaviorFuelSeasoning : BlockEntityBehavior
 
     protected double seasonedHours;
     protected double lastCheckTotalHours;
-    protected double seasonHoursRequired = 240; // base at a temperate, sheltered spot (rate ~1); tunable via behavior props
+    protected double fallbackSeasonHours = 240; // cure time used when no config is present (behavior prop / default)
 
     private long tickListenerId;        // 0 = no tick registered
     private InventoryBase? watchedInv;  // the inventory we're subscribed to (for clean unsubscribe)
     private bool ticking;               // true while OnServerTick runs, so a conversion's SlotModified defers
     private bool resyncPending;         // a SlotModified arrived mid-tick; re-evaluate registration afterwards
+    private DryFuelsConfig? config;     // user-tunable seasoning timings (ModConfig/dryfuels.json)
 
     public BEBehaviorFuelSeasoning(BlockEntity blockentity) : base(blockentity) { }
 
     protected InventoryBase? Inventory => (Blockentity as BlockEntityContainer)?.Inventory;
 
-    public double Progress => seasonHoursRequired <= 0 ? 0 : Math.Clamp(seasonedHours / seasonHoursRequired, 0, 1);
+    // Live from config so a server→client config sync (which mutates Config in place) updates the display.
+    protected double SeasonHoursRequired => config?.SeasonHours ?? fallbackSeasonHours;
+
+    public double Progress => SeasonHoursRequired <= 0 ? 0 : Math.Clamp(seasonedHours / SeasonHoursRequired, 0, 1);
 
     public bool HasSeasonable
     {
@@ -48,7 +52,9 @@ public class BEBehaviorFuelSeasoning : BlockEntityBehavior
     public override void Initialize(ICoreAPI api, JsonObject properties)
     {
         base.Initialize(api, properties);
-        seasonHoursRequired = properties["seasonHours"].AsDouble(seasonHoursRequired);
+        config = api.ModLoader.GetModSystem<DryFuelsModSystem>()?.Config;
+        // Cache the behavior prop as the fallback; SeasonHoursRequired prefers config (which may sync from server).
+        fallbackSeasonHours = properties["seasonHours"].AsDouble(fallbackSeasonHours);
 
         // Defer the first check so the inventory is populated (FromTreeAttributes has run); thereafter
         // SlotModified keeps the tick registration in sync. Server-only — seasoning is a server-side sim.
@@ -153,7 +159,7 @@ public class BEBehaviorFuelSeasoning : BlockEntityBehavior
             if (!HasSeasonable) return; // safety: fuel removed between a deferred SlotModified and this tick
 
             seasonedHours += elapsed * SeasoningRateMul();
-            if (seasonedHours >= seasonHoursRequired)
+            if (seasonedHours >= SeasonHoursRequired)
             {
                 ConvertSeasonable(inv);
                 seasonedHours = 0;
@@ -214,7 +220,7 @@ public class BEBehaviorFuelSeasoning : BlockEntityBehavior
         double dryFactor = 0.6 + 0.8 * dry01;                                  // 0.6x in a soaking climate .. 1.4x arid
         bool openToSky = Pos.Y >= Api.World.BlockAccessor.GetRainMapHeightAt(Pos.X, Pos.Z);
         double shelter = openToSky ? (0.6 + 0.4 * dry01) : 1.0;                // exposed wood seasons slower in wet climates
-        double room = InEnclosedRoom() ? RoomDryingBonus : 1.0;                // a woodshed / indoor store seasons faster
+        double room = InEnclosedRoom() ? (config?.RoomDryingBonus ?? RoomDryingBonus) : 1.0; // woodshed seasons faster
 
         return warmth * dryFactor * shelter * room;
     }
