@@ -1,0 +1,71 @@
+{
+	"code": "gruit",
+	"__comment": "Wild gruit herbs (new worldgen plants). Modeled on vanilla flower (BlockPlant); harvest drops the gruit ingredient item. Visuals reuse vanilla flower shapes/textures as placeholders.",
+	"class": "BlockPlant",
+	"behaviors": [
+		{ "name": "DropNotSnowCovered" }
+	],
+	"variantgroups": [
+		{ "code": "herb", "states": ["sweetgale", "marshrosemary", "yarrow"] },
+		{ "code": "cover", "states": ["free", "snow"] }
+	],
+	"creativeinventory": { "general": ["*-free"], "flora": ["*-free"] },
+	"renderpass": "OpaqueNoCull",
+	"drawtypeByType": {
+		"*-snow": "JSONAndSnowLayer",
+		"*": "JSON"
+	},
+	"shape": { "base": "game:block/plant/flower/1patch-3faces-24x24" },
+	"texturesByType": {
+		"*-sweetgale": {
+			"north1": { "base": "game:block/plant/flower/petal/westerngorse1" },
+			"south1": { "base": "game:block/plant/flower/petal/westerngorse1" },
+			"northTinted1": { "base": "game:block/plant/flower/stem/westerngorse1" },
+			"southTinted1": { "base": "game:block/plant/flower/stem/westerngorse1" }
+		},
+		"*-marshrosemary": {
+			"north1": { "base": "game:block/plant/flower/petal/heather1" },
+			"south1": { "base": "game:block/plant/flower/petal/heather1" },
+			"northTinted1": { "base": "game:block/plant/flower/stem/heather1" },
+			"southTinted1": { "base": "game:block/plant/flower/stem/heather1" }
+		},
+		"*-yarrow": {
+			"north1": { "base": "game:block/plant/flower/petal/wilddaisy1" },
+			"south1": { "base": "game:block/plant/flower/petal/wilddaisy1" },
+			"northTinted1": { "base": "game:block/plant/flower/stem/wilddaisy1" },
+			"southTinted1": { "base": "game:block/plant/flower/stem/wilddaisy1" }
+		}
+	},
+	"blockmaterialByType": {
+		"*-free": "Plant",
+		"*": "Snow"
+	},
+	"replaceable": 3000,
+	"lightAbsorption": 0,
+	"randomizeRotations": true,
+	"randomDrawOffset": true,
+	"resistance": 0.5,
+	"collisionbox": null,
+	"selectionbox": { "x1": 0.125, "y1": 0, "z1": 0.125, "x2": 0.875, "y2": 0.4375, "z2": 0.875 },
+	"sidesolid": { "all": false },
+	"sideopaque": { "all": false },
+	"dropsByType": {
+		"*-free": [
+			{ "type": "item", "code": "beer:gruit-{herb}", "quantity": { "avg": 1, "var": 0 } }
+		],
+		"*": []
+	},
+	"creativeinventoryStacks": [
+		{
+			"tabs": ["general", "flora"],
+			"stacks": [
+				{ "type": "block", "code": "beer:gruit-{herb}-free" }
+			]
+		}
+	],
+	"guiTransform": {
+		"rotation": { "x": -3, "y": -27, "z": 0 },
+		"origin": { "x": 0.5, "y": 0.2, "z": 0.5 },
+		"scale": 1.62
+	}
+}

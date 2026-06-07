@@ -1,0 +1,18 @@
+{
+	"code": "gruit",
+	"__comment": "Gruit herbs harvested from the wild gruit plants. Bittering/flavoring herbs for the boil (step 5). Placeholder visuals reuse vanilla spice-herb item textures; distinct art is a polish follow-up.",
+	"maxstacksize": 64,
+	"variantgroups": [
+		{ "code": "herb", "states": ["sweetgale", "marshrosemary", "yarrow"] }
+	],
+	"attributes": {
+		"handbook": { "groupBy": ["gruit-*"] }
+	},
+	"textureByType": {
+		"*-sweetgale": { "base": "game:item/resource/herb/sage" },
+		"*-marshrosemary": { "base": "game:item/resource/herb/lavender" },
+		"*-yarrow": { "base": "game:item/resource/herb/chamomile" }
+	},
+	"creativeinventory": { "general": ["*"], "items": ["*"] },
+	"materialDensity": 100
+}

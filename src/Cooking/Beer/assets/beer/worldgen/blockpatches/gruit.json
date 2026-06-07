@@ -1,0 +1,39 @@
+[
+	{
+		"__comment": "Sweet gale (bog myrtle): wet, cool-temperate, near water.",
+		"blockCodes": ["beer:gruit-sweetgale-free"],
+		"placement": "NearWater",
+		"minTemp": 4, "maxTemp": 16,
+		"minRain": 0.5,
+		"minForest": 0, "maxForest": 1,
+		"maxY": 0.1,
+		"chance": 0.35,
+		"quantity": { "dist": "invexp", "avg": 12, "var": 6 },
+		"offsetX": { "dist": "uniform", "avg": 0, "var": 8 },
+		"offsetZ": { "dist": "uniform", "avg": 0, "var": 8 }
+	},
+	{
+		"__comment": "Marsh rosemary (Labrador tea): cold bog, near water.",
+		"blockCodes": ["beer:gruit-marshrosemary-free"],
+		"placement": "NearWater",
+		"minTemp": -5, "maxTemp": 8,
+		"minRain": 0.45,
+		"minForest": 0, "maxForest": 1,
+		"maxY": 0.1,
+		"chance": 0.3,
+		"quantity": { "dist": "invexp", "avg": 10, "var": 5 },
+		"offsetX": { "dist": "uniform", "avg": 0, "var": 8 },
+		"offsetZ": { "dist": "uniform", "avg": 0, "var": 8 }
+	},
+	{
+		"__comment": "Yarrow: temperate meadow, drier and more open ground.",
+		"blockCodes": ["beer:gruit-yarrow-free"],
+		"minTemp": 6, "maxTemp": 24,
+		"minRain": 0.25, "maxRain": 0.75,
+		"minForest": 0, "maxForest": 0.5,
+		"chance": 0.4,
+		"quantity": { "dist": "invexp", "avg": 8, "var": 4 },
+		"offsetX": { "dist": "uniform", "avg": 0, "var": 6 },
+		"offsetZ": { "dist": "uniform", "avg": 0, "var": 6 }
+	}
+]

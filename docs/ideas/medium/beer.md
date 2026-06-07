@@ -2,6 +2,26 @@
 
 Real beer brewing is an in-depth multi-step process with many ingredients, not just flour in a barrel.
 
+## v1
+
+grain + water, sealed in barrel (~2 days) → soaked grain
+
+soaked grain on the ground (~2 days) → wet malt (rots quickly, dry it soon)
+
+dry wet malt:
+
+clay oven (tech/exploration gated) → malt (full yield)
+direct fire → burnt malt (works, but you need more per mash)
+grind malt in quern → cracked malt
+
+cracked malt + water, cook in a vessel → wort + spent malt
+
+wort + gruit, cook again → boiled wort (gruit sets shelf life; longer/harder boil can raise it later)
+
+boiled wort, sealed in barrel (~1 month, magic fermentation) → beer
+
+Worldgen to add for v1: gruit herbs. Historically real options: sweet gale (bog myrtle), yarrow, mugwort, marsh rosemary/Labrador tea.
+
 ## Design Philosophy
 
 Balance IRL brewing against game mechanics. Reward more effort and investment with more nutrition or other effects.

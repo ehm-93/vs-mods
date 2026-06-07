@@ -1,0 +1,52 @@
+{
+	"item-soakedgrain-spelt": "Soaked Spelt",
+	"item-soakedgrain-rice": "Soaked Rice",
+	"item-soakedgrain-rye": "Soaked Rye",
+	"item-soakedgrain-amaranth": "Soaked Amaranth",
+
+	"item-wetmalt-spelt": "Wet Spelt Malt",
+	"item-wetmalt-rice": "Wet Rice Malt",
+	"item-wetmalt-rye": "Wet Rye Malt",
+	"item-wetmalt-amaranth": "Wet Amaranth Malt",
+
+	"item-malt-spelt": "Spelt Malt",
+	"item-malt-rice": "Rice Malt",
+	"item-malt-rye": "Rye Malt",
+	"item-malt-amaranth": "Amaranth Malt",
+
+	"item-burntmalt-spelt": "Burnt Spelt Malt",
+	"item-burntmalt-rice": "Burnt Rice Malt",
+	"item-burntmalt-rye": "Burnt Rye Malt",
+	"item-burntmalt-amaranth": "Burnt Amaranth Malt",
+
+	"item-crackedmalt-spelt": "Cracked Spelt Malt",
+	"item-crackedmalt-rice": "Cracked Rice Malt",
+	"item-crackedmalt-rye": "Cracked Rye Malt",
+	"item-crackedmalt-amaranth": "Cracked Amaranth Malt",
+
+	"item-crackedburntmalt-spelt": "Cracked Burnt Spelt Malt",
+	"item-crackedburntmalt-rice": "Cracked Burnt Rice Malt",
+	"item-crackedburntmalt-rye": "Cracked Burnt Rye Malt",
+	"item-crackedburntmalt-amaranth": "Cracked Burnt Amaranth Malt",
+
+	"item-wortportion-spelt": "Spelt Wort",
+	"item-wortportion-rice": "Rice Wort",
+	"item-wortportion-rye": "Rye Wort",
+	"item-wortportion-amaranth": "Amaranth Wort",
+
+	"item-boiledwortportion-spelt": "Boiled Spelt Wort",
+	"item-boiledwortportion-rice": "Boiled Rice Wort",
+	"item-boiledwortportion-rye": "Boiled Rye Wort",
+	"item-boiledwortportion-amaranth": "Boiled Amaranth Wort",
+
+	"item-gruit-sweetgale": "Sweet Gale",
+	"item-gruit-marshrosemary": "Marsh Rosemary",
+	"item-gruit-yarrow": "Yarrow",
+
+	"block-gruit-sweetgale-free": "Sweet Gale",
+	"block-gruit-sweetgale-snow": "Sweet Gale",
+	"block-gruit-marshrosemary-free": "Marsh Rosemary",
+	"block-gruit-marshrosemary-snow": "Marsh Rosemary",
+	"block-gruit-yarrow-free": "Yarrow",
+	"block-gruit-yarrow-snow": "Yarrow"
+}

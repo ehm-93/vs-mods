@@ -1,0 +1,9 @@
+{
+	"__comment": "Step 6: ferment boiled wort in a sealed barrel into ale (~2 vanilla months; sealHours tunable). Output is vanilla's grain ale (ciderportion-{type}: 'Spelt ale', 'Sake', 'Rye ale', 'Amaranth ale') so it reuses vanilla nutrition/intoxication and stays distillable. 1:1 liquid conversion, type templated from the named wildcard.",
+	"code": "ferment",
+	"sealHours": 432,
+	"ingredients": [
+		{ "type": "item", "code": "beer:boiledwortportion-*", "name": "type", "litres": 0.1 }
+	],
+	"output": { "type": "item", "code": "game:ciderportion-{type}", "litres": 0.1 }
+}

@@ -1,0 +1,50 @@
+{
+	"code": "wortportion",
+	"__comment": "Step 4 output: sweet unfermented wort from mashing cracked malt + water in a cauldron. Spoils quickly until boiled with gruit. A liquid portion, like vanilla cider.",
+	"variantgroups": [
+		{ "code": "type", "states": ["spelt", "rice", "rye", "amaranth"] }
+	],
+	"class": "ItemLiquidPortion",
+	"matterState": "liquid",
+	"attributes": {
+		"handbook": { "ignoreCreativeInvStacks": true, "groupBy": ["wortportion-*"] },
+		"waterTightContainerProps": {
+			"containable": true,
+			"itemsPerLitre": 100,
+			"texture": { "base": "game:block/liquid/honey", "alpha": 140 },
+			"allowSpill": true,
+			"whenSpilled": {
+				"action": "DropContents",
+				"stack": { "type": "item", "code": "beer:wortportion-{type}" }
+			},
+			"nutritionPropsPerLitre": {
+				"satiety": 80,
+				"intoxication": 0,
+				"foodcategory": "Grain"
+			}
+		}
+	},
+	"shape": { "base": "game:item/liquid" },
+	"texture": { "base": "game:block/liquid/honey", "alpha": 140 },
+	"creativeinventory": { "general": ["*"], "items": ["*"] },
+	"maxstacksize": 5000,
+	"materialDensity": 200,
+	"transitionableProps": [
+		{
+			"type": "Perish",
+			"freshHours": { "avg": 120 },
+			"transitionHours": { "avg": 48 },
+			"transitionedStack": { "type": "item", "code": "game:rot" },
+			"transitionRatio": 0.005
+		}
+	],
+	"guiTransform": {
+		"translation": { "x": 0, "y": 1, "z": 0 },
+		"rotation": { "x": 123, "y": -33, "z": -13 },
+		"origin": { "x": 0.5, "y": 0, "z": 0.5 },
+		"scale": 1.4
+	},
+	"tpHandTransform": {
+		"translation": { "x": -1.5, "y": -1, "z": -1.4 }
+	}
+}

@@ -1,0 +1,35 @@
+{
+	"code": "burntmalt",
+	"__comment": "Step 3b output: malt dried over direct fire (or over-baked). Works, but yields less wort per unit when mashed. Grind in a quern into cracked burnt malt.",
+	"maxstacksize": 64,
+	"variantgroups": [
+		{ "code": "type", "states": ["spelt", "rice", "rye", "amaranth"] }
+	],
+	"behaviors": [
+		{ "name": "GroundStorable", "properties": { "layout": "Quadrants", "collisionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.125, "z2": 1 } } }
+	],
+	"attributes": {
+		"handbook": { "groupBy": ["burntmalt-*"] }
+	},
+	"shape": { "base": "game:item/resource/crushed/normal" },
+	"texture": { "base": "game:block/food/grain/{type}-pile" },
+	"creativeinventory": { "general": ["*"], "items": ["*"] },
+	"materialDensity": 600,
+	"grindingProps": {
+		"groundStack": { "type": "item", "code": "beer:crackedburntmalt-{type}" }
+	},
+	"transitionableProps": [
+		{
+			"type": "Perish",
+			"freshHours": { "avg": 2880 },
+			"transitionHours": { "avg": 224 },
+			"transitionedStack": { "type": "item", "code": "game:rot" },
+			"transitionRatio": 0.25
+		}
+	],
+	"guiTransform": {
+		"rotation": { "x": 171, "y": 57, "z": -20 },
+		"origin": { "x": 0.46, "y": 0.11, "z": 0.46 },
+		"scale": 2.64
+	}
+}

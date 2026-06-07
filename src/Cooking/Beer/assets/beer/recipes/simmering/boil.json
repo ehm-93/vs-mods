@@ -1,0 +1,59 @@
+[
+	{
+		"__comment": "Step 5: boil wort with any gruit herb in a cauldron/saucepan -> boiled wort. One entry per grain; the gruit ingredient is a wildcard over all three herbs.",
+		"Ingredients": [
+			{ "type": "item", "code": "beer:wortportion-spelt", "quantity": 30 },
+			{ "type": "item", "code": "beer:gruit-*", "quantity": 1 }
+		],
+		"Simmering": {
+			"meltingPoint": 100,
+			"meltingDuration": 150,
+			"smeltedRatio": 1,
+			"smeltingType": "bake",
+			"smeltedStack": { "type": "item", "code": "beer:boiledwortportion-spelt", "quantity": 30 },
+			"requiresContainer": false
+		}
+	},
+	{
+		"Ingredients": [
+			{ "type": "item", "code": "beer:wortportion-rice", "quantity": 30 },
+			{ "type": "item", "code": "beer:gruit-*", "quantity": 1 }
+		],
+		"Simmering": {
+			"meltingPoint": 100,
+			"meltingDuration": 150,
+			"smeltedRatio": 1,
+			"smeltingType": "bake",
+			"smeltedStack": { "type": "item", "code": "beer:boiledwortportion-rice", "quantity": 30 },
+			"requiresContainer": false
+		}
+	},
+	{
+		"Ingredients": [
+			{ "type": "item", "code": "beer:wortportion-rye", "quantity": 30 },
+			{ "type": "item", "code": "beer:gruit-*", "quantity": 1 }
+		],
+		"Simmering": {
+			"meltingPoint": 100,
+			"meltingDuration": 150,
+			"smeltedRatio": 1,
+			"smeltingType": "bake",
+			"smeltedStack": { "type": "item", "code": "beer:boiledwortportion-rye", "quantity": 30 },
+			"requiresContainer": false
+		}
+	},
+	{
+		"Ingredients": [
+			{ "type": "item", "code": "beer:wortportion-amaranth", "quantity": 30 },
+			{ "type": "item", "code": "beer:gruit-*", "quantity": 1 }
+		],
+		"Simmering": {
+			"meltingPoint": 100,
+			"meltingDuration": 150,
+			"smeltedRatio": 1,
+			"smeltingType": "bake",
+			"smeltedStack": { "type": "item", "code": "beer:boiledwortportion-amaranth", "quantity": 30 },
+			"requiresContainer": false
+		}
+	}
+]

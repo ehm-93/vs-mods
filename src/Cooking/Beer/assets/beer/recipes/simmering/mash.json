@@ -1,0 +1,115 @@
+[
+	{
+		"__comment": "Step 4: mash cracked malt + 1L water in a cauldron/saucepan (ACA simmering) -> wort. ACA simmering does not template output by variant, so one entry per grain. Good malt yields 0.3L; burnt malt only 0.2L (needs more per mash).",
+		"Ingredients": [
+			{ "type": "item", "code": "game:waterportion", "quantity": 100 },
+			{ "type": "item", "code": "beer:crackedmalt-spelt", "quantity": 1 }
+		],
+		"Simmering": {
+			"meltingPoint": 100,
+			"meltingDuration": 200,
+			"smeltedRatio": 1,
+			"smeltingType": "bake",
+			"smeltedStack": { "type": "item", "code": "beer:wortportion-spelt", "quantity": 30 },
+			"requiresContainer": false
+		}
+	},
+	{
+		"Ingredients": [
+			{ "type": "item", "code": "game:waterportion", "quantity": 100 },
+			{ "type": "item", "code": "beer:crackedmalt-rice", "quantity": 1 }
+		],
+		"Simmering": {
+			"meltingPoint": 100,
+			"meltingDuration": 200,
+			"smeltedRatio": 1,
+			"smeltingType": "bake",
+			"smeltedStack": { "type": "item", "code": "beer:wortportion-rice", "quantity": 30 },
+			"requiresContainer": false
+		}
+	},
+	{
+		"Ingredients": [
+			{ "type": "item", "code": "game:waterportion", "quantity": 100 },
+			{ "type": "item", "code": "beer:crackedmalt-rye", "quantity": 1 }
+		],
+		"Simmering": {
+			"meltingPoint": 100,
+			"meltingDuration": 200,
+			"smeltedRatio": 1,
+			"smeltingType": "bake",
+			"smeltedStack": { "type": "item", "code": "beer:wortportion-rye", "quantity": 30 },
+			"requiresContainer": false
+		}
+	},
+	{
+		"Ingredients": [
+			{ "type": "item", "code": "game:waterportion", "quantity": 100 },
+			{ "type": "item", "code": "beer:crackedmalt-amaranth", "quantity": 1 }
+		],
+		"Simmering": {
+			"meltingPoint": 100,
+			"meltingDuration": 200,
+			"smeltedRatio": 1,
+			"smeltingType": "bake",
+			"smeltedStack": { "type": "item", "code": "beer:wortportion-amaranth", "quantity": 30 },
+			"requiresContainer": false
+		}
+	},
+	{
+		"Ingredients": [
+			{ "type": "item", "code": "game:waterportion", "quantity": 100 },
+			{ "type": "item", "code": "beer:crackedburntmalt-spelt", "quantity": 1 }
+		],
+		"Simmering": {
+			"meltingPoint": 100,
+			"meltingDuration": 200,
+			"smeltedRatio": 1,
+			"smeltingType": "bake",
+			"smeltedStack": { "type": "item", "code": "beer:wortportion-spelt", "quantity": 20 },
+			"requiresContainer": false
+		}
+	},
+	{
+		"Ingredients": [
+			{ "type": "item", "code": "game:waterportion", "quantity": 100 },
+			{ "type": "item", "code": "beer:crackedburntmalt-rice", "quantity": 1 }
+		],
+		"Simmering": {
+			"meltingPoint": 100,
+			"meltingDuration": 200,
+			"smeltedRatio": 1,
+			"smeltingType": "bake",
+			"smeltedStack": { "type": "item", "code": "beer:wortportion-rice", "quantity": 20 },
+			"requiresContainer": false
+		}
+	},
+	{
+		"Ingredients": [
+			{ "type": "item", "code": "game:waterportion", "quantity": 100 },
+			{ "type": "item", "code": "beer:crackedburntmalt-rye", "quantity": 1 }
+		],
+		"Simmering": {
+			"meltingPoint": 100,
+			"meltingDuration": 200,
+			"smeltedRatio": 1,
+			"smeltingType": "bake",
+			"smeltedStack": { "type": "item", "code": "beer:wortportion-rye", "quantity": 20 },
+			"requiresContainer": false
+		}
+	},
+	{
+		"Ingredients": [
+			{ "type": "item", "code": "game:waterportion", "quantity": 100 },
+			{ "type": "item", "code": "beer:crackedburntmalt-amaranth", "quantity": 1 }
+		],
+		"Simmering": {
+			"meltingPoint": 100,
+			"meltingDuration": 200,
+			"smeltedRatio": 1,
+			"smeltingType": "bake",
+			"smeltedStack": { "type": "item", "code": "beer:wortportion-amaranth", "quantity": 20 },
+			"requiresContainer": false
+		}
+	}
+]

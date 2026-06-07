@@ -1,0 +1,23 @@
+[
+	{
+		"__comment": "Disable vanilla's flour+water -> grain ale shortcut for the cereals this mod brews (spelt/rice/rye/amaranth), so the full malting->mashing->boiling->fermenting chain is the only path to them. Removed in DESCENDING index order so earlier removals don't shift later targets. cider.json order: 0 fruit cider, 1 mead, 2 spelt, 3 rice, 4 rye, 5 amaranth, 6 cassava. Cassava ale, mead, and fruit cider are left intact.",
+		"file": "game:recipes/barrel/cider.json",
+		"op": "remove",
+		"path": "/5"
+	},
+	{
+		"file": "game:recipes/barrel/cider.json",
+		"op": "remove",
+		"path": "/4"
+	},
+	{
+		"file": "game:recipes/barrel/cider.json",
+		"op": "remove",
+		"path": "/3"
+	},
+	{
+		"file": "game:recipes/barrel/cider.json",
+		"op": "remove",
+		"path": "/2"
+	}
+]

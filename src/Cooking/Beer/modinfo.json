@@ -1,0 +1,14 @@
+{
+	"type": "content",
+	"modid": "beer",
+	"name": "Beer",
+	"description": "Medieval beer brewing: steep and malt grain, mash and boil it with gruit herbs, then ferment into beer. Built on A Culinary Artillery's cookware.",
+	"authors": [
+		"ehm-93"
+	],
+	"version": "0.1.0",
+	"dependencies": {
+		"game": "1.22.0",
+		"aculinaryartillery": "2.0.0-dev.15"
+	}
+}

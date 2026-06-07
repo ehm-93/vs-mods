@@ -1,0 +1,10 @@
+{
+	"__comment": "Step 1: steep grain in a sealed water barrel for ~2 days. One templated entry (vanilla barrel recipes fill {type} from a named wildcard). Restricted to the brewing cereals.",
+	"code": "soak",
+	"sealHours": 48,
+	"ingredients": [
+		{ "type": "item", "code": "game:waterportion", "litres": 0.5 },
+		{ "type": "item", "code": "game:grain-*", "name": "type", "quantity": 1, "allowedVariants": ["spelt", "rice", "rye", "amaranth"] }
+	],
+	"output": { "type": "item", "code": "beer:soakedgrain-{type}", "stackSize": 1 }
+}
