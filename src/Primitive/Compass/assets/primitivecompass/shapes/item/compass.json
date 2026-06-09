@@ -1,0 +1,122 @@
+{
+	"__comment": "Combined static shape for the inventory icon: the vanilla bowl-empty-ground geometry (copied verbatim) + a water surface + the needle. The item's cached inventory mesh is built from this whole shape. (shape `overlays` referencing custom mod shapes aren't reliably loaded for item inventory meshes, so we inline everything here. The in-hand render still builds these parts separately in code so it can spin only the needle.)",
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textures": {
+		"mat": "game:block/clay/ceramic",
+		"water": "game:block/liquid/waterportion",
+		"metal": "game:block/metal/ingot/iron",
+		"white": "game:block/cloth/basic/white"
+	},
+	"elements": [
+		{
+			"name": "Bowl 1 floor",
+			"from": [ 5.5, 0.0, 5.5 ],
+			"to": [ 10.5, 1.0, 10.5 ],
+			"rotationOrigin": [ -1.0, 0.0, -1.0 ],
+			"faces": {
+				"up": { "texture": "#mat", "uv": [ 10.0, 2.0, 15.0, 7.0 ] },
+				"down": { "texture": "#mat", "uv": [ 5.0, 5.0, 10.0, 10.0 ] }
+			},
+			"children": [
+				{
+					"name": "N 1",
+					"from": [ 0.0, 0.0, 0.0 ],
+					"to": [ 5.0, 2.0, 1.0 ],
+					"rotationOrigin": [ 1.0, 0.0, 1.0 ],
+					"faces": {
+						"north": { "texture": "#mat", "uv": [ 6.0, 5.0, 11.0, 7.0 ] },
+						"east": { "texture": "#mat", "uv": [ 9.0, 6.0, 10.0, 8.0 ] },
+						"south": { "texture": "#mat", "uv": [ 4.0, 7.0, 9.0, 9.0 ] },
+						"west": { "texture": "#mat", "uv": [ 12.0, 1.0, 13.0, 3.0 ] },
+						"up": { "texture": "#mat", "uv": [ 3.0, 12.0, 8.0, 13.0 ] }
+					}
+				},
+				{
+					"name": "S 1",
+					"from": [ 0.0, 0.0, 4.0 ],
+					"to": [ 5.0, 2.0, 5.0 ],
+					"rotationOrigin": [ 1.0, 0.0, 1.0 ],
+					"faces": {
+						"north": { "texture": "#mat", "uv": [ 6.0, 10.0, 11.0, 12.0 ] },
+						"east": { "texture": "#mat", "uv": [ 6.0, 7.0, 7.0, 9.0 ] },
+						"south": { "texture": "#mat", "uv": [ 10.0, 3.0, 15.0, 5.0 ] },
+						"west": { "texture": "#mat", "uv": [ 11.0, 5.0, 12.0, 7.0 ] },
+						"up": { "texture": "#mat", "uv": [ 7.0, 9.0, 12.0, 10.0 ] }
+					}
+				},
+				{
+					"name": "W 1",
+					"from": [ 0.0, 0.0, 1.0 ],
+					"to": [ 1.0, 2.0, 4.0 ],
+					"rotationOrigin": [ 1.0, 0.0, 1.0 ],
+					"faces": {
+						"east": { "texture": "#mat", "uv": [ 10.0, 2.0, 13.0, 4.0 ] },
+						"west": { "texture": "#mat", "uv": [ 4.0, 10.0, 7.0, 12.0 ] },
+						"up": { "texture": "#mat", "uv": [ 9.0, 7.0, 10.0, 10.0 ] }
+					}
+				},
+				{
+					"name": "E 1",
+					"from": [ 4.0, 0.0, 1.0 ],
+					"to": [ 5.0, 2.0, 4.0 ],
+					"rotationOrigin": [ 1.0, 0.0, 1.0 ],
+					"faces": {
+						"east": { "texture": "#mat", "uv": [ 1.0, 6.0, 4.0, 8.0 ] },
+						"west": { "texture": "#mat", "uv": [ 6.0, 4.0, 9.0, 6.0 ] },
+						"up": { "texture": "#mat", "uv": [ 2.0, 4.0, 3.0, 7.0 ] }
+					}
+				}
+			]
+		},
+		{
+			"name": "water-surface",
+			"from": [ 5.7, 1.8, 5.7 ],
+			"to": [ 10.3, 1.9, 10.3 ],
+			"faces": {
+				"up":   { "texture": "#water", "uv": [ 5.0, 5.0, 11.0, 11.0 ] },
+				"down": { "texture": "#water", "uv": [ 5.0, 5.0, 11.0, 11.0 ] }
+			}
+		},
+		{
+			"name": "needle-shaft-south",
+			"comment": "White tail half (the end opposite the bulge) for contrast against the water.",
+			"from": [ 7.92, 1.9, 6.7 ],
+			"to": [ 8.08, 2.0, 8.0 ],
+			"faces": {
+				"north": { "texture": "#white", "uv": [ 7.0, 7.0, 9.0, 9.0 ] },
+				"east":  { "texture": "#white", "uv": [ 6.0, 7.0, 9.0, 9.0 ] },
+				"south": { "texture": "#white", "uv": [ 7.0, 7.0, 9.0, 9.0 ] },
+				"west":  { "texture": "#white", "uv": [ 6.0, 7.0, 9.0, 9.0 ] },
+				"up":    { "texture": "#white", "uv": [ 6.0, 7.0, 9.0, 9.0 ] },
+				"down":  { "texture": "#white", "uv": [ 6.0, 7.0, 9.0, 9.0 ] }
+			}
+		},
+		{
+			"name": "needle-shaft-north",
+			"comment": "Iron head half; the bulge/nub marks this north-pointing tip.",
+			"from": [ 7.92, 1.9, 8.0 ],
+			"to": [ 8.08, 2.0, 9.3 ],
+			"faces": {
+				"north": { "texture": "#metal", "uv": [ 7.0, 7.0, 9.0, 9.0 ] },
+				"east":  { "texture": "#metal", "uv": [ 6.0, 7.0, 9.0, 9.0 ] },
+				"south": { "texture": "#metal", "uv": [ 7.0, 7.0, 9.0, 9.0 ] },
+				"west":  { "texture": "#metal", "uv": [ 6.0, 7.0, 9.0, 9.0 ] },
+				"up":    { "texture": "#metal", "uv": [ 6.0, 7.0, 9.0, 9.0 ] },
+				"down":  { "texture": "#metal", "uv": [ 6.0, 7.0, 9.0, 9.0 ] }
+			}
+		},
+		{
+			"name": "needle-nub",
+			"from": [ 7.85, 2.0, 8.8 ],
+			"to": [ 8.15, 2.1, 9.3 ],
+			"faces": {
+				"north": { "texture": "#metal", "uv": [ 6.0, 6.0, 8.0, 7.0 ] },
+				"east":  { "texture": "#metal", "uv": [ 6.0, 6.0, 8.0, 7.0 ] },
+				"south": { "texture": "#metal", "uv": [ 6.0, 6.0, 8.0, 7.0 ] },
+				"west":  { "texture": "#metal", "uv": [ 6.0, 6.0, 8.0, 7.0 ] },
+				"up":    { "texture": "#metal", "uv": [ 6.0, 6.0, 8.0, 8.0 ] }
+			}
+		}
+	]
+}

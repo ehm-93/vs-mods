@@ -1,0 +1,43 @@
+{
+	"code": "compass",
+	"class": "BlockCompass",
+	"__comment": "A held compass, made a BLOCK so its multi-texture icon (bowl + blue water + iron needle) renders in the inventory slot — the same reason the vanilla bowl-of-water (also a block) shows its water. Unplaceable: it's a held instrument, not placed in the world. The combined bowl+water+needle shape is the cached icon mesh; BlockCompass spins only the needle for the in-hand render.",
+	"behaviors": [ { "name": "Unplaceable" } ],
+	"shape": { "base": "primitivecompass:item/compass" },
+	"textures": {
+		"mat": { "base": "game:block/clay/hardened/brown" },
+		"floor": { "base": "game:block/clay/hardened/brown" },
+		"water": { "base": "game:block/liquid/waterportion" },
+		"metal": { "base": "game:block/metal/ingot/iron" },
+		"white": { "base": "game:block/cloth/basic/white" }
+	},
+	"blockmaterial": "Ceramic",
+	"maxStackSize": 1,
+	"replaceable": 3000,
+	"resistance": 0.5,
+	"lightAbsorption": 0,
+	"sideopaque": { "all": false },
+	"sidesolid": { "all": false },
+	"collisionbox": { "x1": 0.3125, "y1": 0, "z1": 0.3125, "x2": 0.6875, "y2": 0.2, "z2": 0.6875 },
+	"selectionbox": { "x1": 0.3125, "y1": 0, "z1": 0.3125, "x2": 0.6875, "y2": 0.2, "z2": 0.6875 },
+	"creativeinventory": { "general": ["*"] },
+	"attributes": {
+		"handbook": { "groupBy": ["compass"] }
+	},
+	"heldTpIdleAnimation": "holdbothhandslarge",
+	"__guicomment": "Straight-down top view: x:-90 looks directly into the bowl (overrides the block-default isometric rotation). If it shows the bowl's underside instead, flip to x:+90.",
+	"guiTransform": {
+		"translation": { "x": 0, "y": 0, "z": 0 },
+		"rotation": { "x": -90, "y": 0, "z": 0 },
+		"origin": { "x": 0.5, "y": 0.0625, "z": 0.5 },
+		"scale": 4.6
+	},
+	"groundTransform": {
+		"scale": 3.5
+	},
+	"tpHandTransform": {
+		"translation": { "x": -1, "y": -0.44, "z": -0.2 },
+		"rotation": { "x": -80, "y": 15, "z": -103 },
+		"scale": 0.9
+	}
+}

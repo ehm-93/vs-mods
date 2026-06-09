@@ -1,0 +1,6 @@
+{
+  "primitivecompass:modname": "Compass",
+  "primitivecompass:moddesc": "A simple lodestone compass that orients to true north while held.",
+  "block-compass": "Compass",
+  "blockdesc-compass": "A magnetised lodestone needle floating in a bowl of water. Hold it and its tip swings to point north."
+}

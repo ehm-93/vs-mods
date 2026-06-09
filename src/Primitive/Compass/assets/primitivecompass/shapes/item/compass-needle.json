@@ -1,0 +1,51 @@
+{
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textures": {
+		"metal": "game:block/metal/ingot/iron",
+		"white": "game:block/cloth/basic/white"
+	},
+	"elements": [
+		{
+			"name": "needle-shaft-south",
+			"comment": "White tail half (the end opposite the bulge) for contrast against the water.",
+			"from": [ 7.92, 1.9, 6.7 ],
+			"to": [ 8.08, 2.0, 8.0 ],
+			"faces": {
+				"north": { "texture": "#white", "uv": [ 7.0, 7.0, 9.0, 9.0 ] },
+				"east":  { "texture": "#white", "uv": [ 6.0, 7.0, 9.0, 9.0 ] },
+				"south": { "texture": "#white", "uv": [ 7.0, 7.0, 9.0, 9.0 ] },
+				"west":  { "texture": "#white", "uv": [ 6.0, 7.0, 9.0, 9.0 ] },
+				"up":    { "texture": "#white", "uv": [ 6.0, 7.0, 9.0, 9.0 ] },
+				"down":  { "texture": "#white", "uv": [ 6.0, 7.0, 9.0, 9.0 ] }
+			}
+		},
+		{
+			"name": "needle-shaft-north",
+			"comment": "Iron head half; the bulge/nub marks this north-pointing tip.",
+			"from": [ 7.92, 1.9, 8.0 ],
+			"to": [ 8.08, 2.0, 9.3 ],
+			"faces": {
+				"north": { "texture": "#metal", "uv": [ 7.0, 7.0, 9.0, 9.0 ] },
+				"east":  { "texture": "#metal", "uv": [ 6.0, 7.0, 9.0, 9.0 ] },
+				"south": { "texture": "#metal", "uv": [ 7.0, 7.0, 9.0, 9.0 ] },
+				"west":  { "texture": "#metal", "uv": [ 6.0, 7.0, 9.0, 9.0 ] },
+				"up":    { "texture": "#metal", "uv": [ 6.0, 7.0, 9.0, 9.0 ] },
+				"down":  { "texture": "#metal", "uv": [ 6.0, 7.0, 9.0, 9.0 ] }
+			}
+		},
+		{
+			"name": "needle-nub",
+			"comment": "Raised marker on the north-pointing (iron) tip.",
+			"from": [ 7.85, 2.0, 8.8 ],
+			"to": [ 8.15, 2.1, 9.3 ],
+			"faces": {
+				"north": { "texture": "#metal", "uv": [ 6.0, 6.0, 8.0, 7.0 ] },
+				"east":  { "texture": "#metal", "uv": [ 6.0, 6.0, 8.0, 7.0 ] },
+				"south": { "texture": "#metal", "uv": [ 6.0, 6.0, 8.0, 7.0 ] },
+				"west":  { "texture": "#metal", "uv": [ 6.0, 6.0, 8.0, 7.0 ] },
+				"up":    { "texture": "#metal", "uv": [ 6.0, 6.0, 8.0, 8.0 ] }
+			}
+		}
+	]
+}

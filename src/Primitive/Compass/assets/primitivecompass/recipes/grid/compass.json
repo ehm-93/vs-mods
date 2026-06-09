@@ -1,0 +1,11 @@
+{
+	"__comment": "Float a magnetite (lodestone) nugget in a bowl of water to magnetise a compass needle. Any fired clay bowl works (empty or water-filled); grid recipes can't require the bowl's liquid contents.",
+	"ingredientPattern": "B,N",
+	"width": 1,
+	"height": 2,
+	"ingredients": {
+		"B": { "type": "block", "code": "game:bowl-*-fired", "name": "color", "allowedVariants": ["blue", "fire", "black", "brown", "cream", "earthyorange", "gray", "orange", "red", "tan"] },
+		"N": { "type": "item", "code": "game:nugget-magnetite" }
+	},
+	"output": { "type": "block", "code": "primitivecompass:compass", "quantity": 1 }
+}

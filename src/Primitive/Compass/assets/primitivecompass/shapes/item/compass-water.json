@@ -1,0 +1,20 @@
+{
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"__note": "waterportion is the already-blue container liquid texture; block/liquid/water is near-transparent (needs the liquid shader) and alpha-discards to invisible on a static item mesh.",
+	"textures": {
+		"water": "game:block/liquid/waterportion"
+	},
+	"elements": [
+		{
+			"name": "water-surface",
+			"comment": "Static water surface filling the vanilla bowl high (near the rim), matching how vanilla renders a full bowl.",
+			"from": [ 5.7, 1.8, 5.7 ],
+			"to": [ 10.3, 1.9, 10.3 ],
+			"faces": {
+				"up":   { "texture": "#water", "uv": [ 5.0, 5.0, 11.0, 11.0 ] },
+				"down": { "texture": "#water", "uv": [ 5.0, 5.0, 11.0, 11.0 ] }
+			}
+		}
+	]
+}
