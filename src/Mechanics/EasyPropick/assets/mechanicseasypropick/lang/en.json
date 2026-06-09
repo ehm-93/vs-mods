@@ -1,0 +1,34 @@
+{
+  "mechanicseasypropick:modname": "Easy Propick",
+  "mechanicseasypropick:moddesc": "Replaces the prospecting pick's tool modes with Proximity, Probability and Bore.",
+
+  "mechanicseasypropick:mode-proximity": "Proximity (direction to nearest ore)",
+  "mechanicseasypropick:mode-probability": "Probability (which way ore density rises)",
+  "mechanicseasypropick:mode-bore": "Bore (ore in a 3x3 column below)",
+  "mechanicseasypropick:mode-disabled": "This prospecting mode is disabled on this server.",
+
+  "mechanicseasypropick:vert-above": "above",
+  "mechanicseasypropick:vert-level": "level",
+  "mechanicseasypropick:vert-below": "below",
+
+  "mechanicseasypropick:proximity-header": "Ores within {0} blocks:",
+  "mechanicseasypropick:proximity-line": "{0}: {1}, {2}",
+  "mechanicseasypropick:proximity-none": "No ore within {0} blocks.",
+
+  "mechanicseasypropick:probability-header": "Ore density nearby:",
+  "mechanicseasypropick:probability-line": "{0}: increasing to the {1}",
+  "mechanicseasypropick:probability-peak": "{0}: densest right here",
+  "mechanicseasypropick:probability-none": "No ore signature nearby.",
+  "mechanicseasypropick:compass-n": "north",
+  "mechanicseasypropick:compass-ne": "northeast",
+  "mechanicseasypropick:compass-e": "east",
+  "mechanicseasypropick:compass-se": "southeast",
+  "mechanicseasypropick:compass-s": "south",
+  "mechanicseasypropick:compass-sw": "southwest",
+  "mechanicseasypropick:compass-w": "west",
+  "mechanicseasypropick:compass-nw": "northwest",
+
+  "mechanicseasypropick:bore-header": "Ore in the 3x3 column below:",
+  "mechanicseasypropick:bore-line": "{0}: {1}",
+  "mechanicseasypropick:bore-none": "No ore in the column below."
+}

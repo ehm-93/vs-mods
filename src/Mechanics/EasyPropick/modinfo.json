@@ -1,0 +1,13 @@
+{
+  "type": "code",
+  "modid": "mechanicseasypropick",
+  "name": "Easy Propick",
+  "description": "Replaces the prospecting pick's tool modes with three friendlier ones — Proximity (direction to the nearest ore), Probability (direction to the richest nearby ground), and Bore (ore in a 3x3 column straight down). Each mode is individually toggleable in the server mod config.",
+  "authors": [
+    "ehm-93"
+  ],
+  "version": "0.1.0",
+  "dependencies": {
+    "game": "1.22.0"
+  }
+}
