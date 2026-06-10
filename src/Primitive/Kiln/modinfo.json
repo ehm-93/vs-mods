@@ -1,0 +1,13 @@
+{
+  "type": "code",
+  "modid": "primitivekiln",
+  "name": "Kiln",
+  "description": "Fire bricks in a covered clamp, like a charcoal mound.",
+  "authors": [
+    "ehm-93"
+  ],
+  "version": "0.1.0",
+  "dependencies": {
+    "game": "1.22.0"
+  }
+}

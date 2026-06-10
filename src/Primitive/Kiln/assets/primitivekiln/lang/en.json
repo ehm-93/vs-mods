@@ -1,0 +1,14 @@
+{
+  "primitivekiln:modname": "Kiln",
+  "primitivekiln:moddesc": "Fire bricks in a covered clamp, like a charcoal mound.",
+  "primitivekiln:clamp-fuel": "Brick clamp: {0}/{1}s fuel loaded ({2} brick piles). Add fuel, then light with a torch.",
+  "primitivekiln:clamp-ready": "Brick clamp: fuelled ({0} brick piles). Light with a torch, then cover it in soil.",
+  "primitivekiln:clamp-firing": "Brick clamp: firing, ~{0} left.",
+  "primitivekiln:clamp-unsealed": "Not sealed — cover every exposed side in soil to keep it firing.",
+  "primitivekiln:clamp-needfuel": "Not enough fuel loaded to fire this clamp.",
+  "primitivekiln:clamp-badfuel": "That won't fire bricks — use firewood, charcoal, coal, coke or peat.",
+  "primitivekiln:clamp-notfull": "Every pile in the clamp must hold a full 24 bricks before fuelling.",
+  "primitivekiln:clamp-fillfirst": "Brick clamp: fill every pile to 24 bricks, then add fuel.",
+  "primitivekiln:clamp-loaded": "Fuel loaded: {0}/{1}s.",
+  "primitivekiln:clamp-full": "Brick clamp fuelled: {0}/{1}s — light it with a torch."
+}

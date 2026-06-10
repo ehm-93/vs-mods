@@ -1,0 +1,9 @@
+[
+  {
+    "__comment": "Attach the brick-clamp behavior to every ground-storage pile. addmerge appends to the existing entityBehaviors array (Burning, TemperatureSensitive, ContainedBagInventory). No 'side' so it applies on both client and server (rendering, block info, and the interaction patch all need it client-side).",
+    "file": "game:blocktypes/groundstorage.json",
+    "op": "addmerge",
+    "path": "/entityBehaviors",
+    "value": [{ "name": "BrickClamp" }]
+  }
+]
