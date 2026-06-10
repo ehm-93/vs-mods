@@ -10,5 +10,26 @@
   "primitivekiln:clamp-notfull": "Every pile in the clamp must hold a full 24 bricks before fuelling.",
   "primitivekiln:clamp-fillfirst": "Brick clamp: fill every pile to 24 bricks, then add fuel.",
   "primitivekiln:clamp-loaded": "Fuel loaded: {0}/{1}s.",
-  "primitivekiln:clamp-full": "Brick clamp fuelled: {0}/{1}s — light it with a torch."
+  "primitivekiln:clamp-full": "Brick clamp fuelled: {0}/{1}s — light it with a torch.",
+
+  "primitivekiln:block-kilnbase-*": "Kiln base",
+  "primitivekiln:kiln-place-hint": "Right-click with fireclay bricks to start building an updraft kiln. Place 4 bases in a square for a large kiln.",
+  "primitivekiln:kiln-construct": "Updraft kiln: tier {0}/{1} built. Next tier: {2} fireclay bricks (one click).",
+  "primitivekiln:kiln-built": "The kiln shell is complete — load it with unfired clayware through the door.",
+  "primitivekiln:kiln-open": "Updraft kiln: door open, {0}/{1} pieces loaded. Seal the door with {2} fireclay bricks (one click).",
+  "primitivekiln:kiln-err-needbricks": "The next step needs {0} fireclay bricks in hand.",
+  "primitivekiln:kiln-err-toobig": "That piece is too large to fit in the kiln.",
+  "primitivekiln:kiln-sealed-msg": "The door is sealed — add fuel, then hold a torch to it.",
+  "primitivekiln:kiln-sealed": "Updraft kiln: sealed. Fuel: {0}/{1}s. Light with a torch (hold).",
+  "primitivekiln:kiln-fuelloaded": "Fuel loaded: {0}/{1}s.",
+  "primitivekiln:kiln-fueled": "The kiln is fuelled: {0}/{1}s — hold a torch to it.",
+  "primitivekiln:kiln-lit": "Updraft kiln: firing, ~{0} left.",
+  "primitivekiln:kiln-cooling": "Updraft kiln: cooling, ~{0} left.",
+  "primitivekiln:kiln-cooled": "Updraft kiln: cooled. Right-click with an empty hand to open the door.",
+  "primitivekiln:kiln-opened": "The door is broken open.",
+  "primitivekiln:kiln-err-buildfirst": "Finish building the kiln shell first.",
+  "primitivekiln:kiln-err-sealfirst": "Seal the door with fireclay bricks before fuelling.",
+  "primitivekiln:kiln-err-sealed": "The door is sealed.",
+  "primitivekiln:kiln-err-full": "The kiln is full.",
+  "primitivekiln:kiln-err-hot": "The kiln is still hot — let it finish firing and cool down."
 }

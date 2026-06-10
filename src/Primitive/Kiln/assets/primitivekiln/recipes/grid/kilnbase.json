@@ -1,0 +1,10 @@
+{
+  "name": "kilnbase",
+  "ingredientPattern": "BBB,B_B",
+  "ingredients": {
+    "B": { "type": "item", "code": "game:burnedbrick-fire" }
+  },
+  "width": 3,
+  "height": 2,
+  "output": { "type": "block", "code": "kilnbase-north" }
+}

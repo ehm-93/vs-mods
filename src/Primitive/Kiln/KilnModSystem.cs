@@ -38,6 +38,8 @@ public class KilnModSystem : ModSystem
     {
         base.Start(api);
         api.RegisterBlockEntityBehaviorClass("BrickClamp", typeof(BEBehaviorBrickClamp));
+        api.RegisterBlockClass("BlockKilnBase", typeof(BlockKilnBase));
+        api.RegisterBlockEntityClass("PrimitiveKilnBase", typeof(BlockEntityKilnBase));
 
         if (!Harmony.HasAnyPatches(ModId))
         {

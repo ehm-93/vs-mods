@@ -25,6 +25,24 @@ public class KilnConfig
     public float BrickLossMin = 0.10f;
     public float BrickLossMax = 0.20f;
 
+    // ---- updraft kiln (the permanent structure; see docs/ideas/medium/updraft-kiln.md) ----
+
+    // Fireclay bricks to build the shell (walls + roof) and to seal the door, per footprint.
+    public int KilnBricksSmall = 16;
+    public int KilnBricksLarge = 40;
+    public int KilnDoorBricksSmall = 4;
+    public int KilnDoorBricksLarge = 8;
+
+    // Pooled fuel burn-seconds required before lighting (same per-item values as the clamp; 192 ≈ 8 firewood).
+    public float KilnFuelSecondsSmall = 192f;
+    public float KilnFuelSecondsLarge = 576f;
+
+    // In-game hours of cooking once lit (20, matching the pit kiln's firewood burn), then of cooling before
+    // the door may be opened. No kiln loss — unlike the clamp, the proper kiln fires everything cleanly;
+    // its costs are construction + fuel + time.
+    public float KilnCookHours = 20f;
+    public float KilnCoolHours = 6f;
+
     // Copy values in place (not a reference swap) so anything holding this instance sees the synced values.
     public void CopyFrom(KilnConfig o)
     {
@@ -33,5 +51,13 @@ public class KilnConfig
         FireHours = o.FireHours;
         BrickLossMin = o.BrickLossMin;
         BrickLossMax = o.BrickLossMax;
+        KilnBricksSmall = o.KilnBricksSmall;
+        KilnBricksLarge = o.KilnBricksLarge;
+        KilnDoorBricksSmall = o.KilnDoorBricksSmall;
+        KilnDoorBricksLarge = o.KilnDoorBricksLarge;
+        KilnFuelSecondsSmall = o.KilnFuelSecondsSmall;
+        KilnFuelSecondsLarge = o.KilnFuelSecondsLarge;
+        KilnCookHours = o.KilnCookHours;
+        KilnCoolHours = o.KilnCoolHours;
     }
 }

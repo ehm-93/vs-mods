@@ -1,0 +1,23 @@
+{
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textures": {
+		"brick": "game:block/clay/brick/four/running/fire1",
+		"brick2": "game:block/clay/brick/four/running/fire3"
+	},
+	"elements": [
+		{
+			"name": "Floor",
+			"from": [ 0, 0, 0 ],
+			"to": [ 16, 4, 16 ],
+			"faces": {
+				"north": { "texture": "#brick", "uv": [ 0, 0, 16, 4 ] },
+				"east": { "texture": "#brick", "uv": [ 0, 0, 16, 4 ] },
+				"south": { "texture": "#brick", "uv": [ 0, 0, 16, 4 ] },
+				"west": { "texture": "#brick", "uv": [ 0, 0, 16, 4 ] },
+				"up": { "texture": "#brick", "uv": [ 0, 0, 16, 16 ] },
+				"down": { "texture": "#brick", "uv": [ 0, 0, 16, 16 ] }
+			}
+		}
+	]
+}

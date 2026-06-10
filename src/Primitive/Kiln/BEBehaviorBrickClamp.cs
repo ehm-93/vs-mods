@@ -117,7 +117,8 @@ public class BEBehaviorBrickClamp : BlockEntityBehavior
 
     // A fuel item contributes its own combustible burn duration (in seconds). Rawbricks have combustible
     // props too (a melting point, no burn duration), so they correctly read as 0 and fall through to vanilla.
-    private static float FuelSecondsOf(ItemStack? stack)
+    // Internal: the updraft kiln (BlockEntityKilnBase) shares the clamp's fuel rules.
+    internal static float FuelSecondsOf(ItemStack? stack)
     {
         CombustibleProperties? cp = stack?.Collectible?.CombustibleProps;
         return cp != null && cp.BurnDuration > 0 && cp.BurnTemperature > 0 ? cp.BurnDuration : 0f;
@@ -129,12 +130,26 @@ public class BEBehaviorBrickClamp : BlockEntityBehavior
     private static readonly string[] FuelCodes =
         { "firewood", "charcoal", "coke", "coal", "anthracite", "lignite", "bituminous", "peat" };
 
-    private static bool IsFuel(ItemStack? stack)
+    internal static bool IsFuel(ItemStack? stack)
     {
         if (FuelSecondsOf(stack) <= 0) return false;
         string code = stack!.Collectible.Code?.Path ?? "";
         foreach (string f in FuelCodes) if (code.Contains(f)) return true;
         return false;
+    }
+
+    // Each fuel's characteristic place sound lives in attributes.placeSound (charcoal/coke/coal/ore ->
+    // block/charcoal, peat -> block/dirt, firewood -> block/planks); GroundStorable's placeRemoveSound is
+    // only a fallback since most fuels don't declare it. The sounds/ prefix is required or the asset
+    // silently fails to resolve.
+    internal static AssetLocation FuelPlaceSound(ItemStack? stack)
+    {
+        if (stack == null) return new AssetLocation("game", "sounds/player/build");
+        string? attrSound = stack.Collectible.Attributes?["placeSound"].AsString();
+        return (attrSound != null ? AssetLocation.Create(attrSound, stack.Collectible.Code.Domain)
+                : stack.Collectible.GetCollectibleBehavior<CollectibleBehaviorGroundStorable>(true)?.StorageProps?.PlaceRemoveSound
+                ?? new AssetLocation("game", "sounds/player/build"))
+            .WithPathPrefixOnce("sounds/");
     }
 
     // ---------------- fuel & ignition (server) ----------------
@@ -172,16 +187,8 @@ public class BEBehaviorBrickClamp : BlockEntityBehavior
         controller.fuelItems.TryGetValue(itemCode, out int already);
         controller.fuelItems[itemCode] = already + take;
 
-        // Each fuel's characteristic place sound lives in attributes.placeSound (charcoal/coke/coal/ore ->
-        // block/charcoal, peat -> block/dirt, firewood -> block/planks); GroundStorable's placeRemoveSound is
-        // only a fallback since most fuels don't declare it. Vanilla always applies the sounds/ path prefix
-        // before playing — without it the asset silently fails to resolve. Captured before TakeOut (slot may empty).
-        string? attrSound = hand.Itemstack.Collectible.Attributes?["placeSound"].AsString();
-        AssetLocation sound =
-            (attrSound != null ? AssetLocation.Create(attrSound, hand.Itemstack.Collectible.Code.Domain)
-                : hand.Itemstack.Collectible.GetCollectibleBehavior<CollectibleBehaviorGroundStorable>(true)?.StorageProps?.PlaceRemoveSound
-                ?? new AssetLocation("game", "sounds/player/build"))
-            .WithPathPrefixOnce("sounds/");
+        // Captured before TakeOut — the slot may empty.
+        AssetLocation sound = FuelPlaceSound(hand.Itemstack);
 
         if (player.WorldData.CurrentGameMode != EnumGameMode.Creative)
         {
@@ -307,7 +314,8 @@ public class BEBehaviorBrickClamp : BlockEntityBehavior
     public static void PreloadFuelTextures(ICoreClientAPI capi)
     {
         foreach (string path in new[] { "block/soil/peat", "block/coal/charcoal", "block/coal/coke",
-                                        "block/coal/bituminous", "block/wood/firewood/side", "block/coal/ember" })
+                                        "block/coal/bituminous", "block/wood/firewood/side", "block/coal/ember",
+                                        "block/coal/orecoalmix" })
         {
             capi.BlockTextureAtlas.GetOrInsertTexture(new AssetLocation("game", path), out int _, out TextureAtlasPosition _);
         }
@@ -368,7 +376,9 @@ public class BEBehaviorBrickClamp : BlockEntityBehavior
     // Representative block-atlas texture per fuel. Order matters: "charcoal" contains "coal", so it must be
     // tested before the coal family. Everything else — firewood, agedfirewood, logs, planks, sticks, drygrass,
     // furniture, … — is organic, so a plain wood texture is the catch-all (it also blends with the bricks).
-    private static string FuelTexturePath(string code)
+    // Internal: the updraft kiln renders its combustion-chamber fuel with the same mapping (and relies on the
+    // same PreloadFuelTextures call).
+    internal static string FuelTexturePath(string code)
     {
         if (code.Contains("peat")) return "block/soil/peat";
         if (code.Contains("charcoal")) return "block/coal/charcoal";
