@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Inherits from root and domain Directory.Build.props -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <!-- protobuf-net: for [ProtoContract] on the config-sync network packet -->
+  <ItemGroup>
+    <Reference Include="protobuf-net">
+      <HintPath>$(VintageStoryInstall)\Lib\protobuf-net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

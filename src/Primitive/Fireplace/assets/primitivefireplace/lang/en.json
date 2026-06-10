@@ -1,0 +1,8 @@
+{
+  "primitivefireplace:modname": "Fireplace",
+  "primitivefireplace:moddesc": "Ring a firepit with stones to make its fuel burn longer.",
+  "primitivefireplace:ringinfo": "Stone ring: {0}/{1} stones.",
+  "primitivefireplace:ringbonus": "Fuel burns {0}% longer.",
+  "primitivefireplace:guide-fireplace-title": "Crafting Mechanic: Stone fire rings",
+  "primitivefireplace:guide-fireplace-text": "<strong>Stone fire rings</strong><br><i>Banked stones hold the heat in.</i><br><br>Right-click a finished <a href=\"handbook://block-firepit-lit\">firepit</a> while holding loose <a href=\"handbook://item-stone-granite\">stones</a> to set one on the rim. Each click adds a stone; 8 stones complete the ring, and from then on every piece of fuel burns twice as long. The bonus is applied as each piece ignites, so a ring finished mid-burn helps from the next piece onward.<br><br>Any rock type works and types can be mixed freely. Sneak and right-click with an empty hand to take the last stone back, and breaking the firepit returns all of them.<br><br>Look at the firepit to see how many stones it has and whether the bonus is active."
+}

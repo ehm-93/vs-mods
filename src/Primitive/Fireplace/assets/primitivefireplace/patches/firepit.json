@@ -1,0 +1,9 @@
+[
+  {
+    "__comment": "Attach the stone-ring behavior to the vanilla firepit. addmerge appends to the existing entityBehaviors array (FirepitAmbient, TemperatureSensitive).",
+    "file": "game:blocktypes/wood/firepit.json",
+    "op": "addmerge",
+    "path": "/entityBehaviors",
+    "value": [{ "name": "FireplaceStoneRing" }]
+  }
+]
