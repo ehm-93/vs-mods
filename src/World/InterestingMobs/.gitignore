@@ -1,1 +1,7 @@
-design
+# design/ holds working artifacts (renders, UAT gifs, copied vanilla textures)
+# - but the generator scripts are the source of truth for the shipped shapes,
+# and NOTES.md is the design log. Keep those.
+design/**
+!design/*/
+!design/**/*.mjs
+!design/**/NOTES.md
