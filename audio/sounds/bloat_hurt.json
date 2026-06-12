@@ -1,0 +1,104 @@
+{
+  "name": "bloat_hurt",
+  "description": "Vanilla drifter hurt bark with a wet squelch body",
+  "duration_ms": 520,
+  "seed": 0,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "bark",
+      "source": {
+        "type": "sample",
+        "file": "refs/drifter-hurt.ogg",
+        "start_ms": 0,
+        "end_ms": 500
+      },
+      "filters": [],
+      "envelope": {
+        "attack_ms": 2,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 1,
+        "release_ms": 120,
+        "curve": "lin"
+      },
+      "gain_db": 0,
+      "delay_ms": 0
+    },
+    {
+      "id": "squelch",
+      "source": {
+        "type": "granular",
+        "file": "refs/squish2.ogg",
+        "grain_ms": 60,
+        "density_hz": 25,
+        "position": 0.2,
+        "position_jitter": 0.2,
+        "pitch_jitter_semitones": 3
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 3500,
+          "q": 0.8,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 5,
+        "hold_ms": 120,
+        "decay_ms": 250,
+        "sustain": 0,
+        "release_ms": 0,
+        "curve": "lin"
+      },
+      "gain_db": -7,
+      "delay_ms": 0
+    },
+    {
+      "id": "thump",
+      "source": {
+        "type": "noise",
+        "color": "brown"
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 140,
+          "q": 0.8,
+          "gain_db": 0
+        },
+        {
+          "type": "highpass",
+          "cutoff_hz": 35,
+          "q": 0.707,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 2,
+        "hold_ms": 50,
+        "decay_ms": 140,
+        "sustain": 0,
+        "release_ms": 0,
+        "curve": "lin"
+      },
+      "gain_db": -16,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [],
+  "master": {
+    "gain_db": 0,
+    "fade_in_ms": 0,
+    "fade_out_ms": 60,
+    "fade_curve": "lin"
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "sample_rate": 44100,
+  "channels_default": "mono",
+  "loudness": {
+    "mode": "peak",
+    "peak_db": -12,
+    "lufs_target": null
+  },
+  "naming": "{name}_{nn}",
+  "seed": 0,
+  "palette": {
+    "resonators": {},
+    "irs": {}
+  }
+}

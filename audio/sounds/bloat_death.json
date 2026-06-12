@@ -1,0 +1,149 @@
+{
+  "name": "bloat_death",
+  "description": "Drifter death cry over a wet rupture and a long sagging deflate - the reward for killing it before the boom",
+  "duration_ms": 2000,
+  "seed": 0,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "cry",
+      "source": {
+        "type": "sample",
+        "file": "refs/drifter-death.ogg",
+        "start_ms": 0,
+        "end_ms": 1050
+      },
+      "filters": [],
+      "envelope": {
+        "attack_ms": 2,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 1,
+        "release_ms": 150,
+        "curve": "lin"
+      },
+      "gain_db": 0,
+      "delay_ms": 0
+    },
+    {
+      "id": "burst",
+      "source": {
+        "type": "granular",
+        "file": "refs/squish1.ogg",
+        "grain_ms": 70,
+        "density_hz": 30,
+        "position": 0.25,
+        "position_jitter": 0.3,
+        "pitch_jitter_semitones": 4
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 2800,
+          "q": 0.8,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 3,
+        "hold_ms": 150,
+        "decay_ms": 350,
+        "sustain": 0,
+        "release_ms": 0,
+        "curve": "lin"
+      },
+      "gain_db": -5,
+      "delay_ms": 0
+    },
+    {
+      "id": "deflate",
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 700,
+          "q": 0.9,
+          "gain_db": 0,
+          "sweep": {
+            "end_hz": 130,
+            "curve": "exp"
+          }
+        },
+        {
+          "type": "highpass",
+          "cutoff_hz": 50,
+          "q": 0.707,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 60,
+        "hold_ms": 250,
+        "decay_ms": 1300,
+        "sustain": 0,
+        "release_ms": 0,
+        "curve": "lin"
+      },
+      "gain_db": -18,
+      "delay_ms": 250
+    },
+    {
+      "id": "slump",
+      "source": {
+        "type": "granular",
+        "file": "refs/squish2.ogg",
+        "grain_ms": 80,
+        "density_hz": 12,
+        "position": 0.3,
+        "position_jitter": 0.15,
+        "pitch_jitter_semitones": 2
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 900,
+          "q": 0.8,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 5,
+        "hold_ms": 80,
+        "decay_ms": 220,
+        "sustain": 0,
+        "release_ms": 0,
+        "curve": "lin"
+      },
+      "gain_db": -10,
+      "delay_ms": 1200
+    }
+  ],
+  "bus": [
+    {
+      "type": "eq",
+      "bands": [
+        {
+          "freq_hz": 3200,
+          "gain_db": -3,
+          "q": 0.7
+        }
+      ]
+    }
+  ],
+  "master": {
+    "gain_db": 0,
+    "fade_in_ms": 0,
+    "fade_out_ms": 250,
+    "fade_curve": "lin"
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}

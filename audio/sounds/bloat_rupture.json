@@ -1,0 +1,124 @@
+{
+  "name": "bloat_rupture",
+  "description": "Detonation sweetener over the vanilla blast: gore splat, temporal rift shred, sub drop",
+  "duration_ms": 1800,
+  "seed": 0,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "splat1",
+      "source": {
+        "type": "sample",
+        "file": "refs/squish1.ogg",
+        "start_ms": 0,
+        "end_ms": 200
+      },
+      "filters": [],
+      "envelope": {
+        "attack_ms": 0,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 1,
+        "release_ms": 0,
+        "curve": "lin"
+      },
+      "gain_db": 4,
+      "delay_ms": 0
+    },
+    {
+      "id": "splat2",
+      "source": {
+        "type": "sample",
+        "file": "refs/squish2.ogg",
+        "start_ms": 0,
+        "end_ms": 230
+      },
+      "filters": [],
+      "envelope": {
+        "attack_ms": 0,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 1,
+        "release_ms": 0,
+        "curve": "lin"
+      },
+      "gain_db": 2,
+      "delay_ms": 60
+    },
+    {
+      "id": "rifttear",
+      "source": {
+        "type": "granular",
+        "file": "refs/rift.ogg",
+        "grain_ms": 180,
+        "density_hz": 16,
+        "position": 0.55,
+        "position_jitter": 0.12,
+        "pitch_jitter_semitones": 2.5
+      },
+      "filters": [
+        {
+          "type": "highpass",
+          "cutoff_hz": 60,
+          "q": 0.707,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 10,
+        "hold_ms": 280,
+        "decay_ms": 1250,
+        "sustain": 0,
+        "release_ms": 0,
+        "curve": "lin"
+      },
+      "gain_db": 6,
+      "delay_ms": 0
+    },
+    {
+      "id": "sub",
+      "source": {
+        "type": "osc",
+        "shape": "sine",
+        "freq_hz": 52,
+        "duty": 0.5,
+        "pitch_env": {
+          "end_semitones": -8,
+          "curve": "exp"
+        }
+      },
+      "filters": [],
+      "envelope": {
+        "attack_ms": 5,
+        "hold_ms": 150,
+        "decay_ms": 750,
+        "sustain": 0,
+        "release_ms": 0,
+        "curve": "lin"
+      },
+      "gain_db": -2,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [
+    {
+      "type": "delay",
+      "time_ms": 150,
+      "feedback": 0.28,
+      "wet": 0.18
+    }
+  ],
+  "master": {
+    "gain_db": -5,
+    "fade_in_ms": 0,
+    "fade_out_ms": 250,
+    "fade_curve": "lin"
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}

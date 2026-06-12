@@ -1,0 +1,169 @@
+{
+  "name": "bloat_fuse",
+  "description": "Armed-fuse pulse: the rising tail of the drifter aggro scream over burning-fuse hiss and a gurgling throat; task repeats it every ~650ms",
+  "duration_ms": 780,
+  "seed": 0,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "scream",
+      "source": {
+        "type": "sample",
+        "file": "refs/drifter-aggro1.ogg",
+        "start_ms": 1450,
+        "end_ms": 2300
+      },
+      "filters": [
+        {
+          "type": "highpass",
+          "cutoff_hz": 55,
+          "q": 0.707,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 10,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 1,
+        "release_ms": 150,
+        "curve": "lin"
+      },
+      "gain_db": 8,
+      "delay_ms": 0
+    },
+    {
+      "id": "gurgle",
+      "source": {
+        "type": "granular",
+        "file": "refs/squish2.ogg",
+        "grain_ms": 45,
+        "density_hz": 28,
+        "position": 0.25,
+        "position_jitter": 0.25,
+        "pitch_jitter_semitones": 3
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 2500,
+          "q": 0.8,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 5,
+        "hold_ms": 250,
+        "decay_ms": 350,
+        "sustain": 0,
+        "release_ms": 0,
+        "curve": "lin"
+      },
+      "gain_db": -10,
+      "delay_ms": 0
+    },
+    {
+      "id": "fusehiss",
+      "source": {
+        "type": "sample",
+        "file": "refs/fuse.ogg",
+        "start_ms": 1200,
+        "end_ms": 1950
+      },
+      "filters": [
+        {
+          "type": "highpass",
+          "cutoff_hz": 1800,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 20,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.8,
+        "release_ms": 200,
+        "curve": "lin"
+      },
+      "gain_db": -8,
+      "delay_ms": 0
+    },
+    {
+      "id": "riser",
+      "source": {
+        "type": "osc",
+        "shape": "saw",
+        "freq_hz": 320,
+        "duty": 0.5,
+        "pitch_env": {
+          "end_semitones": 10,
+          "curve": "exp"
+        }
+      },
+      "filters": [
+        {
+          "type": "bandpass",
+          "cutoff_hz": 1100,
+          "q": 1.2,
+          "gain_db": 0,
+          "sweep": {
+            "end_hz": 2400,
+            "curve": "exp"
+          }
+        },
+        {
+          "type": "highpass",
+          "cutoff_hz": 100,
+          "q": 0.707,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 60,
+        "hold_ms": 200,
+        "decay_ms": 380,
+        "sustain": 0,
+        "release_ms": 0,
+        "curve": "exp"
+      },
+      "lfo": {
+        "target": "pitch",
+        "rate_hz": 8,
+        "rate_end_hz": 13,
+        "depth": 1,
+        "curve": "lin"
+      },
+      "gain_db": -20,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [
+    {
+      "type": "waveshaper",
+      "drive_db": 5,
+      "shape": "tanh"
+    },
+    {
+      "type": "delay",
+      "time_ms": 85,
+      "feedback": 0.2,
+      "wet": 0.1
+    }
+  ],
+  "master": {
+    "gain_db": 2,
+    "fade_in_ms": 5,
+    "fade_out_ms": 70,
+    "fade_curve": "lin"
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": [
+      "E102"
+    ]
+  }
+}

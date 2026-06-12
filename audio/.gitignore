@@ -1,0 +1,13 @@
+# Mixdown workspace: track the recipes (source of truth) and project config.
+# Everything else is derivable: renders/ is a cache, exports/ are build
+# artifacts (the shipped copies live in the mod's assets/), audition/ is a
+# generated page, history/ is local version snapshots.
+/*
+!/.gitignore
+!/project.json
+!/sounds/
+
+# refs/ are vanilla game sounds copied from the install. Tracked so recipes
+# build without a manual re-import step - but they are Anego Studios' assets,
+# so drop this exception if this repo ever goes public.
+!/refs/

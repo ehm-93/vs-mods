@@ -1,0 +1,206 @@
+{
+	"code": "bloat",
+	"class": "EntityAgent",
+	"tags": ["rust-creature", "habitat-land"],
+	"variantgroups": [
+		{ "code": "tier", "states": ["small", "large", "massive"] }
+	],
+	"weightByType": {
+		"*-small": 180,
+		"*-large": 300,
+		"*-massive": 500
+	},
+	"canClimb": false,
+	"hitboxSizeByType": {
+		"*-small": { "x": 0.9, "y": 0.85 },
+		"*-large": { "x": 1.1, "y": 1.0 },
+		"*-massive": { "x": 1.4, "y": 1.2 }
+	},
+	"deadHitboxSizeByType": {
+		"*-small": { "x": 0.9, "y": 0.6 },
+		"*-large": { "x": 1.1, "y": 0.7 },
+		"*-massive": { "x": 1.4, "y": 0.85 }
+	},
+	"eyeHeightByType": {
+		"*-small": 0.5,
+		"*-large": 0.6,
+		"*-massive": 0.7
+	},
+	"attributes": {
+		"allowInDevastationArea": true,
+		"killedByInfoText": "deadcreature-vile",
+		"glitchAffected": true,
+		"spawnCloserDuringLowStability": true,
+		"onDeathStabilityRecoveryByType": {
+			"bloat-small": 0.015,
+			"bloat-large": 0.025,
+			"bloat-massive": 0.05
+		}
+	},
+	"client": {
+		"renderer": "Shape",
+		"pitchStep": false,
+		"shapeByType": {
+			"*-small": { "base": "worldinterestingmobs:entity/bloat/small" },
+			"*-large": { "base": "worldinterestingmobs:entity/bloat/large" },
+			"*-massive": { "base": "worldinterestingmobs:entity/bloat/massive" }
+		},
+		"sizeByType": {
+			"*-small": 0.85,
+			"*-large": 1.05,
+			"*-massive": 1.25
+		},
+		"behaviors": [
+			{ "code": "repulseagents" },
+			{ "code": "controlledphysics", "stepHeight": 1.1251 },
+			{ "code": "floatupwhenstuck", "onlyWhenDead": true },
+			{ "code": "interpolateposition" },
+			{ "code": "harvestable", "duration": 2 }
+		],
+		"animations": [
+			{
+				"code": "hurt",
+				"animation": "crawlhurt",
+				"animationSpeed": 2,
+				"weight": 10,
+				"blendMode": "AddAverage"
+			},
+			{
+				"code": "die",
+				"animation": "crawldie",
+				"animationSpeed": 0.7,
+				"weight": 10,
+				"blendMode": "Average",
+				"triggeredBy": { "onControls": ["dead"] }
+			},
+			{
+				"code": "idle",
+				"animation": "crawlidle",
+				"blendMode": "Average",
+				"weight": 0.1,
+				"easeoutSpeed": 10,
+				"triggeredBy": { "defaultAnim": true }
+			},
+			{ "code": "crawlwalk", "animation": "crawlwalk", "blendMode": "Average" },
+			{ "code": "crawlrun", "animation": "crawlrun", "blendMode": "Average" },
+			{ "code": "crawlemote", "animation": "crawlemote" }
+		]
+	},
+	"server": {
+		"behaviors": [
+			{ "code": "repulseagents" },
+			{ "code": "controlledphysics", "stepHeight": 1.1251 },
+			{
+				"code": "health",
+				"currenthealthByType": { "*-small": 14, "*-large": 28, "*-massive": 50 },
+				"maxhealthByType": { "*-small": 14, "*-large": 28, "*-massive": 50 }
+			},
+			{ "code": "deaddecay", "hoursToDecay": 3 },
+			{ "code": "floatupwhenstuck", "onlyWhenDead": true },
+			{ "code": "despawn", "minPlayerDistance": 32, "minSeconds": 30 },
+			{ "code": "despawn", "minPlayerDistance": 64, "minSeconds": 6 },
+			{
+				"code": "taskai",
+				"aitasks": [
+					{
+						"code": "bloatfuse",
+						"entityCodes": ["player"],
+						"priority": 5,
+						"priorityForCancel": 10,
+						"triggerRangeByType": { "*-small": 7, "*-large": 8, "*-massive": 10 },
+						"fuseMsByType": { "*-small": 2600, "*-large": 3200, "*-massive": 4200 },
+						"movespeedByType": { "*-small": 0.024, "*-large": 0.021, "*-massive": 0.018 },
+						"destructionRadiusByType": { "*-small": 1.5, "*-large": 2.5, "*-massive": 3.5 },
+						"injureRadiusByType": { "*-small": 3.5, "*-large": 5, "*-massive": 7 },
+						"stabilityDrainByType": { "*-small": 0.05, "*-large": 0.1, "*-massive": 0.18 },
+						"animation": "crawlrun",
+						"animationSpeed": 1.8,
+						"sound": "worldinterestingmobs:creature/bloat/fuse",
+						"soundRepeatMs": 650,
+						"timeoutSec": 30
+					},
+					{
+						"code": "bloatstalk",
+						"entityCodes": ["player"],
+						"priority": 1.5,
+						"seekingRangeByType": { "*-small": 18, "*-large": 20, "*-massive": 22 },
+						"minRange": 7,
+						"maxRange": 14,
+						"movespeed": 0.012,
+						"runspeed": 0.02,
+						"watchedToleranceMs": 1600,
+						"coverSamples": 10,
+						"animation": "crawlwalk",
+						"animationSpeed": 1.2,
+						"timeoutSec": 300
+					},
+					{
+						"code": "getoutofwater",
+						"priority": 1.4,
+						"movespeed": 0.01,
+						"animation": "crawlwalk",
+						"animationSpeed": 1.4
+					},
+					{
+						"code": "wander",
+						"priority": 1.0,
+						"movespeedByType": { "*-small": 0.007, "*-large": 0.006, "*-massive": 0.005 },
+						"animationSpeed": 1.1,
+						"animation": "crawlwalk",
+						"preferredLightLevel": 0
+					},
+					{ "code": "lookaround", "priority": 0.5 }
+				]
+			},
+			{
+				"code": "harvestable",
+				"duration": 2,
+				"fixedweight": true,
+				"dropsByType": {
+					"*-small": [
+						{ "type": "item", "code": "game:gear-rusty", "dropModbyStat": "rustyGearDropRate", "quantity": { "avg": 0.1, "var": 0 } },
+						{ "type": "item", "code": "game:gear-temporal", "quantity": { "avg": 0.03, "var": 0 } }
+					],
+					"*-large": [
+						{ "type": "item", "code": "game:gear-rusty", "dropModbyStat": "rustyGearDropRate", "quantity": { "avg": 0.4, "var": 0 } },
+						{ "type": "item", "code": "game:gear-temporal", "quantity": { "avg": 0.08, "var": 0 } }
+					],
+					"*-massive": [
+						{ "type": "item", "code": "game:gear-rusty", "dropModbyStat": "rustyGearDropRate", "quantity": { "avg": 1, "var": 0.5 } },
+						{ "type": "item", "code": "game:gear-temporal", "quantity": { "avg": 0.25, "var": 0 } }
+					]
+				}
+			}
+		],
+		"spawnconditions": {
+			"runtime": {
+				"group": "hostile",
+				"maxQuantityByType": {
+					"*-small": 4,
+					"*-large": 2,
+					"*-massive": 1
+				},
+				"maxLightLevel": 7,
+				"lightLevelType": "OnlyBlockLight",
+				"chance": 0.04,
+				"groupSize": { "dist": "uniform", "avg": 1, "var": 0 },
+				"insideBlockCodes": ["game:air"],
+				"minYByType": {
+					"*-small": 0.5,
+					"*-large": 0.25,
+					"*-massive": 0
+				},
+				"maxYByType": {
+					"*-small": 0.92,
+					"*-large": 0.6,
+					"*-massive": 0.35
+				}
+			}
+		}
+	},
+	"sounds": {
+		"hurt": "worldinterestingmobs:creature/bloat/hurt",
+		"death": "worldinterestingmobs:creature/bloat/death",
+		"idle": { "path": "worldinterestingmobs:creature/bloat/idle", "range": 12, "pitch": { "avg": 1, "var": 0.08 } }
+	}
+}

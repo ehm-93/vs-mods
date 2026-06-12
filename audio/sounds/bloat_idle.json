@@ -1,0 +1,137 @@
+{
+  "name": "bloat_idle",
+  "description": "Drifter moan granular-warped into wet labored parasite breathing, with sparse squelch bubbles",
+  "duration_ms": 3400,
+  "seed": 0,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "moanbed",
+      "source": {
+        "type": "granular",
+        "file": "refs/drifter-idle1.ogg",
+        "grain_ms": 130,
+        "density_hz": 18,
+        "position": 0.35,
+        "position_jitter": 0.25,
+        "pitch_jitter_semitones": 1.5
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 1400,
+          "q": 0.8,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 350,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 1,
+        "release_ms": 700,
+        "curve": "lin"
+      },
+      "lfo": {
+        "target": "gain",
+        "rate_hz": 0.5,
+        "depth": 5,
+        "curve": "lin"
+      },
+      "gain_db": 0,
+      "delay_ms": 0
+    },
+    {
+      "id": "bubbles",
+      "source": {
+        "type": "granular",
+        "file": "refs/squish1.ogg",
+        "grain_ms": 55,
+        "density_hz": 5,
+        "position": 0.3,
+        "position_jitter": 0.4,
+        "pitch_jitter_semitones": 4
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 1500,
+          "q": 0.9,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 400,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.8,
+        "release_ms": 600,
+        "curve": "lin"
+      },
+      "gain_db": -14,
+      "delay_ms": 0
+    },
+    {
+      "id": "subbreath",
+      "source": {
+        "type": "noise",
+        "color": "brown"
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 300,
+          "q": 0.9,
+          "gain_db": 0
+        },
+        {
+          "type": "highpass",
+          "cutoff_hz": 40,
+          "q": 0.707,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 500,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.9,
+        "release_ms": 800,
+        "curve": "lin"
+      },
+      "lfo": {
+        "target": "gain",
+        "rate_hz": 0.5,
+        "depth": 6,
+        "curve": "lin"
+      },
+      "gain_db": -22,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [
+    {
+      "type": "eq",
+      "bands": [
+        {
+          "freq_hz": 3000,
+          "gain_db": -4,
+          "q": 0.7
+        }
+      ]
+    }
+  ],
+  "master": {
+    "gain_db": -2,
+    "fade_in_ms": 120,
+    "fade_out_ms": 500,
+    "fade_curve": "lin"
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}
