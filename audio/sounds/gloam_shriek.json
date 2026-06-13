@@ -1,0 +1,114 @@
+{
+  "name": "gloam_shriek",
+  "description": "DIRECTION 4 — Warped avian. A heron's croak-shriek twisted wrong: a pitched scream sweep over a distorted aggro grain. Sharp, sudden, alarming.",
+  "duration_ms": 1300,
+  "seed": 5,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "cry",
+      "source": {
+        "type": "osc",
+        "shape": "saw",
+        "freq_hz": 520,
+        "duty": 0.5,
+        "pitch_env": {
+          "points": [
+            {
+              "at": 0,
+              "semitones": -8
+            },
+            {
+              "at": 0.25,
+              "semitones": 9
+            },
+            {
+              "at": 0.6,
+              "semitones": 4
+            },
+            {
+              "at": 1,
+              "semitones": -14
+            }
+          ],
+          "curve": "exp"
+        }
+      },
+      "filters": [
+        {
+          "type": "bandpass",
+          "cutoff_hz": 1700,
+          "q": 2.5,
+          "gain_db": 0
+        },
+        {
+          "type": "highpass",
+          "cutoff_hz": 400,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 8,
+        "hold_ms": 120,
+        "decay_ms": 400,
+        "sustain": 0.3,
+        "release_ms": 300,
+        "curve": "exp"
+      },
+      "gain_db": -6,
+      "delay_ms": 0
+    },
+    {
+      "id": "grain",
+      "source": {
+        "type": "granular",
+        "file": "refs/drifter-aggro1.ogg",
+        "grain_ms": 45,
+        "density_hz": 30,
+        "position": 0.2,
+        "position_jitter": 0.3,
+        "pitch_jitter_semitones": 6
+      },
+      "filters": [
+        {
+          "type": "bandpass",
+          "cutoff_hz": 2200,
+          "q": 1.5,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 10,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.8,
+        "release_ms": 250,
+        "curve": "lin"
+      },
+      "gain_db": -10,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [
+    {
+      "type": "waveshaper",
+      "drive_db": 12,
+      "shape": "tanh"
+    }
+  ],
+  "master": {
+    "gain_db": -5,
+    "fade_in_ms": 5,
+    "fade_out_ms": 200,
+    "fade_curve": "lin",
+    "dc_block": true
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}

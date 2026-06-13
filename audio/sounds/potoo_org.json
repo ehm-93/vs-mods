@@ -1,0 +1,146 @@
+{
+  "name": "potoo_org",
+  "description": "DIRGE — potoo, ORGANIC. Real drifter vocal as the loud lead, bent into one long descending sigh, formants kept, breath pulled back. Osc only a faint sub.",
+  "duration_ms": 1550,
+  "seed": 8,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "voice",
+      "source": {
+        "type": "sample",
+        "file": "refs/drifter-idle1.ogg",
+        "rate": 0.8,
+        "reverse": false,
+        "pitch_env": {
+          "points": [
+            {
+              "at": 0,
+              "semitones": 6
+            },
+            {
+              "at": 1,
+              "semitones": -9
+            }
+          ],
+          "curve": "exp"
+        }
+      },
+      "filters": [
+        {
+          "type": "peak",
+          "cutoff_hz": 700,
+          "q": 3,
+          "gain_db": 5
+        },
+        {
+          "type": "peak",
+          "cutoff_hz": 1600,
+          "q": 4,
+          "gain_db": 3
+        },
+        {
+          "type": "highpass",
+          "cutoff_hz": 150,
+          "q": 0.7,
+          "gain_db": 0
+        },
+        {
+          "type": "lowpass",
+          "cutoff_hz": 3400,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 110,
+        "hold_ms": 0,
+        "decay_ms": 1150,
+        "sustain": 0,
+        "release_ms": 300,
+        "curve": "exp"
+      },
+      "gain_db": 12,
+      "delay_ms": 0
+    },
+    {
+      "id": "breath",
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "filters": [
+        {
+          "type": "bandpass",
+          "cutoff_hz": 1500,
+          "q": 1,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 120,
+        "hold_ms": 0,
+        "decay_ms": 1050,
+        "sustain": 0,
+        "release_ms": 300,
+        "curve": "exp"
+      },
+      "gain_db": -20,
+      "delay_ms": 0
+    },
+    {
+      "id": "sub",
+      "source": {
+        "type": "osc",
+        "shape": "sine",
+        "freq_hz": 95,
+        "duty": 0.5
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 200,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 140,
+        "hold_ms": 0,
+        "decay_ms": 950,
+        "sustain": 0,
+        "release_ms": 300,
+        "curve": "exp"
+      },
+      "gain_db": -24,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [
+    {
+      "type": "waveshaper",
+      "drive_db": 4,
+      "shape": "tanh"
+    },
+    {
+      "type": "delay",
+      "time_ms": 280,
+      "feedback": 0.24,
+      "wet": 0.16
+    }
+  ],
+  "master": {
+    "gain_db": 5,
+    "fade_in_ms": 0,
+    "fade_out_ms": 250,
+    "fade_curve": "lin",
+    "dc_block": true
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}

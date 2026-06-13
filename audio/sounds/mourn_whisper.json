@@ -1,0 +1,138 @@
+{
+  "name": "mourn_whisper",
+  "description": "MOURN A — breathy whisper. Airy and sibilant, whisper pushed forward, almost-words at the front, only a faint formant body behind.",
+  "duration_ms": 2700,
+  "seed": 9,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "whisper",
+      "source": {
+        "type": "granular",
+        "file": "refs/drifter-idle1.ogg",
+        "grain_ms": 75,
+        "density_hz": 30,
+        "position": 0.5,
+        "position_jitter": 0.45,
+        "pitch_jitter_semitones": 2
+      },
+      "filters": [
+        {
+          "type": "highpass",
+          "cutoff_hz": 1500,
+          "q": 0.7,
+          "gain_db": 0
+        },
+        {
+          "type": "lowpass",
+          "cutoff_hz": 7500,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 250,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.85,
+        "release_ms": 700,
+        "curve": "lin"
+      },
+      "lfo": {
+        "target": "gain",
+        "rate_hz": 2.2,
+        "depth": 4,
+        "curve": "lin"
+      },
+      "gain_db": -4,
+      "delay_ms": 0
+    },
+    {
+      "id": "voice",
+      "source": {
+        "type": "sample",
+        "file": "refs/drifter-idle3.ogg",
+        "rate": 0.66,
+        "reverse": false
+      },
+      "filters": [
+        {
+          "type": "peak",
+          "cutoff_hz": 650,
+          "q": 4,
+          "gain_db": 6
+        },
+        {
+          "type": "peak",
+          "cutoff_hz": 1200,
+          "q": 5,
+          "gain_db": 5
+        },
+        {
+          "type": "peak",
+          "cutoff_hz": 2900,
+          "q": 6,
+          "gain_db": 4
+        },
+        {
+          "type": "lowpass",
+          "cutoff_hz": 4000,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 200,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 1,
+        "release_ms": 700,
+        "curve": "lin"
+      },
+      "gain_db": -8,
+      "delay_ms": 0
+    },
+    {
+      "id": "drone",
+      "source": {
+        "type": "osc",
+        "shape": "sine",
+        "freq_hz": 120,
+        "duty": 0.5
+      },
+      "filters": [],
+      "envelope": {
+        "attack_ms": 600,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.7,
+        "release_ms": 800,
+        "curve": "lin"
+      },
+      "gain_db": -24,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [
+    {
+      "type": "delay",
+      "time_ms": 380,
+      "feedback": 0.28,
+      "wet": 0.18
+    }
+  ],
+  "master": {
+    "gain_db": 4,
+    "fade_in_ms": 180,
+    "fade_out_ms": 700,
+    "fade_curve": "lin",
+    "dc_block": true
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}

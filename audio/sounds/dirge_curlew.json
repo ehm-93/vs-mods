@@ -1,0 +1,127 @@
+{
+  "name": "dirge_curlew",
+  "description": "DIRGE — curlew (bark). A quick plaintive descending whistle breaking into a short bubbling trill. Moorland sorrow, clipped.",
+  "duration_ms": 1350,
+  "seed": 7,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "whistle",
+      "source": {
+        "type": "osc",
+        "shape": "sine",
+        "freq_hz": 680,
+        "duty": 0.5,
+        "pitch_env": {
+          "points": [
+            {
+              "at": 0,
+              "semitones": 10
+            },
+            {
+              "at": 0.55,
+              "semitones": 3
+            },
+            {
+              "at": 1,
+              "semitones": -6
+            }
+          ],
+          "curve": "exp"
+        }
+      },
+      "filters": [
+        {
+          "type": "peak",
+          "cutoff_hz": 1500,
+          "q": 5,
+          "gain_db": 5
+        },
+        {
+          "type": "highpass",
+          "cutoff_hz": 500,
+          "q": 0.7,
+          "gain_db": 0
+        },
+        {
+          "type": "lowpass",
+          "cutoff_hz": 4500,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 40,
+        "hold_ms": 0,
+        "decay_ms": 950,
+        "sustain": 0,
+        "release_ms": 250,
+        "curve": "exp"
+      },
+      "lfo": {
+        "target": "pitch",
+        "rate_hz": 7,
+        "rate_end_hz": 18,
+        "depth": 0.7,
+        "curve": "exp"
+      },
+      "gain_db": -6,
+      "delay_ms": 0
+    },
+    {
+      "id": "throat",
+      "source": {
+        "type": "sample",
+        "file": "refs/drifter-idle3.ogg",
+        "rate": 0.55,
+        "reverse": false
+      },
+      "filters": [
+        {
+          "type": "peak",
+          "cutoff_hz": 700,
+          "q": 4,
+          "gain_db": 4
+        },
+        {
+          "type": "lowpass",
+          "cutoff_hz": 2000,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 60,
+        "hold_ms": 0,
+        "decay_ms": 800,
+        "sustain": 0,
+        "release_ms": 250,
+        "curve": "exp"
+      },
+      "gain_db": -15,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [
+    {
+      "type": "delay",
+      "time_ms": 230,
+      "feedback": 0.2,
+      "wet": 0.16
+    }
+  ],
+  "master": {
+    "gain_db": 1,
+    "fade_in_ms": 0,
+    "fade_out_ms": 200,
+    "fade_curve": "lin",
+    "dc_block": true
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "name": "dirge_heron",
+  "description": "DIRGE — grey heron (bark). The harsh guttural 'frahnk', one rasping startled croak. Short and sharp.",
+  "duration_ms": 1000,
+  "seed": 5,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "croak",
+      "source": {
+        "type": "osc",
+        "shape": "saw",
+        "freq_hz": 150,
+        "duty": 0.5,
+        "pitch_env": {
+          "points": [
+            {
+              "at": 0,
+              "semitones": 4
+            },
+            {
+              "at": 0.15,
+              "semitones": 0
+            },
+            {
+              "at": 1,
+              "semitones": -12
+            }
+          ],
+          "curve": "exp"
+        }
+      },
+      "filters": [
+        {
+          "type": "bandpass",
+          "cutoff_hz": 850,
+          "q": 1.6,
+          "gain_db": 0
+        },
+        {
+          "type": "highpass",
+          "cutoff_hz": 180,
+          "q": 0.7,
+          "gain_db": 0
+        },
+        {
+          "type": "lowpass",
+          "cutoff_hz": 2600,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 8,
+        "hold_ms": 110,
+        "decay_ms": 420,
+        "sustain": 0,
+        "release_ms": 220,
+        "curve": "exp"
+      },
+      "gain_db": -7,
+      "delay_ms": 0
+    },
+    {
+      "id": "throat",
+      "source": {
+        "type": "sample",
+        "file": "refs/drifter-idle3.ogg",
+        "rate": 0.5,
+        "reverse": false
+      },
+      "filters": [
+        {
+          "type": "peak",
+          "cutoff_hz": 520,
+          "q": 4,
+          "gain_db": 5
+        },
+        {
+          "type": "lowpass",
+          "cutoff_hz": 1600,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 20,
+        "hold_ms": 0,
+        "decay_ms": 500,
+        "sustain": 0,
+        "release_ms": 200,
+        "curve": "exp"
+      },
+      "gain_db": -13,
+      "delay_ms": 0
+    },
+    {
+      "id": "sub",
+      "source": {
+        "type": "noise",
+        "color": "brown"
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 240,
+          "q": 0.9,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 10,
+        "hold_ms": 0,
+        "decay_ms": 350,
+        "sustain": 0,
+        "release_ms": 200,
+        "curve": "exp"
+      },
+      "gain_db": -16,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [
+    {
+      "type": "waveshaper",
+      "drive_db": 10,
+      "shape": "tanh"
+    },
+    {
+      "type": "delay",
+      "time_ms": 190,
+      "feedback": 0.18,
+      "wet": 0.12
+    }
+  ],
+  "master": {
+    "gain_db": -3,
+    "fade_in_ms": 0,
+    "fade_out_ms": 150,
+    "fade_curve": "lin",
+    "dc_block": true
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}

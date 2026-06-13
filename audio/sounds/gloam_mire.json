@@ -1,0 +1,135 @@
+{
+  "name": "gloam_mire",
+  "description": "DIRECTION 2 — Wet organic. Deep labored gurgle-breath, viscera and bog. Drifter moan dragged down an octave under squelching bubbles.",
+  "duration_ms": 2600,
+  "seed": 3,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "moan",
+      "source": {
+        "type": "sample",
+        "file": "refs/drifter-idle1.ogg",
+        "rate": 0.55,
+        "reverse": false
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 900,
+          "q": 0.9,
+          "gain_db": 0
+        },
+        {
+          "type": "highpass",
+          "cutoff_hz": 50,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 250,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 1,
+        "release_ms": 700,
+        "curve": "lin"
+      },
+      "lfo": {
+        "target": "gain",
+        "rate_hz": 0.45,
+        "depth": 6,
+        "curve": "lin"
+      },
+      "gain_db": 2,
+      "delay_ms": 0
+    },
+    {
+      "id": "bubbles",
+      "source": {
+        "type": "granular",
+        "file": "refs/squish2.ogg",
+        "grain_ms": 60,
+        "density_hz": 7,
+        "position": 0.4,
+        "position_jitter": 0.45,
+        "pitch_jitter_semitones": 5
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 1300,
+          "q": 0.9,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 300,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.8,
+        "release_ms": 500,
+        "curve": "lin"
+      },
+      "gain_db": -8,
+      "delay_ms": 0
+    },
+    {
+      "id": "subbreath",
+      "source": {
+        "type": "noise",
+        "color": "brown"
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 260,
+          "q": 0.9,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 400,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.9,
+        "release_ms": 700,
+        "curve": "lin"
+      },
+      "lfo": {
+        "target": "gain",
+        "rate_hz": 0.45,
+        "depth": 8,
+        "curve": "lin"
+      },
+      "gain_db": -14,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [
+    {
+      "type": "eq",
+      "bands": [
+        {
+          "freq_hz": 2800,
+          "gain_db": -5,
+          "q": 0.7
+        }
+      ]
+    }
+  ],
+  "master": {
+    "gain_db": 4,
+    "fade_in_ms": 120,
+    "fade_out_ms": 500,
+    "fade_curve": "lin",
+    "dc_block": true
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}

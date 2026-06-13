@@ -1,0 +1,132 @@
+{
+  "name": "gloam_knell",
+  "description": "DIRECTION 5 — Metallic resonant. The rust given voice: a detuned inharmonic toll that rings and groans, scraped iron underneath. Cold, ominous, ringing.",
+  "duration_ms": 2350,
+  "seed": 2,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "toll",
+      "source": {
+        "type": "modal",
+        "modes": [
+          {
+            "freq_hz": 96,
+            "decay_ms": 2200,
+            "gain_db": 0
+          },
+          {
+            "freq_hz": 233,
+            "decay_ms": 1900,
+            "gain_db": -3
+          },
+          {
+            "freq_hz": 541,
+            "decay_ms": 1500,
+            "gain_db": -6
+          },
+          {
+            "freq_hz": 803,
+            "decay_ms": 1100,
+            "gain_db": -10
+          },
+          {
+            "freq_hz": 1310,
+            "decay_ms": 650,
+            "gain_db": -15
+          }
+        ],
+        "excite": "impulse",
+        "excite_ms": 5
+      },
+      "filters": [],
+      "envelope": {
+        "attack_ms": 1,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 1,
+        "release_ms": 500,
+        "curve": "exp"
+      },
+      "gain_db": -7,
+      "delay_ms": 0
+    },
+    {
+      "id": "scrape",
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "filters": [
+        {
+          "type": "bandpass",
+          "cutoff_hz": 1200,
+          "q": 4,
+          "gain_db": 0,
+          "sweep": {
+            "end_hz": 380,
+            "curve": "log"
+          }
+        }
+      ],
+      "envelope": {
+        "attack_ms": 300,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.6,
+        "release_ms": 900,
+        "curve": "lin"
+      },
+      "lfo": {
+        "target": "gain",
+        "rate_hz": 5.5,
+        "depth": 9,
+        "curve": "lin"
+      },
+      "gain_db": -22,
+      "delay_ms": 0
+    },
+    {
+      "id": "sub",
+      "source": {
+        "type": "osc",
+        "shape": "sine",
+        "freq_hz": 48,
+        "duty": 0.5
+      },
+      "filters": [],
+      "envelope": {
+        "attack_ms": 5,
+        "hold_ms": 0,
+        "decay_ms": 1800,
+        "sustain": 0,
+        "release_ms": 400,
+        "curve": "exp"
+      },
+      "gain_db": -13,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [
+    {
+      "type": "delay",
+      "time_ms": 320,
+      "feedback": 0.32,
+      "wet": 0.2
+    }
+  ],
+  "master": {
+    "gain_db": -5,
+    "fade_in_ms": 0,
+    "fade_out_ms": 500,
+    "fade_curve": "lin",
+    "dc_block": true
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}

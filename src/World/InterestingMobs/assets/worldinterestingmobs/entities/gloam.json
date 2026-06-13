@@ -1,0 +1,109 @@
+{
+	"code": "gloam",
+	"class": "EntityAgent",
+	"tags": ["habitat-land"],
+	"canClimb": false,
+	"hitboxSize": { "x": 0.75, "y": 2.5 },
+	"deadHitboxSize": { "x": 0.9, "y": 0.5 },
+	"eyeHeight": 1.55,
+	"attributes": {
+		"allowInDevastationArea": true,
+		"killedByInfoText": "deadcreature-vile",
+		"glitchAffected": true
+	},
+	"client": {
+		"renderer": "Shape",
+		"pitchStep": false,
+		"shape": { "base": "worldinterestingmobs:entity/gloam/wader" },
+		"size": 1.0,
+		"behaviors": [
+			{ "code": "repulseagents" },
+			{ "code": "controlledphysics", "stepHeight": 1.1251 },
+			{ "code": "floatupwhenstuck", "onlyWhenDead": true },
+			{ "code": "interpolateposition" },
+			{ "code": "gloamheadtracking", "searchRange": 12, "yawClampDeg": 175, "pitchClampDeg": 25, "easePerSec": 4 }
+		],
+		"animations": [
+			{ "code": "stride", "animation": "stride", "blendMode": "Average" },
+			{ "code": "sprint", "animation": "sprint", "blendMode": "Average" },
+			{ "code": "stomp", "animation": "stomp", "blendMode": "Average", "weight": 5 },
+			{
+				"code": "die",
+				"animation": "death",
+				"blendMode": "Average",
+				"weight": 20,
+				"animationSpeed": 1,
+				"triggeredBy": { "onControls": ["dead"] }
+			},
+			{
+				"code": "idle",
+				"animation": "idle",
+				"blendMode": "Average",
+				"weight": 0.1,
+				"easeoutSpeed": 10,
+				"triggeredBy": { "defaultAnim": true }
+			}
+		]
+	},
+	"server": {
+		"behaviors": [
+			{ "code": "repulseagents" },
+			{ "code": "controlledphysics", "stepHeight": 1.1251 },
+			{ "code": "health", "currenthealth": 20, "maxhealth": 20 },
+			{ "code": "deaddecay", "hoursToDecay": 3 },
+			{ "code": "floatupwhenstuck", "onlyWhenDead": true },
+			{
+				"code": "taskai",
+				"aitasks": [
+					{
+						"code": "gloamhunt",
+						"priority": 1.5,
+						"detectionRange": 22,
+						"stalkRange": 13,
+						"engageRange": 5,
+						"attackTimerMs": 6000,
+						"forceAttackMs": 14000,
+						"stalkSpeed": 0.0056,
+						"stalkAnimation": "stride",
+						"stalkAnimationSpeed": 1,
+						"sprintSpeed": 0.045,
+						"sprintAnimation": "sprint",
+						"sprintAnimationSpeed": 2.7,
+						"chargeSpeed": 0.052,
+						"lightThreshold": 7,
+						"playerDarkThreshold": 4,
+						"stalkStepDeg": 22,
+						"dirFlipChance": 0.05,
+						"torchSearchRange": 14,
+						"minPlayerDistToTorch": 6,
+						"snuffCooldownMs": 9000,
+						"strikeReach": 2.6,
+						"stompAnimation": "stomp",
+						"stompMs": 930,
+						"damageAtMs": 400,
+						"damage": 8,
+						"damageTier": 2,
+						"knockbackStrength": 1.5,
+						"fleeMaxMs": 3000
+					},
+					{
+						"code": "getoutofwater",
+						"priority": 1.4,
+						"movespeed": 0.0064,
+						"animation": "stride",
+						"animationSpeed": 1.15
+					},
+					{
+						"code": "wander",
+						"priority": 1.0,
+						"movespeed": 0.0056,
+						"animation": "stride",
+						"animationSpeed": 1,
+						"preferredLightLevel": 0
+					},
+					{ "code": "lookaround", "priority": 0.5 }
+				]
+			}
+		]
+	}
+}

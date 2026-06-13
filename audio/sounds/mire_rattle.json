@@ -1,0 +1,159 @@
+{
+  "name": "mire_rattle",
+  "description": "MIRE B — wet death-rattle. Phlegmy, throaty: fluid in the airway gargling over the moan, more active and alive-sick.",
+  "duration_ms": 2400,
+  "seed": 6,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "moan",
+      "source": {
+        "type": "sample",
+        "file": "refs/drifter-idle1.ogg",
+        "rate": 0.5,
+        "reverse": false
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 1000,
+          "q": 0.9,
+          "gain_db": 0
+        },
+        {
+          "type": "highpass",
+          "cutoff_hz": 55,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 200,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 1,
+        "release_ms": 600,
+        "curve": "lin"
+      },
+      "gain_db": -1,
+      "delay_ms": 0
+    },
+    {
+      "id": "rattle",
+      "source": {
+        "type": "granular",
+        "file": "refs/squish1.ogg",
+        "grain_ms": 38,
+        "density_hz": 16,
+        "position": 0.3,
+        "position_jitter": 0.4,
+        "pitch_jitter_semitones": 4
+      },
+      "filters": [
+        {
+          "type": "bandpass",
+          "cutoff_hz": 720,
+          "q": 1.6,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 250,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.9,
+        "release_ms": 450,
+        "curve": "lin"
+      },
+      "lfo": {
+        "target": "gain",
+        "rate_hz": 8,
+        "depth": 11,
+        "curve": "lin"
+      },
+      "gain_db": -6,
+      "delay_ms": 0
+    },
+    {
+      "id": "gargle",
+      "source": {
+        "type": "granular",
+        "file": "refs/squish2.ogg",
+        "grain_ms": 30,
+        "density_hz": 22,
+        "position": 0.35,
+        "position_jitter": 0.45,
+        "pitch_jitter_semitones": 6
+      },
+      "filters": [
+        {
+          "type": "bandpass",
+          "cutoff_hz": 1150,
+          "q": 1.4,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 250,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.8,
+        "release_ms": 400,
+        "curve": "lin"
+      },
+      "gain_db": -13,
+      "delay_ms": 0
+    },
+    {
+      "id": "subbreath",
+      "source": {
+        "type": "noise",
+        "color": "brown"
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 280,
+          "q": 0.9,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 350,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.9,
+        "release_ms": 600,
+        "curve": "lin"
+      },
+      "gain_db": -14,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [
+    {
+      "type": "eq",
+      "bands": [
+        {
+          "freq_hz": 3200,
+          "gain_db": -5,
+          "q": 0.7
+        }
+      ]
+    }
+  ],
+  "master": {
+    "gain_db": 2,
+    "fade_in_ms": 100,
+    "fade_out_ms": 450,
+    "fade_curve": "lin",
+    "dc_block": true
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}

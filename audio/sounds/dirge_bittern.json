@@ -1,0 +1,130 @@
+{
+  "name": "dirge_bittern",
+  "description": "DIRGE — bittern (bark). One deep resonant boom from the reeds, the wetland foghorn. Short.",
+  "duration_ms": 1400,
+  "seed": 2,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "boom",
+      "source": {
+        "type": "osc",
+        "shape": "triangle",
+        "freq_hz": 78,
+        "duty": 0.5
+      },
+      "filters": [
+        {
+          "type": "peak",
+          "cutoff_hz": 84,
+          "q": 2,
+          "gain_db": 3
+        },
+        {
+          "type": "lowpass",
+          "cutoff_hz": 320,
+          "q": 0.8,
+          "gain_db": 0
+        },
+        {
+          "type": "highpass",
+          "cutoff_hz": 32,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 25,
+        "hold_ms": 120,
+        "decay_ms": 750,
+        "sustain": 0,
+        "release_ms": 250,
+        "curve": "exp"
+      },
+      "gain_db": -5,
+      "delay_ms": 0
+    },
+    {
+      "id": "subadd",
+      "source": {
+        "type": "osc",
+        "shape": "sine",
+        "freq_hz": 39,
+        "duty": 0.5
+      },
+      "filters": [
+        {
+          "type": "highpass",
+          "cutoff_hz": 30,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 25,
+        "hold_ms": 120,
+        "decay_ms": 750,
+        "sustain": 0,
+        "release_ms": 250,
+        "curve": "exp"
+      },
+      "gain_db": -13,
+      "delay_ms": 0
+    },
+    {
+      "id": "throat",
+      "source": {
+        "type": "sample",
+        "file": "refs/drifter-idle3.ogg",
+        "rate": 0.5,
+        "reverse": false
+      },
+      "filters": [
+        {
+          "type": "peak",
+          "cutoff_hz": 500,
+          "q": 4,
+          "gain_db": 5
+        },
+        {
+          "type": "lowpass",
+          "cutoff_hz": 1400,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 40,
+        "hold_ms": 0,
+        "decay_ms": 900,
+        "sustain": 0,
+        "release_ms": 250,
+        "curve": "exp"
+      },
+      "gain_db": -13,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [
+    {
+      "type": "delay",
+      "time_ms": 240,
+      "feedback": 0.2,
+      "wet": 0.12
+    }
+  ],
+  "master": {
+    "gain_db": -3,
+    "fade_in_ms": 0,
+    "fade_out_ms": 200,
+    "fade_curve": "lin",
+    "dc_block": true
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}

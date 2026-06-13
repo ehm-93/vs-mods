@@ -1,0 +1,148 @@
+{
+  "name": "gloam_infra",
+  "description": "DIRECTION 1 — Infrasonic dread. Felt-not-heard presence: a slow subsonic drone that swells and breathes, almost no midrange. The 'it is near' drone.",
+  "duration_ms": 2800,
+  "seed": 7,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "sub",
+      "source": {
+        "type": "osc",
+        "shape": "sine",
+        "freq_hz": 40,
+        "duty": 0.5,
+        "pitch_env": {
+          "points": [
+            {
+              "at": 0,
+              "semitones": 0
+            },
+            {
+              "at": 0.5,
+              "semitones": 2
+            },
+            {
+              "at": 1,
+              "semitones": -1
+            }
+          ],
+          "curve": "lin"
+        }
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 90,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 700,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 1,
+        "release_ms": 1000,
+        "curve": "lin"
+      },
+      "lfo": {
+        "target": "gain",
+        "rate_hz": 0.18,
+        "depth": 6,
+        "curve": "lin"
+      },
+      "gain_db": -8,
+      "delay_ms": 0
+    },
+    {
+      "id": "rumble",
+      "source": {
+        "type": "noise",
+        "color": "brown"
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 140,
+          "q": 0.8,
+          "gain_db": 0
+        },
+        {
+          "type": "highpass",
+          "cutoff_hz": 24,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 900,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.9,
+        "release_ms": 900,
+        "curve": "lin"
+      },
+      "lfo": {
+        "target": "gain",
+        "rate_hz": 0.12,
+        "depth": 8,
+        "curve": "lin"
+      },
+      "gain_db": -14,
+      "delay_ms": 0
+    },
+    {
+      "id": "unease",
+      "source": {
+        "type": "osc",
+        "shape": "triangle",
+        "freq_hz": 1990,
+        "duty": 0.5,
+        "pitch_env": {
+          "end_semitones": -2,
+          "curve": "lin"
+        }
+      },
+      "filters": [
+        {
+          "type": "highpass",
+          "cutoff_hz": 1600,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 1400,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.5,
+        "release_ms": 1100,
+        "curve": "lin"
+      },
+      "lfo": {
+        "target": "gain",
+        "rate_hz": 0.7,
+        "depth": 10,
+        "curve": "lin"
+      },
+      "gain_db": -38,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [],
+  "master": {
+    "gain_db": -6,
+    "fade_in_ms": 500,
+    "fade_out_ms": 900,
+    "fade_curve": "lin",
+    "dc_block": true
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "name": "gloam_chitin",
+  "description": "DIRECTION 3 — Dry insectile. Bone-dry stridulation and chitin ticks, the stilt-legs working. No body, no reverb, all skitter.",
+  "duration_ms": 2000,
+  "seed": 11,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "stridulate",
+      "source": {
+        "type": "noise",
+        "color": "blue"
+      },
+      "filters": [
+        {
+          "type": "bandpass",
+          "cutoff_hz": 3200,
+          "q": 6,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 60,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.9,
+        "release_ms": 200,
+        "curve": "lin"
+      },
+      "lfo": {
+        "target": "gain",
+        "rate_hz": 26,
+        "rate_end_hz": 54,
+        "depth": 24,
+        "curve": "exp"
+      },
+      "gain_db": -8,
+      "delay_ms": 0
+    },
+    {
+      "id": "ticks",
+      "source": {
+        "type": "modal",
+        "modes": [
+          {
+            "freq_hz": 1850,
+            "decay_ms": 45,
+            "gain_db": 0
+          },
+          {
+            "freq_hz": 2630,
+            "decay_ms": 35,
+            "gain_db": -4
+          },
+          {
+            "freq_hz": 3400,
+            "decay_ms": 28,
+            "gain_db": -8
+          }
+        ],
+        "excite": "noise",
+        "excite_ms": 4
+      },
+      "filters": [],
+      "envelope": {
+        "attack_ms": 1,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 1,
+        "release_ms": 50,
+        "curve": "lin"
+      },
+      "lfo": {
+        "target": "gain",
+        "rate_hz": 9,
+        "rate_end_hz": 17,
+        "depth": 22,
+        "curve": "lin"
+      },
+      "gain_db": -6,
+      "delay_ms": 0
+    },
+    {
+      "id": "sizzle",
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "filters": [
+        {
+          "type": "highpass",
+          "cutoff_hz": 6000,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 120,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.5,
+        "release_ms": 300,
+        "curve": "lin"
+      },
+      "lfo": {
+        "target": "gain",
+        "rate_hz": 40,
+        "depth": 18,
+        "curve": "lin"
+      },
+      "gain_db": -22,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [],
+  "master": {
+    "gain_db": -4,
+    "fade_in_ms": 40,
+    "fade_out_ms": 250,
+    "fade_curve": "lin",
+    "dc_block": true
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}

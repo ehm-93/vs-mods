@@ -1,0 +1,163 @@
+{
+  "name": "dirge_swan",
+  "description": "DIRGE — whooper swan (bark). A short sad bugle blat, two detuned horn-tones with a quick bend. Clipped.",
+  "duration_ms": 1350,
+  "seed": 1,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "bugle1",
+      "source": {
+        "type": "osc",
+        "shape": "saw",
+        "freq_hz": 196,
+        "duty": 0.5,
+        "pitch_env": {
+          "points": [
+            {
+              "at": 0,
+              "semitones": -2
+            },
+            {
+              "at": 0.25,
+              "semitones": 2
+            },
+            {
+              "at": 1,
+              "semitones": -5
+            }
+          ],
+          "curve": "lin"
+        }
+      },
+      "filters": [
+        {
+          "type": "peak",
+          "cutoff_hz": 820,
+          "q": 3,
+          "gain_db": 4
+        },
+        {
+          "type": "highpass",
+          "cutoff_hz": 150,
+          "q": 0.7,
+          "gain_db": 0
+        },
+        {
+          "type": "lowpass",
+          "cutoff_hz": 2200,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 45,
+        "hold_ms": 0,
+        "decay_ms": 850,
+        "sustain": 0,
+        "release_ms": 250,
+        "curve": "exp"
+      },
+      "gain_db": -10,
+      "delay_ms": 0
+    },
+    {
+      "id": "bugle2",
+      "source": {
+        "type": "osc",
+        "shape": "saw",
+        "freq_hz": 197.6,
+        "duty": 0.5,
+        "pitch_env": {
+          "points": [
+            {
+              "at": 0,
+              "semitones": -2
+            },
+            {
+              "at": 0.25,
+              "semitones": 2
+            },
+            {
+              "at": 1,
+              "semitones": -5
+            }
+          ],
+          "curve": "lin"
+        }
+      },
+      "filters": [
+        {
+          "type": "peak",
+          "cutoff_hz": 820,
+          "q": 3,
+          "gain_db": 4
+        },
+        {
+          "type": "highpass",
+          "cutoff_hz": 150,
+          "q": 0.7,
+          "gain_db": 0
+        },
+        {
+          "type": "lowpass",
+          "cutoff_hz": 2200,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 65,
+        "hold_ms": 0,
+        "decay_ms": 850,
+        "sustain": 0,
+        "release_ms": 250,
+        "curve": "exp"
+      },
+      "gain_db": -13,
+      "delay_ms": 30
+    },
+    {
+      "id": "drone",
+      "source": {
+        "type": "osc",
+        "shape": "sine",
+        "freq_hz": 98,
+        "duty": 0.5
+      },
+      "filters": [],
+      "envelope": {
+        "attack_ms": 60,
+        "hold_ms": 0,
+        "decay_ms": 700,
+        "sustain": 0,
+        "release_ms": 250,
+        "curve": "exp"
+      },
+      "gain_db": -16,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [
+    {
+      "type": "delay",
+      "time_ms": 240,
+      "feedback": 0.22,
+      "wet": 0.18
+    }
+  ],
+  "master": {
+    "gain_db": -3,
+    "fade_in_ms": 0,
+    "fade_out_ms": 200,
+    "fade_curve": "lin",
+    "dc_block": true
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}

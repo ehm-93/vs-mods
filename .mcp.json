@@ -2,15 +2,15 @@
   "mcpServers": {
     "pixel": {
       "command": "npx",
-      "args": ["-y", "github:ehm-93/pixel-mcp#d768709"]
+      "args": ["-y", "github:ehm-93/pixel-mcp#503ef58"]
     },
     "shapes": {
       "command": "npx",
-      "args": ["-y", "github:ehm-93/vs-shapes-mcp#d896505"]
+      "args": ["-y", "github:ehm-93/vs-shapes-mcp#fdfbc3d"]
     },
     "mixdown": {
       "command": "npx",
-      "args": ["-y", "github:ehm-93/audio-mcp#2c68331", "audio"]
+      "args": ["-y", "github:ehm-93/audio-mcp#9b4f229", "audio"]
     }
   }
 }

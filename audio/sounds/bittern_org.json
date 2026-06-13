@@ -1,0 +1,127 @@
+{
+  "name": "bittern_org",
+  "description": "DIRGE — bittern, ORGANIC. Real drifter groan as the lead with a resonant peak for the boom, reed-breath air; osc only a faint felt sub. Inherently low/tonal.",
+  "duration_ms": 1400,
+  "seed": 2,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "voice",
+      "source": {
+        "type": "sample",
+        "file": "refs/drifter-idle1.ogg",
+        "rate": 0.5,
+        "reverse": false
+      },
+      "filters": [
+        {
+          "type": "peak",
+          "cutoff_hz": 88,
+          "q": 4,
+          "gain_db": 8
+        },
+        {
+          "type": "lowpass",
+          "cutoff_hz": 950,
+          "q": 0.8,
+          "gain_db": 0
+        },
+        {
+          "type": "highpass",
+          "cutoff_hz": 35,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 30,
+        "hold_ms": 140,
+        "decay_ms": 720,
+        "sustain": 0,
+        "release_ms": 250,
+        "curve": "exp"
+      },
+      "gain_db": 12,
+      "delay_ms": 0
+    },
+    {
+      "id": "reedbreath",
+      "source": {
+        "type": "noise",
+        "color": "brown"
+      },
+      "filters": [
+        {
+          "type": "bandpass",
+          "cutoff_hz": 220,
+          "q": 1.4,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 30,
+        "hold_ms": 120,
+        "decay_ms": 600,
+        "sustain": 0,
+        "release_ms": 250,
+        "curve": "exp"
+      },
+      "gain_db": -12,
+      "delay_ms": 0
+    },
+    {
+      "id": "subfelt",
+      "source": {
+        "type": "osc",
+        "shape": "sine",
+        "freq_hz": 80,
+        "duty": 0.5
+      },
+      "filters": [
+        {
+          "type": "lowpass",
+          "cutoff_hz": 180,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 30,
+        "hold_ms": 140,
+        "decay_ms": 700,
+        "sustain": 0,
+        "release_ms": 250,
+        "curve": "exp"
+      },
+      "gain_db": -20,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [
+    {
+      "type": "waveshaper",
+      "drive_db": 5,
+      "shape": "tanh"
+    },
+    {
+      "type": "delay",
+      "time_ms": 240,
+      "feedback": 0.2,
+      "wet": 0.1
+    }
+  ],
+  "master": {
+    "gain_db": 2,
+    "fade_in_ms": 0,
+    "fade_out_ms": 200,
+    "fade_curve": "lin",
+    "dc_block": true
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}

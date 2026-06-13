@@ -13,5 +13,9 @@ public class InterestingMobsModSystem : ModSystem
 
         AiTaskRegistry.Register<AiTaskBloatStalk>("bloatstalk");
         AiTaskRegistry.Register<AiTaskBloatFuse>("bloatfuse");
+
+        AiTaskRegistry.Register<AiTaskGloamHunt>("gloamhunt");
+
+        api.RegisterEntityBehaviorClass("gloamheadtracking", typeof(EntityBehaviorGloamHeadTracking));
     }
 }

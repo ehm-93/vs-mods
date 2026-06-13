@@ -1,0 +1,144 @@
+{
+  "name": "mourn_dirge",
+  "description": "MOURN B — low dirge. Deeper and sustained: a grieving low moan, formants and drone dropped, barely any whisper. Funereal.",
+  "duration_ms": 3200,
+  "seed": 4,
+  "hidden": false,
+  "layers": [
+    {
+      "id": "voice",
+      "source": {
+        "type": "sample",
+        "file": "refs/drifter-idle3.ogg",
+        "rate": 0.5,
+        "reverse": false
+      },
+      "filters": [
+        {
+          "type": "peak",
+          "cutoff_hz": 500,
+          "q": 4,
+          "gain_db": 8
+        },
+        {
+          "type": "peak",
+          "cutoff_hz": 900,
+          "q": 5,
+          "gain_db": 6
+        },
+        {
+          "type": "peak",
+          "cutoff_hz": 2200,
+          "q": 6,
+          "gain_db": 4
+        },
+        {
+          "type": "lowpass",
+          "cutoff_hz": 3000,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 300,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 1,
+        "release_ms": 900,
+        "curve": "lin"
+      },
+      "lfo": {
+        "target": "gain",
+        "rate_hz": 2.8,
+        "depth": 3,
+        "curve": "lin"
+      },
+      "gain_db": 2,
+      "delay_ms": 0
+    },
+    {
+      "id": "drone",
+      "source": {
+        "type": "osc",
+        "shape": "sine",
+        "freq_hz": 88,
+        "duty": 0.5
+      },
+      "filters": [],
+      "envelope": {
+        "attack_ms": 700,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.85,
+        "release_ms": 1000,
+        "curve": "lin"
+      },
+      "lfo": {
+        "target": "pitch",
+        "rate_hz": 0.2,
+        "depth": 0.3,
+        "curve": "lin"
+      },
+      "gain_db": -13,
+      "delay_ms": 0
+    },
+    {
+      "id": "whisper",
+      "source": {
+        "type": "granular",
+        "file": "refs/drifter-idle1.ogg",
+        "grain_ms": 100,
+        "density_hz": 16,
+        "position": 0.5,
+        "position_jitter": 0.4,
+        "pitch_jitter_semitones": 2
+      },
+      "filters": [
+        {
+          "type": "highpass",
+          "cutoff_hz": 2000,
+          "q": 0.7,
+          "gain_db": 0
+        },
+        {
+          "type": "lowpass",
+          "cutoff_hz": 6000,
+          "q": 0.7,
+          "gain_db": 0
+        }
+      ],
+      "envelope": {
+        "attack_ms": 500,
+        "hold_ms": 0,
+        "decay_ms": 0,
+        "sustain": 0.6,
+        "release_ms": 700,
+        "curve": "lin"
+      },
+      "gain_db": -19,
+      "delay_ms": 0
+    }
+  ],
+  "bus": [
+    {
+      "type": "delay",
+      "time_ms": 460,
+      "feedback": 0.3,
+      "wet": 0.22
+    }
+  ],
+  "master": {
+    "gain_db": 5,
+    "fade_in_ms": 250,
+    "fade_out_ms": 800,
+    "fade_curve": "lin",
+    "dc_block": true
+  },
+  "loop": {
+    "enabled": false,
+    "crossfade_ms": 50
+  },
+  "lint": {
+    "allow": []
+  }
+}
