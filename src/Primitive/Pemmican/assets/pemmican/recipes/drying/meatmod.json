@@ -1,0 +1,26 @@
+[
+	{
+		"code": "meatmod-redmeat",
+		"dependsOn": [ { "modid": "meatmod" } ],
+		"input": { "code": "meatmod:*-raw", "allowedVariants": [ "pork", "beef", "mutton", "chevon", "rabbitmeat" ], "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } },
+		"output": { "code": "pemmican:jerky-redmeat", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } }
+	},
+	{
+		"code": "meatmod-bushmeat",
+		"dependsOn": [ { "modid": "meatmod" } ],
+		"input": { "code": "meatmod:*-raw", "allowedVariants": [ "venison", "moosemeat", "catmeat", "dogmeat", "bearmeat" ], "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } },
+		"output": { "code": "pemmican:jerky-bushmeat", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } }
+	},
+	{
+		"code": "meatmod-fish",
+		"dependsOn": [ { "modid": "meatmod" } ],
+		"input": { "code": "meatmod:*-raw", "allowedVariants": [ "carp", "catfish", "salmon", "tuna", "whitefish", "perch", "pike", "tilapia", "herring", "mackerel", "sturgeon" ], "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } },
+		"output": { "code": "pemmican:jerky-fish", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } }
+	},
+	{
+		"code": "meatmod-poultry",
+		"dependsOn": [ { "modid": "meatmod" } ],
+		"input": { "code": "meatmod:*-raw", "allowedVariants": [ "chicken", "duck" ], "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } },
+		"output": { "code": "pemmican:jerky-poultry", "render": { "scale": 0.68, "translation": [ 0, 0, 0 ] } }
+	}
+]

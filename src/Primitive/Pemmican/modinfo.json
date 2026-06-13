@@ -6,7 +6,7 @@
   "authors": [
     "ehm-93"
   ],
-  "version": "0.3.0",
+  "version": "0.4.0",
   "dependencies": {
     "game": "1.22.0"
   },
@@ -14,6 +14,7 @@
     "primitivesurvival": "5.0.5",
     "expandedfoods": "2.0.0-dev.8",
     "aculinaryartillery": "2.0.0-dev.15",
-    "butchering": "1.13.4"
+    "butchering": "1.13.4",
+    "meatmod": "1.0.2"
   }
 }
