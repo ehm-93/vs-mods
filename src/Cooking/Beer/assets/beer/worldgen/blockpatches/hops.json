@@ -1,0 +1,15 @@
+[
+	{
+		"__comment": "Wild hops (Humulus lupulus): temperate woodland edges / hedgerows on moister ground near water. Spawns as the mature bine so it can be harvested for the first rhizomes — bootstraps the farming loop.",
+		"blockCodes": ["beer:crop-hops-4"],
+		"placement": "NearWater",
+		"minTemp": 5, "maxTemp": 22,
+		"minRain": 0.4,
+		"minForest": 0.1, "maxForest": 0.7,
+		"maxY": 0.2,
+		"chance": 0.22,
+		"quantity": { "dist": "invexp", "avg": 4, "var": 2 },
+		"offsetX": { "dist": "uniform", "avg": 0, "var": 5 },
+		"offsetZ": { "dist": "uniform", "avg": 0, "var": 5 }
+	}
+]

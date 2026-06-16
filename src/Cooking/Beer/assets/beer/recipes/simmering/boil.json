@@ -55,5 +55,62 @@
 			"smeltedStack": { "type": "item", "code": "beer:boiledwortportion-amaranth", "quantity": 30 },
 			"requiresContainer": false
 		}
+	},
+	{
+		"__comment": "Hopped boil — same boiled wort, bittered with hop cones instead of gruit. One entry per grain.",
+		"Ingredients": [
+			{ "type": "item", "code": "beer:wortportion-spelt", "quantity": 30 },
+			{ "type": "item", "code": "beer:hopcone", "quantity": 1 }
+		],
+		"Simmering": {
+			"meltingPoint": 100,
+			"meltingDuration": 150,
+			"smeltedRatio": 1,
+			"smeltingType": "bake",
+			"smeltedStack": { "type": "item", "code": "beer:boiledwortportion-spelt", "quantity": 30 },
+			"requiresContainer": false
+		}
+	},
+	{
+		"Ingredients": [
+			{ "type": "item", "code": "beer:wortportion-rice", "quantity": 30 },
+			{ "type": "item", "code": "beer:hopcone", "quantity": 1 }
+		],
+		"Simmering": {
+			"meltingPoint": 100,
+			"meltingDuration": 150,
+			"smeltedRatio": 1,
+			"smeltingType": "bake",
+			"smeltedStack": { "type": "item", "code": "beer:boiledwortportion-rice", "quantity": 30 },
+			"requiresContainer": false
+		}
+	},
+	{
+		"Ingredients": [
+			{ "type": "item", "code": "beer:wortportion-rye", "quantity": 30 },
+			{ "type": "item", "code": "beer:hopcone", "quantity": 1 }
+		],
+		"Simmering": {
+			"meltingPoint": 100,
+			"meltingDuration": 150,
+			"smeltedRatio": 1,
+			"smeltingType": "bake",
+			"smeltedStack": { "type": "item", "code": "beer:boiledwortportion-rye", "quantity": 30 },
+			"requiresContainer": false
+		}
+	},
+	{
+		"Ingredients": [
+			{ "type": "item", "code": "beer:wortportion-amaranth", "quantity": 30 },
+			{ "type": "item", "code": "beer:hopcone", "quantity": 1 }
+		],
+		"Simmering": {
+			"meltingPoint": 100,
+			"meltingDuration": 150,
+			"smeltedRatio": 1,
+			"smeltingType": "bake",
+			"smeltedStack": { "type": "item", "code": "beer:boiledwortportion-amaranth", "quantity": 30 },
+			"requiresContainer": false
+		}
 	}
 ]

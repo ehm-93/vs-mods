@@ -1,0 +1,15 @@
+{
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textures": {},
+	"elements": [
+		{ "name": "crown", "from": [3, 0, 3], "to": [13, 3, 13], "faces": {
+			"north": { "texture": "#crown", "uv": [3, 13, 13, 16] },
+			"east":  { "texture": "#crown", "uv": [3, 13, 13, 16] },
+			"south": { "texture": "#crown", "uv": [3, 13, 13, 16] },
+			"west":  { "texture": "#crown", "uv": [3, 13, 13, 16] },
+			"up":    { "texture": "#crown", "uv": [3, 3, 13, 13] },
+			"down":  { "texture": "#crown", "uv": [3, 3, 13, 13] }
+		}}
+	]
+}

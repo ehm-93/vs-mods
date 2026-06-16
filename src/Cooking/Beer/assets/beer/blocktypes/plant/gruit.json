@@ -1,6 +1,6 @@
 {
 	"code": "gruit",
-	"__comment": "Wild gruit herbs (new worldgen plants). Modeled on vanilla flower (BlockPlant); harvest drops the gruit ingredient item. Visuals reuse vanilla flower shapes/textures as placeholders.",
+	"__comment": "Wild gruit herbs (new worldgen plants). Modeled on vanilla flower (BlockPlant); harvest drops the gruit ingredient item. Custom petal+stem billboards per herb on the vanilla 1patch-3faces shape; the *Tinted* (stem) faces are season-tinted via climatePlantTint, so stem textures are drawn grey.",
 	"class": "BlockPlant",
 	"behaviors": [
 		{ "name": "DropNotSnowCovered" }
@@ -16,25 +16,11 @@
 		"*": "JSON"
 	},
 	"shape": { "base": "game:block/plant/flower/1patch-3faces-24x24" },
-	"texturesByType": {
-		"*-sweetgale": {
-			"north1": { "base": "game:block/plant/flower/petal/westerngorse1" },
-			"south1": { "base": "game:block/plant/flower/petal/westerngorse1" },
-			"northTinted1": { "base": "game:block/plant/flower/stem/westerngorse1" },
-			"southTinted1": { "base": "game:block/plant/flower/stem/westerngorse1" }
-		},
-		"*-marshrosemary": {
-			"north1": { "base": "game:block/plant/flower/petal/heather1" },
-			"south1": { "base": "game:block/plant/flower/petal/heather1" },
-			"northTinted1": { "base": "game:block/plant/flower/stem/heather1" },
-			"southTinted1": { "base": "game:block/plant/flower/stem/heather1" }
-		},
-		"*-yarrow": {
-			"north1": { "base": "game:block/plant/flower/petal/wilddaisy1" },
-			"south1": { "base": "game:block/plant/flower/petal/wilddaisy1" },
-			"northTinted1": { "base": "game:block/plant/flower/stem/wilddaisy1" },
-			"southTinted1": { "base": "game:block/plant/flower/stem/wilddaisy1" }
-		}
+	"textures": {
+		"north1": { "base": "beer:block/plant/gruit/petal/{herb}" },
+		"south1": { "base": "beer:block/plant/gruit/petal/{herb}" },
+		"northTinted1": { "base": "beer:block/plant/gruit/stem/{herb}" },
+		"southTinted1": { "base": "beer:block/plant/gruit/stem/{herb}" }
 	},
 	"blockmaterialByType": {
 		"*-free": "Plant",

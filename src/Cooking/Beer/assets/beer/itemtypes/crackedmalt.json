@@ -12,7 +12,7 @@
 		"handbook": { "groupBy": ["crackedmalt-*"] }
 	},
 	"shape": { "base": "game:item/food/flour" },
-	"texture": { "base": "game:item/food/grain/{type}-flour" },
+	"texture": { "base": "beer:item/malt/crackedmalt" },
 	"creativeinventory": { "general": ["*"], "items": ["*"] },
 	"materialDensity": 600,
 	"transitionableProps": [

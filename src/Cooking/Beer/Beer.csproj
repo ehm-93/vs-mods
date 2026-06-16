@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Inherits from root and domain Directory.Build.props -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <!-- Dependency DLLs fetched by tools/build.ps1 from modinfo (dependencies + optionalDependencies) -->
+  <ItemGroup>
+    <DepAssembly Include="$(MSBuildProjectDirectory)/deps/*/*.dll" />
+  </ItemGroup>
+
+  <!-- Compile against the dep DLLs. Done in a target so %() batches one
+       Reference per assembly. Private=false: provided by the player's
+       install, not bundled into our output. -->
+  <Target Name="AddDepReferences" BeforeTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <Reference Include="%(DepAssembly.Filename)">
+        <HintPath>%(DepAssembly.FullPath)</HintPath>
+        <Private>false</Private>
+      </Reference>
+    </ItemGroup>
+  </Target>
+</Project>

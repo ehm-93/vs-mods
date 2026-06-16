@@ -19,7 +19,7 @@
 		}
 	},
 	"shape": { "base": "game:item/resource/crushed/normal" },
-	"texture": { "base": "game:block/food/grain/{type}-pile" },
+	"texture": { "base": "beer:item/malt/malt" },
 	"creativeinventory": { "general": ["*"], "items": ["*"] },
 	"materialDensity": 600,
 	"grindingProps": {

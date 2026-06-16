@@ -1,0 +1,66 @@
+{
+	"code": "crop",
+	"__comment": "WILD hops (Humulus lupulus) — the worldgen plant + rhizome source. Cultivation is the beer:hopplant crown (planted on farmland, stick-raised post the bine climbs), not here; players don't plant this crop. Spawns via worldgen/blockpatches/hops.json; harvest the mature stage 4 for beer:hopcone + beer:hoprhizome. Uses the vanilla tallcrossdense (2-block) billboard for all stages.",
+	"class": "BlockCrop",
+	"behaviors": [{ "name": "Unstable" }],
+	"variantgroups": [
+		{ "code": "type", "states": ["hops"] },
+		{ "code": "stage", "states": ["1", "2", "3", "4"] }
+	],
+	"creativeinventory": { "general": ["*-4"], "plants": ["*-4"] },
+	"renderpass": "OpaqueNoCull",
+	"shape": { "base": "game:block/plant/crop/tallcrossdense" },
+	"blockmaterial": "Plant",
+	"randomizeRotations": true,
+	"randomDrawOffset": true,
+	"overrideRandomDrawOffset": 14,
+	"textures": {
+		"0": { "base": "beer:block/plant/crop/hops/stage{stage}" },
+		"1": { "base": "beer:block/plant/crop/hops/stage{stage}" }
+	},
+	"attributes": {
+		"butterflyFeedByType": { "*-4": true, "*": false },
+		"beeFeedByType": { "*-4": true, "*": false },
+		"sitHeightByType": { "*-3": 1.1, "*-4": 1.5 },
+		"tickGrowthProbability": 0.04,
+		"handbook": { "includeByType": { "*-4": true, "*": false } }
+	},
+	"sideopaque": { "all": false },
+	"sidesolid": { "all": false },
+	"replaceable": 3000,
+	"lightAbsorption": 0,
+	"resistance": 0.5,
+	"sounds": {
+		"place": "game:block/plant",
+		"break": "game:block/plant",
+		"hit": "game:block/plant"
+	},
+	"rainPermeable": false,
+	"dropsByType": {
+		"*-4": [
+			{ "type": "item", "code": "beer:hopcone", "quantity": { "avg": 3, "var": 1 } },
+			{ "type": "item", "code": "beer:hoprhizome", "quantity": { "avg": 1, "var": 0.3 } }
+		],
+		"*": [
+			{ "type": "item", "code": "beer:hoprhizome", "quantity": { "avg": 0.5 } }
+		]
+	},
+	"cropProps": {
+		"requiredNutrient": "N",
+		"nutrientConsumption": 40,
+		"growthStages": 4,
+		"totalGrowthMonths": 2.5,
+		"coldDamageBelow": -5,
+		"heatDamageAbove": 40
+	},
+	"collisionbox": null,
+	"selectionBoxByType": {
+		"*-1": { "x1": 0.125, "y1": -0.0625, "z1": 0.125, "x2": 0.875, "y2": 0.3, "z2": 0.875 },
+		"*-2": { "x1": 0.125, "y1": -0.0625, "z1": 0.125, "x2": 0.875, "y2": 0.75, "z2": 0.875 },
+		"*-3": { "x1": 0.125, "y1": -0.0625, "z1": 0.125, "x2": 0.875, "y2": 1.25, "z2": 0.875 },
+		"*-4": { "x1": 0.115, "y1": -0.0625, "z1": 0.115, "x2": 0.885, "y2": 1.75, "z2": 0.885 }
+	},
+	"materialDensity": 200,
+	"combustibleProps": { "burnTemperature": 600, "burnDuration": 10 },
+	"frostable": true
+}

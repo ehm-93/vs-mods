@@ -12,7 +12,7 @@
 		"handbook": { "groupBy": ["burntmalt-*"] }
 	},
 	"shape": { "base": "game:item/resource/crushed/normal" },
-	"texture": { "base": "game:block/food/grain/{type}-pile" },
+	"texture": { "base": "beer:item/malt/burntmalt" },
 	"creativeinventory": { "general": ["*"], "items": ["*"] },
 	"materialDensity": 600,
 	"grindingProps": {

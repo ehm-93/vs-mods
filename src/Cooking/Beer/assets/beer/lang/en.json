@@ -48,5 +48,23 @@
 	"block-gruit-marshrosemary-free": "Marsh Rosemary",
 	"block-gruit-marshrosemary-snow": "Marsh Rosemary",
 	"block-gruit-yarrow-free": "Yarrow",
-	"block-gruit-yarrow-snow": "Yarrow"
+	"block-gruit-yarrow-snow": "Yarrow",
+
+	"item-hopcone": "Hop Cone",
+	"item-hoprhizome": "Hop Rhizome",
+
+	"hoprhizome-needs-farmland": "Hops must be planted on tilled farmland",
+	"hoprhizome-blocked": "No room to plant here",
+
+	"blockhelp-hopplant-harvest": "Harvest hop cones",
+	"hopplant-nofarmland": "Not on farmland — the bine can't draw nutrients",
+	"hopplant-maturity": "Crown maturity: year {0}",
+	"hopplant-growing": "Bine climbing: {0}%",
+	"hopplant-ripe": "Ripe — {0} cones ready",
+	"hopplant-dormant": "Dormant for winter",
+
+	"block-crop-hops-1": "Wild Hops (sprouting)",
+	"block-crop-hops-2": "Wild Hops (young)",
+	"block-crop-hops-3": "Wild Hops (climbing)",
+	"block-crop-hops-4": "Wild Hops (in cone)"
 }

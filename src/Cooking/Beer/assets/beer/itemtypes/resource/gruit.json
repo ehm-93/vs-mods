@@ -1,6 +1,6 @@
 {
 	"code": "gruit",
-	"__comment": "Gruit herbs harvested from the wild gruit plants. Bittering/flavoring herbs for the boil (step 5). Placeholder visuals reuse vanilla spice-herb item textures; distinct art is a polish follow-up.",
+	"__comment": "Gruit herbs harvested from the wild gruit plants. Bittering/flavoring herbs for the boil (step 5). Custom item art per herb (yarrow umbel / sweet-gale catkin twig / marsh-rosemary pink bells).",
 	"maxstacksize": 64,
 	"variantgroups": [
 		{ "code": "herb", "states": ["sweetgale", "marshrosemary", "yarrow"] }
@@ -9,9 +9,9 @@
 		"handbook": { "groupBy": ["gruit-*"] }
 	},
 	"textureByType": {
-		"*-sweetgale": { "base": "game:item/resource/herb/sage" },
-		"*-marshrosemary": { "base": "game:item/resource/herb/lavender" },
-		"*-yarrow": { "base": "game:item/resource/herb/chamomile" }
+		"*-sweetgale": { "base": "beer:item/gruit/sweetgale" },
+		"*-marshrosemary": { "base": "beer:item/gruit/marshrosemary" },
+		"*-yarrow": { "base": "beer:item/gruit/yarrow" }
 	},
 	"creativeinventory": { "general": ["*"], "items": ["*"] },
 	"materialDensity": 100

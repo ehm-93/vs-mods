@@ -1,0 +1,35 @@
+{
+	"code": "hopplant",
+	"__comment": "Planted hop crown — placed by right-clicking tilled farmland with beer:hoprhizome. A non-colliding 3 m pole renders automatically (BlockEntityHopPlant); the perennial bine climbs it through the warm months, drawing the farmland's nutrient (requiredNutrient). TEMPERATURE-DRIVEN: a freeze (temp <= dormantTemp) makes it die back dormant, a thaw (temp >= coldStallTemp) regrows it. Growth/yield/maturity in BlockEntityHopPlant; tunable in 'attributes'.",
+	"class": "HopPlant",
+	"entityClass": "HopPlant",
+	"shape": { "base": "beer:block/hopplant" },
+	"textures": {
+		"crown": { "base": "beer:item/hoprhizome" }
+	},
+	"attributes": {
+		"conesPerBlock": 1.2,
+		"maturityMultipliers": [0.4, 0.7, 1.0],
+		"growSeason": { "growSeasonFraction": 0.4, "ripeThreshold": 0.92 },
+		"coldStallTemp": 5,
+		"dormantTemp": 0,
+		"requiredNutrient": "N",
+		"nutrientPerSeason": 40
+	},
+	"creativeinventory": { "general": ["*"] },
+	"replaceable": 3000,
+	"lightAbsorption": 0,
+	"resistance": 0.8,
+	"renderpass": "OpaqueNoCull",
+	"sideopaque": { "all": false },
+	"sidesolid": { "all": false },
+	"selectionbox": { "x1": 0.35, "y1": 0, "z1": 0.35, "x2": 0.65, "y2": 2, "z2": 0.65 },
+	"collisionbox": null,
+	"sounds": {
+		"place": "game:block/plant",
+		"break": "game:block/plant",
+		"hit": "game:block/plant"
+	},
+	"materialDensity": 200,
+	"combustibleProps": { "burnTemperature": 600, "burnDuration": 8 }
+}

@@ -1,0 +1,23 @@
+{
+	"code": "hoprhizome",
+	"__comment": "Hop rhizome — right-click tilled farmland to plant a beer:hopplant crown (ItemHopRhizome). Then right-click the crown with sticks to raise a post for the bine to climb. Dropped by the wild hop crop so farming self-sustains; wild hops worldgen bootstraps the first one.",
+	"class": "HopRhizome",
+	"maxstacksize": 64,
+	"texture": { "base": "beer:item/hoprhizome" },
+	"creativeinventory": { "general": ["*"], "items": ["*"] },
+	"materialDensity": 200,
+	"transitionableProps": [
+		{
+			"type": "Perish",
+			"freshHours": { "avg": 1080 },
+			"transitionHours": { "avg": 240 },
+			"transitionedStack": { "type": "item", "code": "game:rot" },
+			"transitionRatio": 1
+		}
+	],
+	"guiTransform": {
+		"rotation": { "x": -10, "y": -45, "z": 0 },
+		"origin": { "x": 0.5, "y": 0.4, "z": 0.5 },
+		"scale": 2.3
+	}
+}
